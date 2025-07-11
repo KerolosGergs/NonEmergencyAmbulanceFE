@@ -1,0 +1,23 @@
+h1, h2 {
+  font-weight: 700;
+}
+
+.form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Image Section Styling */
+.position-absolute h2 {
+  font-size: 2rem;
+}
+
+.position-absolute p {
+  font-size: 1rem;
+  opacity: 0.85;
+}

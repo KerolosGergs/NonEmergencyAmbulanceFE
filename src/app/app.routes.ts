@@ -8,8 +8,8 @@ export const routes: Routes = [
     {
         path: '', 
             children: [
-                { path: '', redirectTo: 'Login', pathMatch: 'full' },
-                { path: 'Login',  component:LoginLayout },
+                { path: '', redirectTo: 'login', pathMatch: 'full' },
+                { path: 'login',  component:LoginLayout },
                 { path: 'Register',  component:LoginLayout },
             ]},
     {

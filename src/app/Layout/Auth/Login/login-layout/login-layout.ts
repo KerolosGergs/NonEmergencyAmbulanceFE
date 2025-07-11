@@ -1,11 +1,74 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
+import { ILogin } from '../../../../Core/interface/login';
 
 @Component({
   selector: 'app-login-layout',
-  imports: [],
+  imports: [ReactiveFormsModule],
   templateUrl: './login-layout.html',
-  styleUrl: './login-layout.scss'
+  styleUrl: './login-layout.scss',
 })
 export class LoginLayout {
+ loginForm: FormGroup = new FormGroup({
+  email: new FormControl('', [Validators.required, Validators.email]),
+  password: new FormControl('', [Validators.required])
+ });
+ Login = inject(LoginService);
+    toastr = inject(ToastrService);
+
+  showPassword: boolean = false;
+  rememberMe: boolean = false;
+  isLoading: boolean = false;
+   constructor(private router:Router ) {
+  }
+ onSubmit() {
+   this.Login.login(this.loginForm).subscribe(res => {
+       if (this.loginForm.valid) {
+    this.isLoading = true;
+
+    this.Login.login(this.loginForm.value).subscribe({
+      next: (res:ILogin) => {
+        if (res.email && res.password ) {
+          // const token = res.token;
+          // const user = res.user;
+
+          // localStorage.setItem('authToken', token);
+          // localStorage.setItem('userRole', res.role);
+          // localStorage.setItem('userInfo', JSON.stringify(user));
+
+          this.router.navigate(['/home']);
+
+          this.toastr.success('تم تسجيل الدخول بنجاح');
+        } else {
+          this.toastr.error('البريد الالكتروني او كلمة المرور غير صحيح');
+        }
+
+        this.isLoading = false;
+      },
+
+      error: (error) => {
+        debugger
+        this.toastr.error(' حدث خطاء اثناء تسجيل الدخول تحقق من اتصالك بالانترنت');
+        this.isLoading = false;
+      }
+    });
+
+  } else {
+    // this.toastr.error('يرجى ملء جميع الحقول');
+    this.markFormGroupTouched();
+  }
+   })
+  }
+   private markFormGroupTouched(): void {
+    Object.keys(this.loginForm.controls).forEach(key => {
+      const control = this.loginForm.get(key);
+      if (control) {
+        control.markAsTouched();
+      }
+    });
+  }
 
 }

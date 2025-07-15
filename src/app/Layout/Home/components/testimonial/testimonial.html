@@ -1,0 +1,56 @@
+<section class="testimonials-section">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="row">
+      <div class="col-12">
+        <div class="text-center mb-5 animate__animated animate__fadeInDown">
+          <h2 class="section-title">{{ sectionTitle }}</h2>
+          <p class="section-description">{{ sectionDescription }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testimonials Grid -->
+    <div class="row g-4">
+      @for (testimonial of testimonials; track $index; let i = $index) {
+        <div class="col-lg-4 col-md-6 col-12">
+          <div class="testimonial-card animate__animated animate__fadeInUp"
+               [style.animation-delay]="(i * 0.2) + 's'">
+
+            <!-- Star Rating -->
+            <div class="rating mb-3">
+              @for (star of getRatingStars(testimonial.rating); track $index) {
+                <i class="bi"
+                   [ngClass]="{
+                     'bi-star-fill': star.filled,
+                     'bi-star-half': star.half,
+                     'bi-star': !star.filled && !star.half
+                   }"></i>
+              }
+              <span class="rating-value ms-2">{{ testimonial.rating }}</span>
+            </div>
+
+            <!-- Quote -->
+            <blockquote class="testimonial-quote mb-4">
+              "{{ testimonial.quote }}"
+            </blockquote>
+
+            <!-- Customer Info -->
+            <div class="customer-info d-flex align-items-center">
+              <div class="customer-avatar me-3">
+                <img [src]="testimonial.customerImage"
+                     [alt]="testimonial.customerName"
+                     class="rounded-circle"
+                     onerror="this.src='assets/images/default-avatar.jpg'">
+              </div>
+              <div class="customer-details">
+                <h5 class="customer-name mb-0">{{ testimonial.customerName }}</h5>
+                <p class="customer-role mb-0">{{ testimonial.customerRole }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</section>

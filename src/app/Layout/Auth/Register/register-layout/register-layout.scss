@@ -1,0 +1,180 @@
+/* Registration Component Styles */
+
+h1, h2 {
+  font-weight: 700;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--bs-primary);
+  box-shadow: 0 0 0 0.2rem rgba(37, 99, 235, 0.25);
+}
+
+.form-control,
+.form-select {
+  transition: all 0.3s ease;
+  border: 1px solid #dee2e6;
+}
+
+.form-control:hover,
+.form-select:hover {
+  border-color: #adb5bd;
+}
+
+/* Custom styling for select dropdown */
+.form-select {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m1 6 7 7 7-7'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 16px 12px;
+}
+
+/* Textarea specific styling */
+textarea.form-control {
+  resize: vertical;
+  min-height: 80px;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+}
+
+/* Error message styling */
+.text-danger {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Image Section Styling */
+.position-absolute h2 {
+  font-size: 2rem;
+}
+
+.position-absolute p {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* Loading state */
+.btn-primary.loading {
+  position: relative;
+  color: transparent;
+}
+
+.btn-primary.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form validation states */
+.form-control.is-invalid,
+.form-select.is-invalid {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.form-control.is-valid,
+.form-select.is-valid {
+  border-color: #198754;
+  box-shadow: 0 0 0 0.2rem rgba(25, 135, 84, 0.25);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container-fluid .row {
+    max-width: 100% !important;
+    margin: 0;
+  }
+  
+  .col-md-6 {
+    padding: 2rem 1.5rem;
+  }
+  
+  h1 {
+    font-size: 1.75rem;
+  }
+  
+  .form-control,
+  .form-select {
+    padding: 0.75rem 1rem;
+  }
+  
+  .btn {
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* Custom primary color variables */
+:root {
+  --primary-blue: #2563eb;
+}
+
+/* Link styling */
+a.text-primary {
+  transition: all 0.3s ease;
+}
+
+a.text-primary:hover {
+  text-decoration: underline !important;
+  color: var(--primary-blue) !important;
+}
+
+/* Form group spacing */
+.mb-3 {
+  margin-bottom: 1.5rem !important;
+}
+
+.mb-4 {
+  margin-bottom: 2rem !important;
+}
+
+/* Label styling */
+.form-label {
+  margin-bottom: 0.5rem;
+  color: #495057;
+}
+
+/* Container shadow and border radius */
+.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+}
+
+.rounded-4 {
+  border-radius: 1rem !important;
+}
+
+/* Animation delays for staggered effect */
+.animate__slideInLeft {
+  animation-delay: 0.2s;
+}
+
+.animate__slideInRight {
+  animation-delay: 0.4s;
+}
+

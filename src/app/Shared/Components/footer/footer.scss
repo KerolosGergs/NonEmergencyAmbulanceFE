@@ -1,0 +1,157 @@
+/* Footer Section - Minimal CSS */
+.footer-section {
+  background-color: #f8f9fa;
+  padding: 3rem 0 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+/* Company Info */
+.company-name {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.company-description {
+  font-size: 0.9rem;
+  color: #6c757d;
+  line-height: 1.5;
+}
+
+/* Social Links */
+.social-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 35px;
+  height: 35px;
+  background-color: #007bff;
+  color: white;
+  border-radius: 50%;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: #0056b3;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Footer Titles */
+.footer-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+/* Footer Links */
+.footer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-link {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Contact Info */
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  font-size: 0.9rem;
+}
+
+.contact-text {
+  color: #6c757d;
+}
+
+.contact-link {
+  color: #6c757d;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-link:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+/* Footer Bottom */
+.footer-bottom {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.copyright-text {
+  font-size: 0.85rem;
+  color: #6c757d;
+}
+
+.bottom-links {
+  text-align: right;
+}
+
+.bottom-link {
+  color: #6c757d;
+  text-decoration: none;
+  font-size: 0.85rem;
+  margin: 0 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.bottom-link:hover {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.separator {
+  margin-left: 0.5rem;
+  color: #dee2e6;
+}
+
+/* Responsive */
+@media (max-width: 767.98px) {
+  .footer-section {
+    padding: 2rem 0 1rem;
+  }
+  
+  .footer-column {
+    margin-bottom: 2rem;
+  }
+  
+  .bottom-links {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .copyright-text {
+    text-align: center;
+  }
+  
+  .bottom-link {
+    display: block;
+    margin: 0.25rem 0;
+  }
+  
+  .separator {
+    display: none;
+  }
+}
+

@@ -1,0 +1,57 @@
+<app-nav></app-nav>
+<app-hero></app-hero>
+
+@defer (on viewport) {
+  <app-services></app-services>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل الخدمات...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل قسم الخدمات.</p>
+}
+
+@defer (on viewport) {
+  <app-how-work></app-how-work>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل آلية العمل...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل آلية العمل.</p>
+}
+
+@defer (on viewport) {
+  <app-why-us></app-why-us>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل لماذا نحن...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل هذا القسم.</p>
+}
+
+@defer (on viewport) {
+  <app-testimonial></app-testimonial>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل التوصيات...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل التوصيات.</p>
+}
+
+@defer (on viewport) {
+ <app-ready-book></app-ready-book>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل التوصيات...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل التوصيات.</p>
+}
+
+@defer (on viewport) {
+<app-faq></app-faq>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل التوصيات...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل التوصيات.</p>
+}
+@defer (on viewport) {
+<app-footer></app-footer>
+} @placeholder {
+  <p class="text-light">جارٍ تحميل التوصيات...</p>
+} @error {
+  <p class="text-danger">تعذر تحميل التوصيات.</p>
+}

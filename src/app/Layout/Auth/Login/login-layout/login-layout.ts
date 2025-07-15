@@ -3,7 +3,7 @@ import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angul
 import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ILogin } from '../../../../Core/interface/login';
+import { ILogin, ILoginResponse } from '../../../../Core/interface/login';
 
 @Component({
   selector: 'app-login-layout',
@@ -17,7 +17,7 @@ export class LoginLayout {
   password: new FormControl('', [Validators.required])
  });
  Login = inject(LoginService);
-    toastr = inject(ToastrService);
+  toastr = inject(ToastrService);
 
   showPassword: boolean = false;
   rememberMe: boolean = false;
@@ -25,13 +25,13 @@ export class LoginLayout {
    constructor(private router:Router ) {
   }
  onSubmit() {
-   this.Login.login(this.loginForm).subscribe(res => {
+      this.isLoading = true;
        if (this.loginForm.valid) {
-    this.isLoading = true;
 
     this.Login.login(this.loginForm.value).subscribe({
-      next: (res:ILogin) => {
-        if (res.email && res.password ) {
+      
+      next: (res:ILoginResponse) => {
+        if (res.success ) {
           // const token = res.token;
           // const user = res.user;
 
@@ -60,8 +60,8 @@ export class LoginLayout {
     // this.toastr.error('يرجى ملء جميع الحقول');
     this.markFormGroupTouched();
   }
-   })
-  }
+   }
+  
    private markFormGroupTouched(): void {
     Object.keys(this.loginForm.controls).forEach(key => {
       const control = this.loginForm.get(key);

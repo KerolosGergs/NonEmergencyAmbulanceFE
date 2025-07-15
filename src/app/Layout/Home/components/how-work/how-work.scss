@@ -1,0 +1,257 @@
+/* How It Works Section */
+.how-it-works-section {
+  padding: 5rem 0;
+  background-color: #f1f3f4;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Section Header */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  color: #6c757d;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Steps Container */
+.steps-container {
+  margin: 3rem 0;
+}
+
+/* Curved Line */
+.curved-line {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 200px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.curved-line svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Step Cards */
+.step-card {
+  background: white;
+  padding: 2rem 1.5rem;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+  border: 1px solid #e9ecef;
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 123, 255, 0.15);
+}
+
+/* Step Number */
+.step-number {
+  position: absolute;
+  top: -15px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 10px rgba(0, 123, 255, 0.3);
+}
+
+/* Step Icon */
+.step-icon {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem auto;
+  transition: transform 0.3s ease;
+}
+
+.step-icon i {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.step-card:hover .step-icon {
+  transform: scale(1.1) rotate(5deg);
+}
+
+/* Step Content */
+.step-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.step-description {
+  color: #6c757d;
+  line-height: 1.6;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* Call to Action Button */
+.cta-btn {
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  border: none;
+  border-radius: 30px;
+  padding: 1rem 2.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 20px rgba(0, 123, 255, 0.3);
+}
+
+.cta-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #004085);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.4);
+}
+
+.cta-btn:active {
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 1199.98px) {
+  .section-title {
+    font-size: 2.2rem;
+  }
+  
+  .curved-line {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .how-it-works-section {
+    padding: 4rem 0;
+  }
+  
+  .section-title {
+    font-size: 2rem;
+  }
+  
+  .step-card {
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .how-it-works-section {
+    padding: 3rem 0;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .section-description {
+    font-size: 1rem;
+  }
+  
+  .step-card {
+    padding: 1.5rem 1rem;
+  }
+  
+  .step-icon {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .step-icon i {
+    font-size: 1.3rem;
+  }
+  
+  .step-title {
+    font-size: 1.2rem;
+  }
+  
+  .step-description {
+    font-size: 0.9rem;
+  }
+  
+  .cta-btn {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .step-number {
+    top: -12px;
+    right: 12px;
+    width: 25px;
+    height: 25px;
+    font-size: 0.8rem;
+  }
+  
+  .step-card {
+    padding: 1.2rem 0.8rem;
+  }
+}
+
+/* Animation Enhancements */
+.step-card {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.step-card.animate__animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Loading State */
+.step-card.loading {
+  background: #f8f9fa;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Focus States for Accessibility */
+.cta-btn:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.step-card:focus-within {
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+

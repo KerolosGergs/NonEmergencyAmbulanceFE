@@ -1,0 +1,78 @@
+/* Ready to Book Section - Minimal CSS */
+.ready-to-book-section {
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+}
+
+/* Content */
+.section-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1.3;
+}
+
+.section-description {
+  font-size: 1.1rem;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+/* Buttons */
+.action-buttons .btn {
+  border-radius: 25px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+}
+
+/* Contact Info */
+.contact-info {
+  font-size: 1rem;
+  color: #495057;
+}
+
+.phone-text {
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.phone-text:hover {
+  color: #007bff;
+}
+
+/* Image */
+.image-wrapper img {
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .ready-to-book-section {
+    padding: 4rem 0;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+  }
+  
+  .image-wrapper {
+    margin-top: 3rem;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .section-title {
+    font-size: 1.6rem;
+  }
+  
+  .action-buttons .btn {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  .action-buttons .btn:last-child {
+    margin-bottom: 0;
+  }
+}
+

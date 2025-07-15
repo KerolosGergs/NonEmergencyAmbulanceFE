@@ -1,0 +1,136 @@
+<footer class="footer-section">
+    <div class="container">
+
+        <!-- Main Footer Content -->
+        <div class="row g-4 mb-4">
+
+            <!-- Company Info Column -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="footer-column animate__animated animate__fadeInUp">
+
+                    <!-- Company Logo/Name -->
+                    <div class="company-info mb-3">
+                        <h5 class="company-name">
+                            <i class="bi bi-truck text-primary me-2"></i>
+                            {{ companyName }}
+                        </h5>
+                        <p class="company-description">{{ companyDescription }}</p>
+                    </div>
+
+                    <!-- Social Media -->
+                    <div class="social-links">
+                        @for (social of socialLinks; track $index) {
+                        <a href="javascript:void(0)" class="social-link me-2" [title]="social.name"
+                            (click)="onSocialClick(social)">
+                            <i [class]="social.icon"></i>
+                        </a>
+                        }
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Quick Links Column -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="footer-column animate__animated animate__fadeInUp animate__delay-1s">
+                    <h6 class="footer-title">{{ quickLinksTitle }}</h6>
+                    <ul class="footer-links">
+                        @for (link of quickLinks; track $index) {
+                        <li>
+                            <a href="javascript:void(0)" class="footer-link" (click)="onLinkClick(link.url)">
+                                {{ link.text }}
+                            </a>
+                        </li>
+                        }
+
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Professional Links Column -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="footer-column animate__animated animate__fadeInUp animate__delay-2s">
+                    <h6 class="footer-title">{{ professionalLinksTitle }}</h6>
+                    <ul class="footer-links">
+                        @for (link of professionalLinks; track $index) {
+                        <li>
+                            <a href="javascript:void(0)" class="footer-link" (click)="onLinkClick(link.url)">
+                                {{ link.text }}
+                            </a>
+                        </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact Info Column -->
+            <div class="col-lg-3 col-md-6 col-12">
+                <div class="footer-column animate__animated animate__fadeInUp animate__delay-3s">
+                    <h6 class="footer-title">{{ contactTitle }}</h6>
+
+                    <!-- Address -->
+                    <div class="contact-item mb-2">
+                        <i class="bi bi-geo-alt text-primary me-2"></i>
+                        <span class="contact-text">{{ address }}</span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="contact-item mb-2">
+                        <i class="bi bi-telephone text-primary me-2"></i>
+                        <a href="javascript:void(0)" class="contact-link" (click)="onPhoneClick()">
+                            {{ phone }}
+                        </a>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="contact-item mb-2">
+                        <i class="bi bi-envelope text-primary me-2"></i>
+                        <a href="javascript:void(0)" class="contact-link" (click)="onEmailClick()">
+                            {{ email }}
+                        </a>
+                    </div>
+
+                    <!-- Service Hours -->
+                    <div class="contact-item">
+                        <i class="bi bi-clock text-primary me-2"></i>
+                        <span class="contact-text">{{ serviceHours }}</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer Bottom -->
+        <div class="footer-bottom">
+            <div class="row align-items-center">
+
+                <!-- Copyright -->
+                <div class="col-md-6 col-12">
+                    <p class="copyright-text mb-0">
+                        © {{ copyrightYear }} {{ copyrightText }}
+                    </p>
+                </div>
+
+                <!-- Bottom Links -->
+                <div class="col-md-6 col-12">
+                    <div class="bottom-links">
+                        @for (link of footerBottomLinks; track $index;let last = $last) {
+                        <a href="javascript:void(0)" class="bottom-link" (click)="onLinkClick(link.url)">
+                            {{ link.text }}
+                            @if (!last) {
+                            <span class="separator">|</span>
+
+                            }
+                        </a>
+                        }
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</footer>

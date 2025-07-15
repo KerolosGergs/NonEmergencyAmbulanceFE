@@ -1,0 +1,53 @@
+<section class="how-it-works-section">
+    <div class="container">
+        <!-- Section Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="text-center mb-5 animate__animated animate__fadeInDown">
+                    <h2 class="section-title">{{ sectionTitle }}</h2>
+                    <p class="section-description">{{ sectionDescription }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Steps Container -->
+        <div class="steps-container position-relative">
+        
+
+            <!-- Steps Grid -->
+            <div class="row g-4">
+                @for (step of steps; track $index ;let i =$index) {
+                <div class="col-lg-3 col-md-6 col-12">
+                    <div class="step-card animate__animated animate__fadeInUp"
+                        [style.animation-delay]="(i * 0.2) + 's'">
+
+                        <!-- Step Number -->
+                        <div class="step-number">{{ step.id }}</div>
+
+                        <!-- Step Icon -->
+                        <div class="step-icon mb-3">
+                            <i [class]="step.icon"></i>
+                        </div>
+
+                        <!-- Step Content -->
+                        <h3 class="step-title">{{ step.title }}</h3>
+                        <p class="step-description">{{ step.description }}</p>
+                    </div>
+                </div>
+                }
+
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                <button type="button"
+                    class="btn btn-primary cta-btn animate__animated animate__fadeInUp animate__delay-1s"
+                    (click)="onBookTransport()">
+                    {{ ctaButtonText }}
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

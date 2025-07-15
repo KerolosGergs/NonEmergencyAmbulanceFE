@@ -1,0 +1,53 @@
+<section class="ready-to-book-section">
+  <div class="container">
+    <div class="row align-items-center">
+      
+      <!-- Content Column -->
+      <div class="col-lg-6 col-md-12">
+        <div class="content-wrapper animate__animated animate__fadeInLeft">
+          
+          <!-- Title -->
+          <h2 class="section-title mb-4">{{ title }}</h2>
+          
+          <!-- Description -->
+          <p class="section-description mb-4">{{ description }}</p>
+          
+          <!-- Action Buttons -->
+          <div class="action-buttons mb-4">
+            <button 
+              type="button"
+              class="btn btn-primary btn-lg me-3 mb-2"
+              (click)="onBookTransport()">
+              {{ primaryButtonText }}
+            </button>
+            <button 
+              type="button"
+              class="btn btn-outline-primary btn-lg mb-2"
+              (click)="onContactUs()">
+              {{ secondaryButtonText }}
+            </button>
+          </div>
+          
+          <!-- Contact Info -->
+          <div class="contact-info d-flex align-items-center">
+            <i class="bi bi-telephone-fill text-primary me-2"></i>
+            <span class="phone-text" (click)="onCallUs()">{{ phoneDisplayText }}</span>
+          </div>
+          
+        </div>
+      </div>
+      
+      <!-- Image Column -->
+      <div class="col-lg-6 col-md-12">
+        <div class="image-wrapper animate__animated animate__fadeInRight">
+          <img 
+            [src]="heroImage" 
+            [alt]="heroImageAlt"
+            class="img-fluid rounded"
+            onerror="this.src='assets/home/1.jpg'">
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</section>

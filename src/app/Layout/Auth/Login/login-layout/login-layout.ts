@@ -1,3 +1,4 @@
+import { AuthService } from './../../../../Core/Services/AuthServices/auth-service';
 import { Component, inject } from '@angular/core';
 import {  FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
@@ -18,6 +19,7 @@ export class LoginLayout {
  });
  Login = inject(LoginService);
   toastr = inject(ToastrService);
+  AuthService = inject(AuthService);
 
   showPassword: boolean = false;
   rememberMe: boolean = false;
@@ -32,13 +34,8 @@ export class LoginLayout {
       
       next: (res:ILoginResponse) => {
         if (res.success ) {
-          // const token = res.token;
-          // const user = res.user;
-
-          // localStorage.setItem('authToken', token);
-          // localStorage.setItem('userRole', res.role);
-          // localStorage.setItem('userInfo', JSON.stringify(user));
-
+          this.AuthService.setSession(res.data.token, res.data, res.data.role);
+          
           this.router.navigate(['/home']);
 
           this.toastr.success('تم تسجيل الدخول بنجاح');

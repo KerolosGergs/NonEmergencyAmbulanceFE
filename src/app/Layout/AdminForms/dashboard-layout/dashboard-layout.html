@@ -1,0 +1,78 @@
+<app-nav></app-nav>
+<div class="min-vh-100 bg-light">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-8">
+        <!-- Header -->
+        <div class="text-center mb-5 animate__animated animate__fadeInDown">
+          <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="bi bi-hospital me-3"></i>
+            Account Dashboard
+          </h1>
+          <p class="lead text-muted">
+            Create accounts for nurses, drivers, and ambulances
+          </p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="row g-3 mb-5 animate__animated animate__fadeInUp">
+          <div class="col-12 col-md-4">
+            <button
+              class="btn w-100 py-3 d-flex align-items-center justify-content-center nav-button"
+              [class.btn-primary]="isActiveForm('nurse')"
+              [class.btn-outline-primary]="!isActiveForm('nurse')"
+              [class.active]="isActiveForm('nurse')"
+              (click)="setActiveForm('nurse')"
+            >
+              <i class="bi bi-person-heart me-2 fs-4"></i>
+              <div>
+                <div class="fw-bold">Nurse</div>
+                <small class="opacity-75">Healthcare Professional</small>
+              </div>
+            </button>
+          </div>
+          <div class="col-12 col-md-4">
+            <button
+              class="btn w-100 py-3 d-flex align-items-center justify-content-center nav-button"
+              [class.btn-primary]="isActiveForm('driver')"
+              [class.btn-outline-primary]="!isActiveForm('driver')"
+              [class.active]="isActiveForm('driver')"
+              (click)="setActiveForm('driver')"
+            >
+              <i class="bi bi-person-gear me-2 fs-4"></i>
+              <div>
+                <div class="fw-bold">Driver</div>
+                <small class="opacity-75">Ambulance Operator</small>
+              </div>
+            </button>
+          </div>
+          <div class="col-12 col-md-4">
+            <button
+              class="btn w-100 py-3 d-flex align-items-center justify-content-center nav-button"
+              [class.btn-primary]="isActiveForm('ambulance')"
+              [class.btn-outline-primary]="!isActiveForm('ambulance')"
+              [class.active]="isActiveForm('ambulance')"
+              (click)="setActiveForm('ambulance')"
+            >
+              <i class="bi bi-truck-front me-2 fs-4"></i>
+              <div>
+                <div class="fw-bold">Ambulance</div>
+                <small class="opacity-75">Emergency Vehicle</small>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Form Container -->
+        <div class="card shadow-lg border-0 animate__animated animate__fadeIn form-section">
+          <div class="card-body p-4 p-md-5">
+            <app-nurse-form *ngIf="activeForm === 'nurse'"></app-nurse-form>
+            <app-driver-form *ngIf="activeForm === 'driver'"></app-driver-form>
+            <app-ambulance-form *ngIf="activeForm === 'ambulance'"></app-ambulance-form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

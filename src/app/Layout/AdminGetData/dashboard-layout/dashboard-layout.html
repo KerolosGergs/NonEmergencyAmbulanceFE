@@ -1,0 +1,71 @@
+<app-nav></app-nav>
+<div class="min-vh-100 bg-light mx-2">
+  <div class="container-fluid py-4">
+    <div class="row">
+      <div class="col-12">
+        <!-- Header -->
+        <div class="text-center mb-4 animate__animated animate__fadeInDown">
+          <h1 class="display-5 fw-bold text-primary mb-2">
+            <i class="bi bi-clipboard-data me-3"></i>
+            Admin Dashboard
+          </h1>
+          <p class="lead text-muted">
+            Manage healthcare data and resources
+          </p>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="row g-3 mb-4 animate__animated animate__fadeInUp">
+          <div class="col-12 col-sm-6 col-lg-3" *ngFor="let item of navigationItems">
+            <button
+              class="btn w-100 py-3 d-flex align-items-center justify-content-center nav-button position-relative"
+              [class]="'btn-' + (isActiveDataType(item.type) ? item.color : 'outline-' + item.color)"
+              [class.active]="isActiveDataType(item.type)"
+              (click)="setActiveDataType(item.type)"
+            >
+              <i [class]="'bi ' + item.icon + ' me-3 fs-3'"></i>
+              <div class="text-start">
+                <div class="fw-bold fs-5">{{ item.label }}</div>
+                <small class="opacity-75">{{ item.description }}</small>
+              </div>
+              <span 
+                *ngIf="isActiveDataType(item.type)" 
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light text-dark"
+              >
+                <i class="bi bi-check-circle-fill"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="row">
+          <div class="col-12">
+            <div class="animate__animated animate__fadeIn">
+              <!-- Dynamic Content Header -->
+              <div class="d-flex align-items-center mb-3" *ngIf="getNavigationItemByType(activeDataType) as activeItem">
+                <div class="me-3">
+                  <div [class]="'bg-' + activeItem.color + ' text-white rounded-circle d-flex align-items-center justify-content-center'" 
+                       style="width: 60px; height: 60px;">
+                    <i [class]="'bi ' + activeItem.icon + ' fs-3'"></i>
+                  </div>
+                </div>
+                <div>
+                  <h3 class="mb-1">{{ activeItem.label }} Management</h3>
+                  <p class="text-muted mb-0">View and manage {{ activeItem.description.toLowerCase() }}</p>
+                </div>
+              </div>
+
+              <!-- Data Tables -->
+              <app-nurses-table *ngIf="activeDataType === 'nurses'"></app-nurses-table>
+              <app-drivers-table *ngIf="activeDataType === 'drivers'"></app-drivers-table>
+              <app-ambulances-table *ngIf="activeDataType === 'ambulances'"></app-ambulances-table>
+              <app-patients-table *ngIf="activeDataType === 'patients'"></app-patients-table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>

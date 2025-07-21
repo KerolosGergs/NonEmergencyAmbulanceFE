@@ -1,0 +1,96 @@
+<div class="animate__animated animate__fadeInRight">
+  <div class="d-flex align-items-center mb-4">
+    <i class="bi bi-truck-front text-primary fs-2 me-3"></i>
+    <div>
+      <h2 class="mb-1">Register Ambulance</h2>
+      <p class="text-muted mb-0">Add a new emergency vehicle to the fleet</p>
+    </div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="row g-3">
+      <!-- Plate Number -->
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-credit-card me-2"></i>Plate Number
+        </label>
+        <input formControlName="plateNumber" class="form-control" placeholder="Plate Number" />
+        @if (f['plateNumber'].touched && f['plateNumber'].invalid) {
+          <span class="text-danger small">Plate number is required.</span>
+        }
+      </div>
+
+      <!-- Current Location -->
+      <div class="col-12 col-md-6">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-geo-alt me-2"></i>Current Location
+        </label>
+        <input formControlName="currentLocation" class="form-control" placeholder="Current Location" />
+        @if (f['currentLocation'].touched && f['currentLocation'].invalid) {
+          <span class="text-danger small">Current location is required.</span>
+        }
+      </div>
+
+      <!-- Status -->
+      <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-activity me-2"></i>Status
+        </label>
+        <select formControlName="status" class="form-select">
+          <option *ngFor="let opt of statusOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Type -->
+      <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-hospital me-2"></i>Type
+        </label>
+        <select formControlName="type" class="form-select">
+          <option *ngFor="let opt of typeOptions" [value]="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Driver ID -->
+      <div class="col-12 col-md-4">
+        <label class="form-label fw-semibold">
+          <i class="bi bi-person-badge me-2"></i>Driver
+        </label>
+        <select formControlName="driverId" class="form-select">
+          <option value="" disabled>Select a driver</option>
+          <option *ngFor="let d of drivers" [value]="d.id">
+            {{ d.userFullName }} (ID: {{ d.id }})
+          </option>
+        </select>
+        @if (f['driverId'].touched && f['driverId'].invalid) {
+          <span class="text-danger small">Driver is required.</span>
+        }
+      </div>
+
+      <!-- Note -->
+      <div class="col-12 mt-4">
+        <div class="alert alert-info d-flex align-items-center">
+          <i class="bi bi-info-circle me-2"></i>
+          <div>
+            Ensure the driver selected is registered.
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit -->
+      <div class="col-12 mt-4">
+        <button class="btn btn-primary btn-lg w-100" [disabled]="isSubmitting">
+          @if (isSubmitting) {
+            <span class="spinner-border spinner-border-sm me-2" role="status"></span> Registering...
+          } @else {
+            <i class="bi bi-plus-circle me-2"></i>Register Ambulance
+          }
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

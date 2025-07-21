@@ -1,47 +1,30 @@
-<div class="booking-table-container">
+<div class="booking-table-container container">
   <!-- Filter Section -->
   <div class="filter-section animate-on-load">
     <div class="row">
       <div class="col-md-3 mb-3">
         <label for="statusFilter" class="form-label">Filter by Status</label>
-        <select 
-          id="statusFilter" 
-          class="form-select" 
-          [(ngModel)]="selectedStatus" 
-          (change)="onStatusChange()">
+        <select id="statusFilter" class="form-select" [(ngModel)]="selectedStatus" (change)="onStatusChange()">
           <option *ngFor="let option of statusOptions" [value]="option.value">
             {{ option.label }}
           </option>
         </select>
       </div>
-      
+
       <div class="col-md-3 mb-3">
         <label for="dateFilter" class="form-label">Filter by Date</label>
-        <input 
-          type="text" 
-          id="dateFilter" 
-          class="form-control" 
-          placeholder="Select date range"
-          [(ngModel)]="selectedDateRange"
-          (input)="onDateRangeChange()">
+        <input type="text" id="dateFilter" class="form-control" placeholder="Select date range"
+          [(ngModel)]="selectedDateRange" (input)="onDateRangeChange()">
       </div>
-      
+
       <div class="col-md-4 mb-3">
         <label for="searchInput" class="form-label">Search</label>
-        <input 
-          type="text" 
-          id="searchInput" 
-          class="form-control" 
-          placeholder="Search by patient name, ID..."
-          [(ngModel)]="searchTerm"
-          (input)="onSearchChange()">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search by patient name, ID..."
+          [(ngModel)]="searchTerm" (input)="onSearchChange()">
       </div>
-      
+
       <div class="col-md-2 d-flex align-items-end mb-3">
-        <button 
-          type="button" 
-          class="btn btn-primary w-100"
-          (click)="applyFilters()">
+        <button type="button" class="btn btn-primary w-100" (click)="applyFilters()">
           Apply Filters
         </button>
       </div>
@@ -65,41 +48,29 @@
         </tr>
       </thead>
       <tbody>
-        <tr 
-          *ngFor="let booking of paginatedBookings" 
-          class="animate__animated animate__fadeIn">
-          <td>{{ booking.id }}</td>
+       
+        <tr *ngFor="let booking of paginatedBookings" class="animate__animated animate__fadeIn">
+          <td>{{ booking.requestId }}</td>
           <td>{{ booking.patientName }}</td>
-          <td>{{ booking.dateTime }}</td>
-          <td>{{ booking.pickupLocation }}</td>
-          <td>{{ booking.destination }}</td>
+          <td>{{ booking.requestDate | date: 'dd/MM/yyyy, hh:mm a' }}</td>
+          <td>{{ booking.pickupAddress }}</td>
+          <td>{{ booking.dropOffAddress }}</td>
           <td>
             <span [class]="getStatusBadgeClass(booking.status)">
-              {{ booking.status }}
+              {{ getStatusText(booking.status) }}
             </span>
           </td>
-          <td>{{ booking.assignedNurse }}</td>
-          <td>{{ booking.assignedDriver }}</td>
+          <td>{{ booking.nurseName }}</td>
+          <td>{{ booking.driverName }}</td>
           <td>
             <div class="btn-group" role="group">
-              <button 
-                type="button" 
-                class="btn btn-sm btn-outline-info"
-                (click)="viewBooking(booking)"
-                title="View">
+              <button type="button" class="btn btn-sm btn-outline-info" (click)="viewBooking(booking)" title="View">
                 <i class="bi bi-eye"></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-sm btn-outline-warning"
-                (click)="editBooking(booking)"
-                title="Edit">
+              <button type="button" class="btn btn-sm btn-outline-warning" (click)="editBooking(booking)" title="Edit">
                 <i class="bi bi-pencil"></i>
               </button>
-              <button 
-                type="button" 
-                class="btn btn-sm btn-outline-danger"
-                (click)="deleteBooking(booking)"
+              <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteBooking(booking)"
                 title="Delete">
                 <i class="bi bi-trash"></i>
               </button>
@@ -114,8 +85,8 @@
   <div class="row mt-4">
     <div class="col-md-6">
       <p class="text-muted">
-        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to 
-        {{ Math.min(currentPage * itemsPerPage, totalItems) }} of 
+        Showing {{ (currentPage - 1) * itemsPerPage + 1 }} to
+        {{ Math.min(currentPage * itemsPerPage, totalItems) }} of
         {{ totalItems }} bookings
       </p>
     </div>
@@ -126,20 +97,22 @@
             <button class="page-link" (click)="currentPage = 1" [disabled]="currentPage === 1">First</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === 1">
-            <button class="page-link" (click)="currentPage = currentPage - 1" [disabled]="currentPage === 1">Previous</button>
+            <button class="page-link" (click)="currentPage = currentPage - 1"
+              [disabled]="currentPage === 1">Previous</button>
           </li>
           <li class="page-item active">
             <span class="page-link">{{ currentPage }} of {{ totalPages }}</span>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="currentPage = currentPage + 1" [disabled]="currentPage === totalPages">Next</button>
+            <button class="page-link" (click)="currentPage = currentPage + 1"
+              [disabled]="currentPage === totalPages">Next</button>
           </li>
           <li class="page-item" [class.disabled]="currentPage === totalPages">
-            <button class="page-link" (click)="currentPage = totalPages" [disabled]="currentPage === totalPages">Last</button>
+            <button class="page-link" (click)="currentPage = totalPages"
+              [disabled]="currentPage === totalPages">Last</button>
           </li>
         </ul>
       </nav>
     </div>
   </div>
 </div>
-

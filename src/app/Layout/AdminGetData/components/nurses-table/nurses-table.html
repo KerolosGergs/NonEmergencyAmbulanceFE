@@ -1,0 +1,148 @@
+<div class="animate__animated animate__fadeIn">
+  <!-- Filter Section -->
+  <div class="filter-section">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label for="searchTerm" class="form-label">
+          <i class="bi bi-search me-2"></i>Search
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="searchTerm"
+          [(ngModel)]="filter.searchTerm"
+          (input)="onFilterChange()"
+          placeholder="Search by name, certification, or phone..."
+        />
+      </div>
+      <div class="col-md-3">
+        <label for="availabilityFilter" class="form-label">
+          <i class="bi bi-funnel me-2"></i>Availability
+        </label>
+        <select
+          class="form-select"
+          id="availabilityFilter"
+          [(ngModel)]="filter.availabilityFilter"
+          (change)="onFilterChange()"
+        >
+          <option value="all">All</option>
+          <option value="available">Available</option>
+          <option value="unavailable">Unavailable</option>
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button class="btn btn-outline-secondary w-100" (click)="loadNurses()">
+          <i class="bi bi-arrow-clockwise me-2"></i>Refresh
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div class="data-table-container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0">
+        <i class="bi bi-person-heart text-primary me-2"></i>
+        Nurses ({{ pagination.totalItems }})
+      </h5>
+    </div>
+
+    <div *ngIf="loading" class="text-center py-4">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
+    <div *ngIf="!loading" class="table-responsive">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Phone Number</th>
+            <th>Certification</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let nurse of getPaginatedNurses()" class="animate__animated animate__fadeInUp">
+            <td>{{ nurse.id }}</td>
+            <td>
+              <strong>{{ nurse.fullName }}</strong>
+            </td>
+            <td>
+              <i class="bi bi-telephone me-2"></i>{{ nurse.phoneNumber }}
+            </td>
+            <td>
+              <i class="bi bi-award me-2"></i>{{ nurse.certification }}
+            </td>
+            <td>
+              <span [class]="getStatusBadgeClass(nurse.isAvailable)">
+                <i class="bi" [class.bi-check-circle]="nurse.isAvailable" [class.bi-x-circle]="!nurse.isAvailable" me-1></i>
+                {{ nurse.isAvailable ? 'Available' : 'Unavailable' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button
+                  class="btn btn-sm"
+                  [class.btn-success]="!nurse.isAvailable"
+                  [class.btn-warning]="nurse.isAvailable"
+                  (click)="toggleAvailability(nurse)"
+                  [title]="nurse.isAvailable ? 'Mark as Unavailable' : 'Mark as Available'"
+                >
+                  <i class="bi" [class.bi-check-circle]="!nurse.isAvailable" [class.bi-pause-circle]="nurse.isAvailable"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-primary"
+                  (click)="editNurse(nurse)"
+                  title="Edit"
+                >
+                  <i class="bi bi-pencil"></i>
+                </button>
+                <button
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteNurse(nurse)"
+                  title="Delete"
+                >
+                  <i class="bi bi-trash"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="getPaginatedNurses().length === 0">
+            <td colspan="6" class="text-center py-4 text-muted">
+              <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+              No nurses found
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav *ngIf="pagination.totalPages > 1" aria-label="Nurses pagination">
+      <ul class="pagination">
+        <li class="page-item" [class.disabled]="pagination.currentPage === 1">
+          <button class="page-link" (click)="onPageChange(pagination.currentPage - 1)">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+        </li>
+        <li 
+          *ngFor="let page of getPageNumbers()" 
+          class="page-item" 
+          [class.active]="page === pagination.currentPage"
+        >
+          <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
+        </li>
+        <li class="page-item" [class.disabled]="pagination.currentPage === pagination.totalPages">
+          <button class="page-link" (click)="onPageChange(pagination.currentPage + 1)">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</div>
+

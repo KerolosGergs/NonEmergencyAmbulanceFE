@@ -1,0 +1,21 @@
+<app-nav></app-nav>
+
+<app-driver-header></app-driver-header>
+
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-lg-8">
+      <app-pending-requests></app-pending-requests>
+    </div>
+    <div class="col-lg-4">
+      <app-trip-details [trip]="currentTrip"></app-trip-details>
+    </div>
+  </div>
+  <div class="row my-4 ">
+    <div class="col-lg-8">
+      <app-schedule [items]="todaySchedule"></app-schedule>
+    </div>
+  </div>
+</div>
+
+<app-footer></app-footer>

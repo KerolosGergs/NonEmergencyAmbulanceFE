@@ -1,0 +1,12 @@
+.card {
+  border: none;
+}
+.table th,
+.table td {
+  vertical-align: middle;
+}
+@media (max-width: 768px) {
+  .card-body {
+    padding: 1rem;
+  }
+}

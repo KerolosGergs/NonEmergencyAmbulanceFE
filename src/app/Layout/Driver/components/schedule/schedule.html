@@ -1,0 +1,35 @@
+<div class="card p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h6 class="mb-0">Today's Schedule</h6>
+    <strong>{{ scheduleDate | date: 'MMMM d, y' }}</strong>
+  </div>
+
+  <div *ngFor="let item of items" class="d-flex justify-content-between align-items-start mb-3">
+    <div class="d-flex align-items-start">
+      <div class="border-start border-4 border-{{ getStatusColor(item.tripStatus) }} me-3" style="height: 100%;"></div>
+      <div>
+        <strong>{{ item.tripId }}</strong><br />
+        <small class="text-muted">From: {{ item.pickupAddress }}</small><br />
+        <small class="text-muted">To: {{ item.dropOffAddress }}</small>
+      </div>
+    </div>
+    <div class="text-end">
+      <div><strong>{{ item.startTime| date: 'h:mm a' }} -{{ item.endTime| date: 'h:mm a' }} </strong></div>
+      <div class="text-{{ getStatusColor(item.tripStatus) }}">
+        {{ TripsStatus[item.tripStatus] }}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+    public enum TripStatus
+     {
+        Pending = 0,  // blue color
+         Assigned = 1,  // blue color
+        Ongoing = 2, // yellow color
+         Completed = 3, // green color
+         Cancelled = 4, // red color
+         Failed = 5     // red color
+     } -->

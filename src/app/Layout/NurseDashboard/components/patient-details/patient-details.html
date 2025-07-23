@@ -1,0 +1,37 @@
+<div class="p-3 border-start bg-white" *ngIf="patient">
+  <h6 class="fw-bold">Patient Details</h6>
+
+  <!-- Centered Image and Basic Info -->
+  <div class="text-center my-3">
+    <img [src]="patient.patientImageUrl" class="rounded-circle mb-2" width="100" height="100" />
+    <h5 class="mb-0">{{ patient.patientName }}</h5>
+    <div class="text-muted">ID: {{ patient.patientId }} </div>
+    <div class="text-muted">Phone: {{ patient.patientPhone }} </div>
+  </div>
+
+
+
+  <!-- Transport Details -->
+  <h6 class="fw-bold border-top pt-2">Transport Details</h6>
+  <div class="row text-start mb-3">
+    <div class="col-6 fw-semibold text-muted">From:</div>
+    <div class="col-6">{{ patient.patientAddress }}</div>
+
+    <div class="col-6 fw-semibold text-muted">To:</div>
+    <div class="col-6">{{ patient.dropOffAddress }}</div>
+
+    <div class="col-6 fw-semibold text-muted">Date:</div>
+    <div class="col-6">{{ patient.scheduledDate | date: 'MMM d, y' }}</div>
+
+    <div class="col-6 fw-semibold text-muted">Time:</div>
+    <div class="col-6">{{ patient.scheduledDate | date: 'h:mm a' }}</div>
+
+
+  </div>
+
+  <!-- Notes -->
+  <h6 class="fw-bold border-top pt-2">Patient's Notes</h6>
+  <p class="text-muted">{{ patient.notes }}</p>
+
+
+</div>

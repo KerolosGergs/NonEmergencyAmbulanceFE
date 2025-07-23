@@ -1,0 +1,23 @@
+<app-nav></app-nav>
+<app-n-header></app-n-header>
+<div class="container-fluid px-3 py-2">
+  <div class="row g-3">
+    <!-- Requests Table (Full width on small screens, 8-cols on md+) -->
+    <div class="col-12 col-md-8">
+      <app-pending-approval-requests
+        [requests]="requestsData"
+        (selected)="selectedRequest = $event">
+
+      </app-pending-approval-requests>
+    </div>
+
+    <!-- Patient Details (Full width on small screens, 4-cols on md+) -->
+<div class="col-12 col-md-4">
+  <app-patient-details [patient]="selectedRequest"></app-patient-details>
+  <app-your-schedule></app-your-schedule>
+</div>
+  </div>
+</div>
+
+<app-footer></app-footer>
+

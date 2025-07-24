@@ -1,5 +1,4 @@
 import { Component, inject, Input } from '@angular/core';
-import { Request } from '../../../../Core/interface/request';
 import { CommonModule } from '@angular/common';
 import { IRequestData } from '../../../../Core/interface/irequest';
 import { NurseService } from '../../../../Core/Services/NurseServise/nurse-service';
@@ -12,5 +11,5 @@ import { NurseService } from '../../../../Core/Services/NurseServise/nurse-servi
 })
 export class PatientDetails {
     @Input() patient?: IRequestData;
-    
+
 }

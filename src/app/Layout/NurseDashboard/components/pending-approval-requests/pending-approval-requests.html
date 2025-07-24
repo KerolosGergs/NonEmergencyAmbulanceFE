@@ -1,90 +1,85 @@
-<div class="p-3">
-  <h5>Pending Approval Requests</h5>
+<div class="p-3 bg-white rounded-3 shadow-sm">
+  <h5 class="fw-bold mb-3">Pending Approval Requests</h5>
 
-<!-- Filter by Emergency Type -->
-<div class="input-group mb-3">
-  <input
-    type="text"
-    class="form-control"
-    [(ngModel)]="searchTerm"
-    placeholder="Search by name or ID..."
-  />
-  <select
-    class="form-select ms-2"
-    [(ngModel)]="selectedEmergencyType"
-    style="max-width: 200px;"
-  >
-    <option value="">All Requests</option>
-    <option value="Urgent">Urgent</option>
-    <option value="Standard">Standard</option>
-    <option value="Special Care">Special Care</option>
-  </select>
-  <span class="input-group-text">
-    <i class="bi bi-search"></i>
-  </span>
-</div>
+  <!-- Filters -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-8 col-lg-9">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchTerm"
+        placeholder="Search requests..."
+      />
+    </div>
+    <div class="col-md-4 col-lg-3">
+      <select class="form-select" [(ngModel)]="selectedEmergencyType">
+        <option value="">All Requests</option>
+        <option value="Urgent">Urgent</option>
+        <option value="Standard">Standard</option>
+        <option value="Special Care">Special Care</option>
+      </select>
+    </div>
+  </div>
 
-
-  <!-- Table -->
+  <!-- Requests Table -->
   <div class="table-responsive">
     <table class="table table-hover align-middle">
-      <thead>
+      <thead class="table-light">
         <tr>
-          <th>Patient</th>
-          <th>From</th>
-          <th>To</th>
-          <th>Date & Time</th>
-          <th>Priority</th>
-          <th>Actions</th>
+          <th scope="col">Patient</th>
+          <th scope="col">From</th>
+          <th scope="col">To</th>
+          <th scope="col">Date & Time</th>
+          <th scope="col">Priority</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let r of paginatedRequests">
+        <tr *ngFor="let r of paginatedRequests" (click)="selectRequest(r)" style="cursor: pointer;">
           <td>
-            <img
-              [src]="r.patientImageUrl"
-              class="rounded-circle me-2"
-              width="35"
-              height="35"
-            />
-            <div>
-              {{ r.patientName }}
-              <div class="text-muted small">ID: {{ r.patientId }}</div>
+            <div class="d-flex align-items-center">
+              <img
+                [src]="r.patientImageUrl"
+                class="rounded-circle me-3"
+                width="40"
+                height="40"
+                alt="Patient Image"
+              />
+              <div>
+                <div class="fw-bold">{{ r.patientName }}</div>
+                <div class="text-muted small">ID: {{ r.patientId }}</div>
+              </div>
             </div>
           </td>
           <td>{{ r.pickupAddress }}</td>
           <td>{{ r.dropOffAddress }}</td>
           <td>
-            <div>{{ r.scheduledDate | date : "MMMM d, h.mm a" }}</div>
+            <div>{{ r.scheduledDate | date: 'MMM d, y' }}</div>
+            <div class="text-muted small">{{ r.scheduledDate | date: 'h:mm a' }}</div>
           </td>
           <td>
-            <span
-              class="fw-bold"
-              [ngStyle]="getEmergencyStyle(r.emergencyType)"
-            >
+            <span class="fw-bold" [ngStyle]="getEmergencyStyle(r.emergencyType)">
               {{ r.emergencyType }}
             </span>
           </td>
           <td>
-            <button
-              class="btn btn-sm me-1 "
-              [ngClass]="{
-                'btn-outline-primary': selectedRequestId === r.requestId,
-                'btn-primary': selectedRequestId !== r.requestId
-              }"
-              (click)="selectRequest(r)"
-            >
-              View Details
-            </button>
-            <button
-              class="btn btn-sm btn-success me-1"
-              (click)="approveRequest(r)"
-            >
-              Approve
-            </button>
-            <button class="btn btn-sm btn-danger" (click)="declineRequest(r)">
-              Decline
-            </button>
+            <!-- On larger screens, show buttons inline -->
+            <div class="d-none d-md-flex gap-2">
+              <button class="btn btn-primary btn-sm" (click)="selectRequest(r)">View Details</button>
+              <button class="btn btn-success btn-sm" (click)="approveRequest(r)">Approve</button>
+              <button class="btn btn-danger btn-sm" (click)="declineRequest(r)">Decline</button>
+            </div>
+            <!-- On smaller screens, show a dropdown -->
+            <div class="d-md-none dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item"  (click)="selectRequest(r)">View Details</a></li>
+                <li><a class="dropdown-item"  (click)="approveRequest(r)">Approve</a></li>
+                <li><a class="dropdown-item"  (click)="declineRequest(r)">Decline</a></li>
+              </ul>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -92,29 +87,16 @@
   </div>
 
   <!-- Pagination -->
-  <nav
-    *ngIf="totalPages > 1"
-    class="d-flex justify-content-between align-items-center"
-  >
-    <span
-      >Showing {{ paginatedRequests.length }} of
-      {{ filteredRequests.length }} requests</span
-    >
-
+  <nav *ngIf="totalPages > 1" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3">
+    <div class="text-muted mb-2 mb-md-0">
+      Showing {{ paginatedRequests.length }} of {{ filteredRequests.length }} requests
+    </div>
     <div class="btn-group">
-      <button
-        class="btn btn-outline-secondary btn-sm"
-        [disabled]="currentPage === 1"
-        (click)="changePage(-1)"
-      >
-        <i class="bi bi-chevron-left"></i> Prev
+      <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="changePage(-1)">
+        Previous
       </button>
-      <button
-        class="btn btn-outline-secondary btn-sm"
-        [disabled]="currentPage === totalPages"
-        (click)="changePage(1)"
-      >
-        Next <i class="bi bi-chevron-right"></i>
+      <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+        Next
       </button>
     </div>
   </nav>

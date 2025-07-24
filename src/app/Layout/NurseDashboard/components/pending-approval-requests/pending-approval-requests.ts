@@ -98,4 +98,6 @@ export class PendingApprovalRequests implements OnInit {
       this.selectRequest(this.paginatedRequests[0]);
     }
   }
+
+
 }

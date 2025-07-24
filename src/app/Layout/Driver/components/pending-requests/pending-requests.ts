@@ -80,7 +80,7 @@ export class PendingRequests implements OnInit {
 
   //call a service to update the request status on the server
 
-  this.assignDriverToRequest(requestId, 4); // Assuming driverId is 4 for this example
+  this.assignDriverToRequest(requestId, 1004); // Assuming driverId is 4 for this example
 
 }
 

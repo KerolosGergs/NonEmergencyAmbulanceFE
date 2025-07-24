@@ -85,7 +85,7 @@ export class PendingApprovalRequests implements OnInit {
   /** Approve a request */
   approveRequest(request: IRequestData): void {
     this.requests = this.requests.filter(r => r.requestId !== request.requestId);
-    this._nurseService.assignNurseToRequest(request.requestId, 4).subscribe({
+    this._nurseService.assignNurseToRequest(request.requestId, 1007).subscribe({
       next: res => console.log('Request approved successfully:', res),
       error: err => console.error('Error approving request:', err),
     });

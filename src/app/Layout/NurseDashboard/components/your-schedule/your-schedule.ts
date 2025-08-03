@@ -1,8 +1,9 @@
+import { TripService } from './../../../../Core/Services/TripService/trip';
+import { response } from 'express';
 import { NurseService } from './../../../../Core/Services/NurseServise/nurse-service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ITripData } from './../../../../Core/interface/itrip-data';
-import { Trip } from '../../../../Core/Services/TripService/trip';
+import { ITrip } from '../../../../Core/interface/Trip/itrip';
 
 @Component({
   selector: 'app-your-schedule',
@@ -14,9 +15,10 @@ import { Trip } from '../../../../Core/Services/TripService/trip';
 export class YourSchedule implements OnInit {
   // Dependencies
   private readonly nurseService = inject(NurseService);
+  private readonly TripService = inject(TripService);
 
   // Data
-  schedule: ITripData[] = [];
+  schedule: ITrip[] = [];
   scheduleDate: Date = new Date();
 
   /** Lifecycle hook */
@@ -27,9 +29,12 @@ export class YourSchedule implements OnInit {
 
   /** Fetch trip data from service */
   private getTrips(nurseId:number): void {
-    this.nurseService.getTripsById(nurseId).subscribe({
-      next: (trips) => {
-        this.schedule = trips;
+    this.TripService.getTripsForNurse(nurseId).subscribe({
+      next: (response) => {
+        if(!response.success){
+          
+          this.schedule = response.data;
+        }
       },
       error: (error) => {
         console.error('Error fetching trips:', error);

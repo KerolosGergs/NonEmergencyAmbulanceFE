@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ILogin, ILoginResponse } from '../../../../Core/interface/login';
+import {  LoginResponse } from '../../../../Core/interface/login';
 
 @Component({
   selector: 'app-login-layout',
@@ -32,16 +32,14 @@ export class LoginLayout {
 
       this.Login.login(this.loginForm.value).subscribe({
 
-        next: (res: ILoginResponse) => {
-          if (res.success) {
-            this.AuthService.setSession(res.data.token, res.data, res.data.role);
+        next: (res: LoginResponse) => {
+      
+            this.AuthService.setSession(res.token, res.email, res.role);
 
             this.router.navigate(['/home']);
 
             this.toastr.success('تم تسجيل الدخول بنجاح');
-          } else {
-            this.toastr.error('البريد الالكتروني او كلمة المرور غير صحيح');
-          }
+         
 
           this.isLoading = false;
         },

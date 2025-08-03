@@ -15,17 +15,20 @@ export class NHeader implements OnInit {
   });
   newRequests!: number;
 
-  _nurseService = inject(NurseService);
+  // _nurseService = inject(NurseService);
+  _requestService = inject(RequestService);
 
   ngOnInit(): void {
     this.getRequestCount();
   }
 
   getRequestCount() {
-    this._nurseService.GetUnassignedRequestsForNurse().subscribe({
+    this._requestService.getAvailableRequestsForNurses().subscribe({
       next: (data) => {
-        this.newRequests = data.length;
-      },
+        if(data.success){
+          this.newRequests = data.data.length;
+        }
+        console.log('Fetched requests:', data);},
       error: (err) => {
         console.error('Error fetching request count:', err);
       }

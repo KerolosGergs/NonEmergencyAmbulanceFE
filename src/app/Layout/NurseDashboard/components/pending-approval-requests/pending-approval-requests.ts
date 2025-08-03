@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 
 import { NurseService } from '../../../../Core/Services/NurseServise/nurse-service';
 import { IRequestData } from '../../../../Core/interface/irequest';
+import { IAssignNurse, IRequest } from '../../../../Core/interface/Request/irequest';
+import { RequestService } from '../../../../Core/Services/RequestService/request-service';
+import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
 
 @Component({
   selector: 'app-pending-approval-requests',
@@ -14,10 +17,11 @@ import { IRequestData } from '../../../../Core/interface/irequest';
 export class PendingApprovalRequests implements OnInit {
   // Services
   private readonly _nurseService = inject(NurseService);
-
+  private readonly _RequestService = inject(RequestService);
+  private readonly _AuthService = inject(AuthService);
   // Inputs & Outputs
-  @Input() requests: IRequestData[] = [];
-  @Output() selected = new EventEmitter<IRequestData>();
+  @Input() requests: IRequest[] = [];
+  @Output() selected = new EventEmitter<IRequest>();
 
   // State
   searchTerm: string = '';
@@ -36,16 +40,16 @@ export class PendingApprovalRequests implements OnInit {
   }
 
   /** Filtered requests based on search and emergency type */
-  get filteredRequests(): IRequestData[] {
+  get filteredRequests(): IRequest[] {
     return (this.requests ?? []).filter(req =>
-      (req.patientName.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+      (req.patientName?.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
         req.patientId.toString().includes(this.searchTerm)) &&
       (this.selectedEmergencyType === '' || req.emergencyType === this.selectedEmergencyType)
     );
   }
 
   /** Paginated requests based on current page */
-  get paginatedRequests(): IRequestData[] {
+  get paginatedRequests(): IRequest[] {
     const start = (this.currentPage - 1) * this.pageSize;
     return this.filteredRequests.slice(start, start + this.pageSize);
   }
@@ -56,7 +60,7 @@ export class PendingApprovalRequests implements OnInit {
   }
 
   /** Selects a request */
-  selectRequest(request: IRequestData): void {
+  selectRequest(request: IRequest): void {
     this.selectedRequestId = request.requestId;
     this.selected.emit(request);
   }
@@ -83,16 +87,22 @@ export class PendingApprovalRequests implements OnInit {
   }
 
   /** Approve a request */
-  approveRequest(request: IRequestData): void {
+  approveRequest(request: IRequest): void {
+   
     this.requests = this.requests.filter(r => r.requestId !== request.requestId);
-    this._nurseService.assignNurseToRequest(request.requestId, 1007).subscribe({
+
+     const dto:IAssignNurse  ={
+      RequestId: request.requestId,
+      NurseId: this._AuthService.getId()
+    };
+    this._RequestService.assignNurse(dto).subscribe({
       next: res => console.log('Request approved successfully:', res),
       error: err => console.error('Error approving request:', err),
     });
   }
 
   /** Decline a request */
-  declineRequest(request: IRequestData): void {
+  declineRequest(request: IRequest): void {
     this.requests = this.requests.filter(r => r.requestId !== request.requestId);
     if (this.paginatedRequests.length > 0) {
       this.selectRequest(this.paginatedRequests[0]);

@@ -1,8 +1,9 @@
-import { Driver } from './../../../../Core/Services/Driver/driver';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { IRequestData } from '../../../../Core/interface/irequest';
-import { RequestStatus } from '../../../../Core/interface/Driver/request-status.enum';
+import { DriverService } from '../../../../Core/Services/Driver/driver';
+import { IRequest, RequestStatus } from '../../../../Core/interface/Request/irequest';
+import { RequestService } from '../../../../Core/Services/RequestService/request-service';
 
 @Component({
   selector: 'app-pending-requests',
@@ -11,13 +12,14 @@ import { RequestStatus } from '../../../../Core/interface/Driver/request-status.
   styleUrl: './pending-requests.scss'
 })
 export class PendingRequests implements OnInit {
-  requests: IRequestData[] = [];
-  pagedRequests: IRequestData[] = [];
+  requests: IRequest[] = [];
+  pagedRequests: IRequest[] = [];
   currentPage = 1;
   itemsPerPage = 4;
   totalPages = 1;
 
-  _driverService= inject(Driver);
+  _driverService= inject(DriverService);
+  _requestService = inject(RequestService);
   RequestStatus = RequestStatus; // bind to template
 
 
@@ -26,9 +28,9 @@ export class PendingRequests implements OnInit {
   }
 
   unassignedRequests() {
-    this._driverService.GetUnassignedRequestsForDriver().subscribe({
+    this._requestService.getAvailableRequestsForDrivers().subscribe({
       next: (data) => {
-        this.requests = data;
+        this.requests = data.data;
         this.calculatePagination();
       },
       error: (error) => {
@@ -37,12 +39,20 @@ export class PendingRequests implements OnInit {
     });
   }
 
-  assignDriverToRequest(requestId: number, driverId: number ) {
-    this._driverService.assignNurseToRequest(requestId, driverId).subscribe({
+  assignDriverToRequest(requestId: number, DriverId: number ) {
+
+    this._requestService.assignDriver(  {DriverId, requestId} ).subscribe({
       next: (response) => {
-        console.log('Driver assigned successfully:', response);
+        if(response.success){
+          this.requests = this.requests.filter(r => r.requestId !== requestId);
+          this.calculatePagination();
+        }
+        else {
+          console.error('Error assigning driver:', response.message);
+        }
       },
       error: (error) => {
+        
         console.error('Error assigning driver:', error);
       }});
   }

@@ -1,14 +1,11 @@
-export interface ILogin {
-    email: string;
-    password: string;
-}
-export interface ILoginResponse {
-  success: boolean
-  message: string
-  data: Data
-}
 
-export interface Data {
+// export interface ILoginResponse {
+//   success: boolean
+//   message: string
+//   data: Data
+// }
+
+export interface LoginResponse {
   fullName: string
   email: string
   token: string

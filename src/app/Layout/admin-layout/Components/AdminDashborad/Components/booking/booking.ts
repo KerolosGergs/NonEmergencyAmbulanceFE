@@ -3,6 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IBooking } from '../../../../../../Core/interface/request-data';
+import { AdminRequest } from '../../../../../../Core/interface/Admin/iadmin';
 
 
 
@@ -17,8 +18,8 @@ import { IBooking } from '../../../../../../Core/interface/request-data';
 export class Booking implements OnInit{
   Math = Math; // Make Math available in template
     adminService = inject(AdminService);
-    bookings: IBooking[] = [];
-filteredBookings: IBooking[] = [];
+    bookings: AdminRequest[] = [];
+  filteredBookings: AdminRequest[] = [];
 
 
   selectedStatus: string = '';
@@ -48,10 +49,14 @@ filteredBookings: IBooking[] = [];
 
   getallBookings() 
   {
-    this.adminService.getAllBookings().subscribe((data: IBooking[]) => {
-      this.bookings = data;
-      this.totalItems = this.bookings.length;
-      this.applyFilters();
+    this.adminService.getAdminRequests().subscribe(res=> {
+      if(res.success)
+      {
+        this.bookings = res.data;
+        this.totalItems = this.bookings.length;
+        this.applyFilters();
+
+      }
     });
    }
   ngOnInit(): void {

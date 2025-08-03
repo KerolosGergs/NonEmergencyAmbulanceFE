@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { DriverService } from './../../../../../../Core/Services/Driver/driver';
+import { AdminService } from './../../../../../../Core/Services/AdminServices/admin-service';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Driver, FilterOptions, PaginationInfo, getStatusBadgeClass } from '../../models/interfaces';
-import { DataService } from '../../services/data.service';
+import { IDriver } from '../../../../../../Core/interface/Driver/IDriver';
+import { response } from 'express';
 
 @Component({
   selector: 'app-drivers-table',
@@ -12,9 +16,10 @@ import { DataService } from '../../services/data.service';
   styleUrl: './drivers-table.css'
 })
 export class DriversTableComponent implements OnInit {
-  drivers: Driver[] = [];
-  filteredDrivers: Driver[] = [];
+  drivers: IDriver[] = [];
+  filteredDrivers: IDriver[] = [];
   loading = false;
+  toastr = inject(ToastrService)
   
   filter: FilterOptions = {
     searchTerm: '',
@@ -29,7 +34,7 @@ export class DriversTableComponent implements OnInit {
     totalPages: 0
   };
 
-  constructor(private dataService: DataService) {}
+  constructor(private AdminService: AdminService,private driverService: DriverService) {}
 
   ngOnInit(): void {
     this.loadDrivers();
@@ -37,10 +42,13 @@ export class DriversTableComponent implements OnInit {
 
   loadDrivers(): void {
     this.loading = true;
-    this.dataService.getDrivers().subscribe({
+    this.AdminService.getAdminDrivers().subscribe({
       next: (data) => {
-        this.drivers = data;
-        this.applyFilters();
+        if(data.success){
+          this.drivers = data.data;
+          this.applyFilters();
+
+        }
         this.loading = false;
       },
       error: (error) => {
@@ -100,10 +108,16 @@ export class DriversTableComponent implements OnInit {
   }
 
   toggleAvailability(driver: Driver): void {
-    this.dataService.updateDriverAvailability(driver.id, !driver.isAvailable).subscribe({
-      next: (success) => {
+    this.driverService.toggleAvailability(driver.id, !driver.isAvailable).subscribe({
+      next: (response) => {
+        if(response.success)
+        {
           driver.isAvailable = !driver.isAvailable;
-        
+          this.toastr.success(response.message, 'Success');
+        }
+        else {
+          this.toastr.error(response.message);
+        }
       },
       error: (error) => {
         console.error('Error updating driver availability:', error);
@@ -113,14 +127,19 @@ export class DriversTableComponent implements OnInit {
 
   deleteDriver(driver: Driver): void {
     if (confirm(`Are you sure you want to delete ${driver.userFullName}?`)) {
-      this.dataService.deleteDriver(driver.id).subscribe({
-        next: (success) => {
-          if (success) {
+      this.driverService.deleteDriver(driver.id).subscribe({
+        next: (response) => {
+          if (response.success) {
             this.loadDrivers();
+            this.toastr.success(response.message, 'Success');
+          }
+          else{
+            this.toastr.error(response.message);
           }
         },
         error: (error) => {
-          console.error('Error deleting driver:', error);
+          this.toastr.error('Error deleting driver');
+          // console.error('Error deleting driver:', error);
         }
       });
     }

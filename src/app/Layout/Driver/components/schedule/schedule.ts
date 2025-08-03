@@ -1,7 +1,7 @@
-import { TripsStatus } from './../../../../Core/interface/Driver/TripsStatus.enum';
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ITripData } from '../../../../Core/interface/itrip-data';
+import { TripStatus } from '../../../../Core/interface/Trip/itrip';
 
 @Component({
   selector: 'app-schedule',
@@ -13,7 +13,7 @@ export class Schedule {
 
   scheduleDate = new Date();
   @Input() items: ITripData[] = [];
-  TripsStatus = TripsStatus; // bind to template
+  TripsStatus = TripStatus; // bind to template
 
 
   getStatusColor(status: number): string {

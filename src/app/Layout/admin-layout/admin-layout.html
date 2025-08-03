@@ -1,15 +1,32 @@
-<app-nav></app-nav>
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div class="sidebar  text-white min-vh-100 p-3 animate__animated animate__fadeInLeft">
+      <div class="sidebar-header mb-4">
+        <h3 class="text-center"><i class="bi bi-grid-fill me-2"></i>Dashboard</h3>
+      </div>
+      <nav class="nav flex-column">
+        <a class="nav-link text-white mb-3" [routerLink]="['dashboard']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+          <i class="bi bi-inbox-fill me-2"></i>Requests
+        </a>
+        <a class="nav-link text-white mb-3" [routerLink]="['forms']" routerLinkActive="active">
+          <i class="bi bi-plus-circle-fill me-2"></i>Add Data
+        </a>
+        <a class="nav-link text-white mb-3" [routerLink]="['get-data']" routerLinkActive="active">
+          <i class="bi bi-table me-2"></i>All Data
+        </a>
+      </nav>
+      <!-- Logout Button -->
+      <div class="mt-auto">
+        <a class="nav-link text-white mb-3" [routerLink]="['/login']" routerLinkActive="active">
+          <i class="bi bi-box-arrow-right me-2"></i>Logout
+        </a>
+      </div>
+    </div>
 
-<!-- Navigation Buttons -->
-<div class="navigation-buttons text-center my-4">
-  <button class="btn btn-primary mx-2" routerLink="dashboard" routerLinkActive="active">Requests</button>
-  <button class="btn btn-success mx-2" routerLink="forms" routerLinkActive="active">Add Data</button>
-  <button class="btn btn-warning mx-2" routerLink="get-data" routerLinkActive="active">All Data</button>
-</div>
-
-
-<router-outlet></router-outlet>
-
-
-
-<app-footer></app-footer>
+    <!-- Main Content -->
+    <div class="main-content flex-grow-1 p-4">
+      <div class="container-fluid">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+  </div>

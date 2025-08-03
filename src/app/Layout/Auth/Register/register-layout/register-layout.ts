@@ -89,12 +89,10 @@ onSubmit(): void {
       this.Login.register(request).subscribe({
         next: (res: IRegisterResponse) => {
           this.isLoading = false;
-          if (res?.success) {
+        
             this.toastr.success('تم إنشاء الحساب بنجاح');
             this.router.navigate(['/login']);
-          } else {
-            this.toastr.error(res?.message ?? 'فشل في إنشاء الحساب، حاول مرة أخرى');
-          }
+         
         },
         error: (err) => {
           this.isLoading = false;

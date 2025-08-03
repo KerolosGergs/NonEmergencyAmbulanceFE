@@ -1,9 +1,11 @@
+import { AdminService } from './../../../../../../Core/Services/AdminServices/admin-service';
+import { AdminPatient } from './../../../../../../Core/interface/Admin/iadmin';
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Patient, FilterOptions, PaginationInfo, Gender, getGenderLabel } from '../../models/interfaces';
-import { DataService } from '../../services/data.service';
+import {  FilterOptions, PaginationInfo, Gender, getGenderLabel } from '../../models/interfaces';
+import { PatientService } from '../../../../../../Core/Services/PatientServise/patient-service';
 
 @Component({
   selector: 'app-patients-table',
@@ -13,8 +15,8 @@ import { DataService } from '../../services/data.service';
   styleUrl: './patients-table.css'
 })
 export class PatientsTableComponent implements OnInit {
-  patients: Patient[] = [];
-  filteredPatients: Patient[] = [];
+  patients: AdminPatient[] = [];
+  filteredPatients: AdminPatient[] = [];
   loading = false;
   
   filter: FilterOptions = {
@@ -30,7 +32,7 @@ export class PatientsTableComponent implements OnInit {
     totalPages: 0
   };
 
-  constructor(private dataService: DataService) {}
+  constructor(private PatientService: PatientService,private AdminService: AdminService) {}
 
   ngOnInit(): void {
     this.loadPatients();
@@ -38,11 +40,15 @@ export class PatientsTableComponent implements OnInit {
 
   loadPatients(): void {
     this.loading = true;
-    this.dataService.getPatients().subscribe({
+    this.AdminService.getAdminPatients().subscribe({
       next: (data) => {
-        this.patients = data;
-        this.applyFilters();
-        this.loading = false;
+        if(data.success)
+        {
+          this.patients = data.data;
+          this.applyFilters();
+        }
+           this.loading = false;
+
       },
       error: (error) => {
         console.error('Error loading patients:', error);
@@ -78,7 +84,7 @@ export class PatientsTableComponent implements OnInit {
     }
   }
 
-  getPaginatedPatients(): Patient[] {
+  getPaginatedPatients(): AdminPatient[] {
     const startIndex = (this.pagination.currentPage - 1) * this.pagination.itemsPerPage;
     const endIndex = startIndex + this.pagination.itemsPerPage;
     return this.filteredPatients.slice(startIndex, endIndex);
@@ -95,9 +101,9 @@ export class PatientsTableComponent implements OnInit {
     this.applyFilters();
   }
 
-  deletePatient(patient: Patient): void {
+  deletePatient(patient: AdminPatient): void {
     if (confirm(`Are you sure you want to delete ${patient.fullName}?`)) {
-      this.dataService.deletePatient(patient.id).subscribe({
+      this.PatientService.deletePatient(patient.id).subscribe({
         next: (success) => {
           if (success) {
             this.loadPatients();
@@ -110,12 +116,12 @@ export class PatientsTableComponent implements OnInit {
     }
   }
 
-  editPatient(patient: Patient): void {
+  editPatient(patient: AdminPatient): void {
     // Placeholder for edit functionality
     alert(`Edit functionality for ${patient.fullName} would be implemented here`);
   }
 
-  viewPatientDetails(patient: Patient): void {
+  viewPatientDetails(patient: AdminPatient): void {
     // Placeholder for view details functionality
     alert(`View details for ${patient.fullName} would be implemented here`);
   }

@@ -4,6 +4,9 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FromResponse } from '../../../../../../Core/interface/FormsInterface';
+import { AuthService } from '../../../../../../Core/Services/AuthServices/auth-service';
+import { GenerialResponse } from '../../../../../../Core/interface/GenerialResponse/GenerialResponse';
+import { IUser } from '../../../../../../Core/interface/IAuth/iauth';
 
 @Component({
   selector: 'app-nurse-form',
@@ -19,7 +22,7 @@ export class NurseFormComponent {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private adminService: AdminService
+    private authService: AuthService
   ) {
     this.form = this.fb.group({
       fullName: ['', Validators.required],
@@ -49,21 +52,37 @@ export class NurseFormComponent {
 
     this.isSubmitting = true;
 
-    this.adminService.addNurse(this.form.value).subscribe({
-      next: (response: FromResponse) => {
-        if (response.fullName && response.email) {
-          this.toastr.success(`Nurse ${response.fullName} created successfully!`, 'Success');
-          this.form.reset();
-        } else {
-          this.toastr.error('Invalid response from server.', 'Error');
-        }
-        this.isSubmitting = false;
-      },
-      error: (error) => {
-        console.error('Error creating nurse:', error);
-        this.toastr.error('Error creating nurse account. Please try again.', 'Error');
-        this.isSubmitting = false;
-      },
-    });
+    this.authService.registerNurse(this.form.value).subscribe({
+  next: (response: GenerialResponse<IUser>) => {
+    if (response.success && response.data) {
+      const user = response.data;
+
+      // Validate the required fields are not null or empty
+      if (user.FullName && user.Email) {
+        this.toastr.success(`Nurse ${user.FullName} created successfully!`, 'Success');
+        this.form.reset();
+      } else {
+        this.toastr.error('Invalid user data received from server.', 'Error');
+      }
+    } else {
+      this.toastr.error(response.message || 'Registration failed.', 'Error');
+    }
+    this.isSubmitting = false;
+  },
+  error: (error) => {
+    console.error('Error creating nurse:', error);
+
+    // Force response.data to be null on error case
+    const failedResponse: GenerialResponse<IUser> = {
+      success: false,
+      message: 'An unexpected error occurred.',
+      data: null as any // Ensures data is null explicitly
+    };
+
+    this.toastr.error(failedResponse.message, 'Error');
+    this.isSubmitting = false;
+  }
+});
+
   }
 }

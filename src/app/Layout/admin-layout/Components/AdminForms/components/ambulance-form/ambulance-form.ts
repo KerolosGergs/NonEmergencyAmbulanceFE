@@ -1,9 +1,12 @@
+import { AmbulanceService } from './../../../../../../Core/Services/Ambulance/ambulance-service';
+import { AuthService } from './../../../../../../Core/Services/AuthServices/auth-service';
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ambulance, FormErrors, AmbulanceStatus, AmbulanceType, Driver, DriverWithId } from '../../../../../../Core/interface/FormsInterface';
 import { ToastrService } from 'ngx-toastr';
 import { AdminService } from '../../../../../../Core/Services/AdminServices/admin-service';
+import { response } from 'express';
 
 @Component({
   selector: 'app-ambulance-form',
@@ -32,7 +35,8 @@ export class AmbulanceFormComponent {
   constructor(
     private fb: FormBuilder,
     private toastr: ToastrService,
-    private adminService: AdminService
+    private adminService: AdminService,
+    private AmbulanceService: AmbulanceService
   ) {
     this.form = this.fb.group({
       plateNumber: ['', Validators.required],
@@ -44,9 +48,10 @@ export class AmbulanceFormComponent {
   }
 
   ngOnInit(): void {
-    this.adminService.getDrivers().subscribe({
-      next: data => this.drivers = data,
-      error: () => this.toastr.error('Failed to load drivers.', 'Error')
+    this.adminService.getAdminDrivers().subscribe({
+      next: response => {
+        if (response.success) this.drivers =response.data}
+      // error: () => this.toastr.error('Failed to load drivers.', 'Error')
     });
   }
 
@@ -61,7 +66,7 @@ export class AmbulanceFormComponent {
     }
     this.isSubmitting = true;
 
-    this.adminService.addAmbulance(this.form.value).subscribe({
+    this.AmbulanceService.createAmbulance(this.form.value).subscribe({
       next: () => {
         this.toastr.success('Ambulance registered successfully!', 'Success');
         this.form.reset({

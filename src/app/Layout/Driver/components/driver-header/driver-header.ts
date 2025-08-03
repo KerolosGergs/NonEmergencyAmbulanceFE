@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { IDriver } from '../../../../Core/interface/Driver/IDriver';
-import { Driver } from '../../../../Core/Services/Driver/driver';
+import { DriverService } from '../../../../Core/Services/Driver/driver';
 
 @Component({
   selector: 'app-driver-header',
@@ -11,7 +11,7 @@ import { Driver } from '../../../../Core/Services/Driver/driver';
 })
 export class DriverHeader implements OnInit {
   // Services
-  private readonly driverService = inject(Driver);
+  private readonly driverService = inject(DriverService);
 
   // Driver data
   driverData!: IDriver;
@@ -22,9 +22,12 @@ export class DriverHeader implements OnInit {
 
   /** Load driver by ID */
   private loadDriver(driverId: number): void {
-    this.driverService.getdriverById(driverId).subscribe({
+    this.driverService.getById(driverId).subscribe({
       next: (driver) => {
-        this.driverData = driver;
+        if (driver.success) {
+          
+          this.driverData = driver.data;
+        }
       },
       error: (error) => {
         console.error('Error fetching driver data:', error);

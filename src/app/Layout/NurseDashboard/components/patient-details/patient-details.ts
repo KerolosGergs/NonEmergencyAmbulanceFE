@@ -2,6 +2,7 @@ import { Component, inject, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IRequestData } from '../../../../Core/interface/irequest';
 import { NurseService } from '../../../../Core/Services/NurseServise/nurse-service';
+import { IRequest } from '../../../../Core/interface/Request/irequest';
 
 @Component({
   selector: 'app-patient-details',
@@ -10,6 +11,6 @@ import { NurseService } from '../../../../Core/Services/NurseServise/nurse-servi
   styleUrl: './patient-details.scss'
 })
 export class PatientDetails {
-    @Input() patient?: IRequestData;
+    @Input() patient?: IRequest;
 
 }

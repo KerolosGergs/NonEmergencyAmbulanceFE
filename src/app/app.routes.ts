@@ -9,6 +9,7 @@ import { NurseLayout } from './Layout/NurseDashboard/nurse-layout/nurse-layout/n
 import { DriverLayout } from './Layout/Driver/DriverLayout/driver-layout/driver-layout';
 import { DashboardLayoutComponent } from './Layout/admin-layout/Components/AdminForms/dashboard-layout/dashboard-layout';
 import { AdminGetDataComponent } from './Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout';
+import { ReservationFrom } from './Layout/reservation-from/reservation-from';
 
 export const routes: Routes = [
 
@@ -32,8 +33,7 @@ export const routes: Routes = [
                     { path: 'get-data', loadComponent: () => import('./Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout').then(m => m.AdminGetDataComponent) },
                 ]
             },
-            { path: 'adminForms', component: DashboardLayoutComponent, title: 'Admin Forms' },
-            { path: 'adminGetData', component: AdminGetDataComponent, title: 'Admin GetData' },
+            {path:'FormRequest',component:ReservationFrom},
             {
                 path: 'nurse', component: NurseLayout
             }

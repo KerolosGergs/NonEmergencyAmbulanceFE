@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
+import { response } from 'express';
+import { AmbulanceService } from './../../../../../../Core/Services/Ambulance/ambulance-service';
+import { AdminService } from './../../../../../../Core/Services/AdminServices/admin-service';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Ambulance, FilterOptions, PaginationInfo, AmbulanceStatus, getAmbulanceStatusLabel, getAmbulanceTypeLabel, getAmbulanceStatusBadgeClass } from '../../models/interfaces';
-import { DataService } from '../../services/data.service';
+import { AmbulanceDto } from '../../../../../../Core/interface/Ambulance/iambulance';
 
 @Component({
   selector: 'app-ambulances-table',
@@ -15,7 +19,7 @@ export class AmbulancesTableComponent implements OnInit {
   ambulances: Ambulance[] = [];
   filteredAmbulances: Ambulance[] = [];
   loading = false;
-  
+  toastr = inject(ToastrService);
   filter: FilterOptions = {
     searchTerm: '',
     availabilityFilter: 'all',
@@ -38,7 +42,7 @@ export class AmbulancesTableComponent implements OnInit {
     { value: '3', label: getAmbulanceStatusLabel(AmbulanceStatus.OUT_OF_SERVICE) }
   ];
 
-  constructor(private dataService: DataService) {}
+  constructor(private AdminService: AdminService, private ambulanceService: AmbulanceService) {}
 
   ngOnInit(): void {
     this.loadAmbulances();
@@ -46,10 +50,13 @@ export class AmbulancesTableComponent implements OnInit {
 
   loadAmbulances(): void {
     this.loading = true;
-    this.dataService.getAmbulances().subscribe({
+    this.AdminService.getAdminAmbulances().subscribe({
       next: (data) => {
-        this.ambulances = data;
-        this.applyFilters();
+        if(data.success){
+          this.ambulances = data.data;
+          this.applyFilters();
+
+        }
         this.loading = false;
       },
       error: (error) => {
@@ -68,7 +75,7 @@ export class AmbulancesTableComponent implements OnInit {
       filtered = filtered.filter(ambulance => 
         ambulance.plateNumber.toLowerCase().includes(searchTerm) ||
         ambulance.currentLocation.toLowerCase().includes(searchTerm) ||
-        this.dataService.getDriverName(ambulance.driverId).toLowerCase().includes(searchTerm)
+        this.ambulanceService.getAmbulanceById(ambulance.driverId).subscribe(driver => driver.data.driverName.toLowerCase().includes(searchTerm))
       );
     }
 
@@ -108,24 +115,37 @@ export class AmbulancesTableComponent implements OnInit {
     this.applyFilters();
   }
 
-  updateStatus(ambulance: Ambulance, newStatus: AmbulanceStatus): void {
-    this.dataService.updateAmbulanceStatus(ambulance.plateNumber, newStatus).subscribe({
-      next: (success) => {
-        if (success) {
-          ambulance.status = newStatus;
-        }
-      },
-      error: (error) => {
-        console.error('Error updating ambulance status:', error);
+ updateStatus(ambulance: Ambulance, newStatus: AmbulanceStatus): void {
+  const dto: AmbulanceDto = {
+    plateNumber: ambulance.plateNumber,
+    currentLocation: ambulance.currentLocation,
+    status: newStatus, // Update status here
+    type: ambulance.type,
+    driverId: ambulance.driverId
+  };
+
+  this.ambulanceService.updateAmbulance(ambulance.ambulanceId, dto).subscribe({
+    next: (response) => {
+      if (response.success) {
+        ambulance.status = newStatus;
+        this.toastr.success('Status updated successfully!', 'Success');
+      } else {
+        this.toastr.error(response.message || 'Failed to update status.', 'Error');
       }
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error updating ambulance status:', error);
+      this.toastr.error('Error updating ambulance status.', 'Error');
+    }
+  });
+}
+
 
   deleteAmbulance(ambulance: Ambulance): void {
     if (confirm(`Are you sure you want to delete ambulance ${ambulance.plateNumber}?`)) {
-      this.dataService.deleteAmbulance(ambulance.ambulanceId).subscribe({
-        next: (success) => {
-          if (success) {
+      this.ambulanceService.deleteAmbulance(ambulance.ambulanceId).subscribe({
+        next: (response) => {
+          if (response.success) {
             this.loadAmbulances();
           }
         },

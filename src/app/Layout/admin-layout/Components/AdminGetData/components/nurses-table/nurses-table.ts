@@ -1,9 +1,12 @@
+import { response } from 'express';
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Nurse, FilterOptions, PaginationInfo, getStatusBadgeClass } from '../../models/interfaces';
-import { DataService } from '../../services/data.service';
+import {  FilterOptions, PaginationInfo, getStatusBadgeClass } from '../../models/interfaces';
 import { ToastrService } from 'ngx-toastr';
+import { AdminService } from '../../../../../../Core/Services/AdminServices/admin-service';
+import { NurseService } from '../../../../../../Core/Services/NurseServise/nurse-service';
+import { AdminNurse } from '../../../../../../Core/interface/Admin/iadmin';
 
 @Component({
   selector: 'app-nurses-table',
@@ -13,8 +16,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './nurses-table.css'
 })
 export class NursesTableComponent implements OnInit {
-  nurses: Nurse[] = [];
-  filteredNurses: Nurse[] = [];
+  nurses: AdminNurse[] = [];
+  filteredNurses: AdminNurse[] = [];
   loading = false;
   tostar = inject(ToastrService);
   filter: FilterOptions = {
@@ -30,7 +33,7 @@ export class NursesTableComponent implements OnInit {
     totalPages: 0
   };
 
-  constructor(private dataService: DataService) { }
+  constructor(private NurseService: NurseService, private adminService: AdminService) { }
 
   ngOnInit(): void {
     this.loadNurses();
@@ -38,10 +41,13 @@ export class NursesTableComponent implements OnInit {
 
   loadNurses(): void {
     this.loading = true;
-    this.dataService.getNurses().subscribe({
+    this.adminService.getAdminNurses().subscribe({
       next: (data) => {
-        this.nurses = data;
-        this.applyFilters();
+        if(data.success){
+          this.nurses = data.data;
+          this.applyFilters();
+          
+        }
         this.loading = false;
       },
       error: (error) => {
@@ -83,7 +89,7 @@ export class NursesTableComponent implements OnInit {
     }
   }
 
-  getPaginatedNurses(): Nurse[] {
+  getPaginatedNurses(): AdminNurse[] {
     const startIndex = (this.pagination.currentPage - 1) * this.pagination.itemsPerPage;
     const endIndex = startIndex + this.pagination.itemsPerPage;
     return this.filteredNurses.slice(startIndex, endIndex);
@@ -100,12 +106,12 @@ export class NursesTableComponent implements OnInit {
     this.applyFilters();
   }
 
-  toggleAvailability(nurse: Nurse): void {
-    this.dataService.updateNurseAvailability(nurse.id, !nurse.isAvailable).subscribe({
-      next: (success) => {
-        if (success.isSuccessful) {
+  toggleAvailability(nurse: AdminNurse): void {
+    this.NurseService.NurseAvailability(nurse.id, !nurse.isAvailable).subscribe({
+      next: (response) => {
+        if (response.success) {
           nurse.isAvailable = !nurse.isAvailable;
-          this.tostar.success(success.data);
+          this.tostar.success(response.message, 'Success');
         }
 
       },
@@ -115,9 +121,9 @@ export class NursesTableComponent implements OnInit {
     });
   }
 
-  deleteNurse(nurse: Nurse): void {
+  deleteNurse(nurse: AdminNurse): void {
     if (confirm(`Are you sure you want to delete ${nurse.fullName}?`)) {
-      this.dataService.deleteNurse(nurse.id).subscribe({
+      this.NurseService.deleteNurse(nurse.id).subscribe({
         next: (success) => {
 
           this.loadNurses();
@@ -129,7 +135,7 @@ export class NursesTableComponent implements OnInit {
     }
   }
 
-  editNurse(nurse: Nurse): void {
+  editNurse(nurse: AdminNurse): void {
     // Placeholder for edit functionality
     alert(`Edit functionality for ${nurse.fullName} would be implemented here`);
   }

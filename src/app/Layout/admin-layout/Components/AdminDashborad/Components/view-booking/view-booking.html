@@ -1,0 +1,174 @@
+
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <div>
+          <h4 class="modal-title">Booking Details</h4>
+          <small class="text-muted">ID: {{ booking.requestId }}</small>
+        </div>
+        <button type="button" class="btn-close" (click)="onClose()" aria-label="Close"></button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body" *ngIf="booking">
+        <!-- Status Badge -->
+        <div class="d-flex align-items-center gap-3 mb-4">
+          <span [class]="getStatusBadgeClass(booking.status)">
+            {{ getStatusText(booking.status) }}
+          </span>
+          <small class="text-muted">
+            Created: {{ booking.requestDate | date:'dd/MM/yyyy, hh:mm a' }}
+          </small>
+        </div>
+
+        <!-- Patient Information -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-person me-2"></i>
+              Patient Information
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Name</label>
+                <p class="mb-0">{{ booking.patientName }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Phone</label>
+                <p class="mb-0">{{ booking.patientPhone || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Patient ID</label>
+                <p class="mb-0">{{ booking.patientId || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Address</label>
+                <p class="mb-0">{{ booking.patientAddress || 'N/A' }}</p>
+              </div>
+              <div class="col-md-12 mb-3" *ngIf="booking.patientImageUrl">
+                <label class="form-label fw-bold">Patient Image</label>
+                <div class="mt-2">
+                  <img [src]="booking.patientImageUrl" alt="Patient Image" class="img-thumbnail"
+                    style="max-width: 150px; max-height: 150px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trip Information -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-geo-alt me-2"></i>
+              Trip Information
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Pickup Location</label>
+                <p class="mb-0">{{ booking.pickupAddress }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Destination</label>
+                <p class="mb-0">{{ booking.dropOffAddress }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Request Date</label>
+                <p class="mb-0">{{ booking.requestDate | date:'dd/MM/yyyy, hh:mm a' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Scheduled Date & Time</label>
+                <p class="mb-0">{{ booking.scheduledDate | date:'dd/MM/yyyy, hh:mm a' }}</p>
+              </div>
+              <div class="col-md-12 mb-3">
+                <label class="form-label fw-bold">Emergency Type</label>
+                <p class="mb-0">{{ booking.emergencyType || 'N/A' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Staff and Ambulance Assignment -->
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-people me-2"></i>
+              Staff and Ambulance Assignment
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <!-- Driver Information -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Driver Name</label>
+                <p class="mb-0">{{ booking.driverName || 'Not assigned' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Driver ID</label>
+                <p class="mb-0">{{ booking.driverId || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Driver Phone</label>
+                <p class="mb-0">{{ booking.driverPhone || 'N/A' }}</p>
+              </div>
+
+              <!-- Nurse Information -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nurse Name</label>
+                <p class="mb-0">{{ booking.nurseName || 'Not assigned' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nurse ID</label>
+                <p class="mb-0">{{ booking.nurseId || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Nurse Phone</label>
+                <p class="mb-0">{{ booking.nursePhone || 'N/A' }}</p>
+              </div>
+
+              <!-- Ambulance Information -->
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Ambulance ID</label>
+                <p class="mb-0">{{ booking.assignedAmbulanceId || 'Not assigned' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Ambulance Plate Number</label>
+                <p class="mb-0">{{ booking.ambulancePlateNumber || 'N/A' }}</p>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label class="form-label fw-bold">Ambulance Type</label>
+                <p class="mb-0">{{ booking.ambulanceType || 'N/A' }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="card mb-4" *ngIf="booking.notes">
+          <div class="card-header">
+            <h5 class="card-title mb-0">
+              <i class="bi bi-file-text me-2"></i>
+              Additional Notes
+            </h5>
+          </div>
+          <div class="card-body">
+            <p class="mb-0">{{ booking.notes }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onClose()">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

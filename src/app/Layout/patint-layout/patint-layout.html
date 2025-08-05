@@ -1,0 +1,149 @@
+<app-nav></app-nav>
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <h2 class="mb-4 text-center">Patient Emergency Requests</h2>
+    </div>
+  </div>
+  @for (request of requests; track $index) {
+  <div class="row">
+    <div class="col-12 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0">
+            <i class="fas fa-ambulance me-2"></i>
+            Emergency Request - {{request.emergencyType}}
+          </h5>
+          <span class="badge" [ngClass]="getStatusClass(request.status)">
+            {{getStatusText(request.status)}}
+          </span>
+        </div>
+
+        <div class="card-body">
+          <!-- Request Details Section -->
+          <div class="row mb-4">
+            <div class="col-md-6">
+              <div class="info-section">
+                <h6 class="text-muted mb-3">
+                  <i class="fas fa-info-circle me-2"></i>Request Details
+                </h6>
+                <div class="row">
+                  <div class="col-sm-6 mb-2">
+                    <strong>Request Date:</strong>
+                    <div class="text-muted">{{formatDate(request.requestDate)}}</div>
+                  </div>
+                  <div class="col-sm-6 mb-2">
+                    <strong>Scheduled Date:</strong>
+                    <div class="text-muted">{{formatDate(request.scheduledDate)}}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="info-section">
+                <h6 class="text-muted mb-3">
+                  <i class="fas fa-map-marker-alt me-2"></i>Location Details
+                </h6>
+                <div class="mb-2">
+                  <strong>Pickup Address:</strong>
+                  <div class="text-muted">{{request.pickupAddress}}</div>
+                </div>
+                <div class="mb-2">
+                  <strong>Drop-off Address:</strong>
+                  <div class="text-muted">{{request.dropOffAddress}}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notes Section -->
+          @if (request.notes) {
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="alert alert-info">
+                <h6 class="alert-heading">
+                  <i class="fas fa-sticky-note me-2"></i>Notes
+                </h6>
+                <p class="mb-0">{{request.notes}}</p>
+              </div>
+            </div>
+          </div>
+          }
+
+
+          <!-- Team Information Section -->
+          <div class="row mb-4">
+            <div class="col-md-4 mb-3">
+              <app-patinet-info [patientInfo]="getPatientInfo(request)"></app-patinet-info>
+            </div>
+            <div class="col-md-4 mb-3">
+              <app-driver-info [driverInfo]="getDriverInfo(request)"></app-driver-info>
+            </div>
+            <div class="col-md-4 mb-3">
+              <app-nurse-info [nurseInfo]="getNurseInfo(request)"></app-nurse-info>
+            </div>
+          </div>
+          @if (request.ambulancePlateNumber) {
+          <div class="row mb-4">
+            <div class="col-12">
+              <div class="card bg-light">
+                <div class="card-body">
+                  <h6 class="card-title">
+                    <i class="fas fa-ambulance me-2"></i>Ambulance Information
+                  </h6>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <strong>Plate Number:</strong> {{request.ambulancePlateNumber}}
+                    </div>
+                    <div class="col-md-6">
+                      <strong>Type:</strong> {{request.ambulanceType}}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          }
+          <!-- Ambulance Information -->
+
+
+          <!-- Action Buttons -->
+           @if (request.status === 0) {
+              <div class="row">
+            <div class="col-12">
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-danger" (click)="cancelRequest(request.requestId)"
+                  [disabled]="isProcessing">
+                  <i class="fas fa-times me-2"></i>Cancel Request
+                </button>
+                <button type="button" class="btn btn-success" (click)="confirmRequest(request.requestId)"
+                  [disabled]="isProcessing">
+                  <i class="fas fa-check me-2"></i>Confirm Request
+                </button>
+              </div>
+            </div>
+          </div>
+           }
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+
+
+  <!-- No Requests Message -->
+   @if (requests.length === 0) {
+     <div class="row" >
+    <div class="col-12">
+      <div class="text-center py-5">
+        <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No requests available</h4>
+        <p class="text-muted">There are currently no patient requests to display.</p>
+      </div>
+    </div>
+  </div>
+   }
+ 
+</div>
+<app-footer></app-footer>

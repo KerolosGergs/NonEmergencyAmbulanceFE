@@ -1,10 +1,9 @@
-import { IRegisterResponse, IRequest } from './../../../../Core/interface/register';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
-import { error } from 'console';
+import { IRegisterResponse, IRequest } from './../../../../Core/interface/register';
 
 @Component({
   selector: 'app-register-layout',
@@ -16,8 +15,16 @@ export class RegisterLayout implements OnInit {
   registerForm!: FormGroup;
   isLoading = false;
 
+  showPassword = false;
+  showConfirmPassword = false;
+
+  imageFile: File | null = null;
+  imagePreview: string | ArrayBuffer | null = null;
+  imageError = '';
+
   Login = inject(LoginService);
   toastr = inject(ToastrService);
+
   constructor(
     private formBuilder: FormBuilder,
     private router: Router
@@ -32,12 +39,31 @@ export class RegisterLayout implements OnInit {
       fullName: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
+      confirmPassword: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern(/^[\+]?[1-9][\d]{0,15}$/)]],
       dateOfBirth: ['', [Validators.required, this.dateOfBirthValidator]],
       gender: ['', [Validators.required]],
       address: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       medicalHistory: ['', [Validators.maxLength(1000)]]
-    });
+    }, { validators: this.passwordMatchValidator });
+  }
+
+  passwordMatchValidator(control: AbstractControl) {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      control.get('confirmPassword')?.setErrors({ mismatch: true });
+    } else {
+      const errors = control.get('confirmPassword')?.errors;
+      if (errors) {
+        delete errors['mismatch'];
+        if (Object.keys(errors).length === 0) {
+          control.get('confirmPassword')?.setErrors(null);
+        }
+      }
+    }
+    return null;
   }
 
   private dateOfBirthValidator(control: any) {
@@ -55,56 +81,83 @@ export class RegisterLayout implements OnInit {
       age--;
     }
 
-    if (age < minAge) {
-      return { minAge: true };
-    }
-
-    if (age > maxAge) {
-      return { maxAge: true };
-    }
-
-    if (selectedDate > today) {
-      return { futureDate: true };
-    }
+    if (age < minAge) return { minAge: true };
+    if (age > maxAge) return { maxAge: true };
+    if (selectedDate > today) return { futureDate: true };
 
     return null;
   }
 
-onSubmit(): void {
-  debugger
-    if (this.registerForm.valid) {
-      this.isLoading = true;
-      
-      const request: IRequest = {
-        email:this.registerForm.get('email')?.value,
-        password: this.registerForm.get('password')?.value,
-        fullName: this.registerForm.get('fullName')?.value  ,
-        phoneNumber: this.registerForm.get('phoneNumber')?.value,
-        address: this.registerForm.get('address')?.value,
-        medicalHistory: this.registerForm.get('medicalHistory')?.value,
-        gender: Number( this.registerForm.get('gender')?.value),
-        dateOfBirth: this.registerForm.get('dateOfBirth')?.value
+  onFileChange(event: any): void {
+    const file = event.target.files[0];
+    this.imageError = '';
+
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        this.imageError = 'Only image files are allowed.';
+        return;
       }
 
-      this.Login.register(request).subscribe({
-        next: (res: IRegisterResponse) => {
-          this.isLoading = false;
-        
-            this.toastr.success('تم إنشاء الحساب بنجاح');
-            this.router.navigate(['/login']);
-         
-        },
-        error: (err) => {
-          this.isLoading = false;
-          console.error('Registration error:', err);
-          this.toastr.error('حدث خطأ أثناء تسجيل الدخول. تحقق من اتصالك بالإنترنت.');
-        }
-      });
+      this.imageFile = file;
 
-    } else {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleShowConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
+  }
+
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
       this.markFormGroupTouched();
       this.toastr.error('يرجى تصحيح الأخطاء في النموذج');
+      return;
     }
+
+    if (!this.imageFile) {
+      this.imageError = 'Profile picture is required.';
+      return;
+    }
+
+    this.isLoading = true;
+
+    const formData = new FormData();
+    formData.append('FullName', this.registerForm.get('fullName')?.value);
+    formData.append('Email', this.registerForm.get('email')?.value);
+    formData.append('Password', this.registerForm.get('password')?.value);
+    formData.append('PhoneNumber', this.registerForm.get('phoneNumber')?.value);
+    formData.append('DateOfBirth', this.registerForm.get('dateOfBirth')?.value);
+    formData.append('Gender', this.registerForm.get('gender')?.value);
+    formData.append('Address', this.registerForm.get('address')?.value);
+    formData.append('MedicalHistory', this.registerForm.get('medicalHistory')?.value || '');
+    formData.append('Image', this.imageFile);
+
+    this.Login.register(formData).subscribe({
+      next: (res: IRegisterResponse) => {
+        if(!res.success){
+          this.toastr.success(res.message, 'Success');
+          this.router.navigate(['/login']);
+          
+        }else{
+          this.toastr.error(res.message, 'Error');
+        }
+        this.isLoading = false;
+      },
+      error: (err) => {
+        this.isLoading = false;
+        // console.error('Registration error:', err);
+        this.toastr.error(err.error.message, 'Error');
+      }
+    });
   }
 
   private markFormGroupTouched(): void {
@@ -114,7 +167,6 @@ onSubmit(): void {
     });
   }
 
-  // Helper methods for template
   isFieldInvalid(fieldName: string): boolean {
     const field = this.registerForm.get(fieldName);
     return !!(field && field.invalid && field.touched);
@@ -140,6 +192,7 @@ onSubmit(): void {
       fullName: 'Full name',
       email: 'Email',
       password: 'Password',
+      confirmPassword: 'Confirm Password',
       phoneNumber: 'Phone number',
       dateOfBirth: 'Date of birth',
       gender: 'Gender',

@@ -10,6 +10,8 @@ import { DriverLayout } from './Layout/Driver/DriverLayout/driver-layout/driver-
 import { DashboardLayoutComponent } from './Layout/admin-layout/Components/AdminForms/dashboard-layout/dashboard-layout';
 import { AdminGetDataComponent } from './Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout';
 import { ReservationFrom } from './Layout/reservation-from/reservation-from';
+import { BookingViewComponent } from './Layout/admin-layout/Components/AdminDashborad/Components/view-booking/view-booking';
+import { PatintLayout } from './Layout/patint-layout/patint-layout';
 
 export const routes: Routes = [
 
@@ -28,12 +30,14 @@ export const routes: Routes = [
                 title: 'Admin Dashboard',
                 children: [
                     { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+                    {path: 'ViewRequest/:id', component: BookingViewComponent},
                     { path: 'dashboard', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/admin-layout/admin-layout').then(m => m.AdminLayout) },
                     { path: 'forms', loadComponent: () => import('./Layout/admin-layout/Components/AdminForms/dashboard-layout/dashboard-layout').then(m => m.DashboardLayoutComponent) },
                     { path: 'get-data', loadComponent: () => import('./Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout').then(m => m.AdminGetDataComponent) },
                 ]
             },
-            {path:'FormRequest',component:ReservationFrom},
+            {path: 'patient', component: PatintLayout},
+            { path: 'FormRequest', component: ReservationFrom },
             {
                 path: 'nurse', component: NurseLayout
             }

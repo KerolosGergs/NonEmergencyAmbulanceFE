@@ -29,6 +29,7 @@ export interface PatientRequest {
   driverId?: number;
   driverName?: string;
   driverPhone?: string;
+  driverImg?: string;
   ambulancePlateNumber?: string;
   ambulanceType?: string;
 
@@ -36,6 +37,7 @@ export interface PatientRequest {
   nurseId?: number;
   nurseName?: string;
   nursePhone?: string;
+  nurseImg?: string;
 }
 export interface PatientTrip {
   tripId: number;

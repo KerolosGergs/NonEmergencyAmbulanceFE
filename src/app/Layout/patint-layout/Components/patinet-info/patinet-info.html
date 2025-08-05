@@ -1,0 +1,49 @@
+<div class="card h-100 border-primary">
+  <div class="card-header bg-primary text-white">
+    <h6 class="mb-0">
+      <i class="fas fa-user-injured me-2"></i>Patient Information
+    </h6>
+  </div>
+  <div class="card-body">
+    <div class="text-center mb-3">
+      <div class="avatar-container">
+        <img [src]="getPatientImage()" [alt]="patientInfo?.patientName || 'Patient'"
+          class="rounded-circle patient-avatar w-100" >
+      </div>
+    </div>
+
+    <div class="patient-details">
+      <div class="detail-item mb-2">
+        <strong>Name:</strong>
+        <div class="text-muted">
+          {{ patientInfo?.patientName || 'Not provided' }}
+        </div>
+      </div>
+
+      <div class="detail-item mb-2">
+        <strong>Phone:</strong>
+        <div class="text-muted">
+          @if (patientInfo?.patientPhone)
+          {
+          <a [href]="'tel:' + patientInfo?.patientPhone" class="text-decoration-none">
+            <i class="fas fa-phone me-1"></i>
+            {{ patientInfo?.patientPhone }}
+          </a>
+          }
+          @if (!patientInfo?.patientPhone)
+          {
+
+          <span>Not provided</span>
+          }
+        </div>
+      </div>
+
+      <div class="detail-item mb-2">
+        <strong>Address:</strong>
+        <div class="text-muted small">
+          {{ patientInfo?.patientAddress || 'Not provided' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

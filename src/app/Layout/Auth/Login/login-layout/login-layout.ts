@@ -32,13 +32,17 @@ export class LoginLayout {
 
       this.Login.login(this.loginForm.value).subscribe({
 
-        next: (res: LoginResponse) => {
-      
-            this.AuthService.setSession(res.token, res.email, res.role);
-
+        next: (res) => {
+          if(res.success){
+            
+            this.AuthService.setUserSession(  res.data);
             this.router.navigate(['/home']);
+            this.toastr.success(res.message, 'Success');
+          }
 
-            this.toastr.success('تم تسجيل الدخول بنجاح');
+          else{
+            this.toastr.error(res.message, 'Error');
+          }
          
 
           this.isLoading = false;

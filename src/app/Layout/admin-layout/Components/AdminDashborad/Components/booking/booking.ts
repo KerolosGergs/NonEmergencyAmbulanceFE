@@ -4,6 +4,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IBooking } from '../../../../../../Core/interface/request-data';
 import { AdminRequest } from '../../../../../../Core/interface/Admin/iadmin';
+import { Router } from '@angular/router';
+import { IRequest } from '../../../../../../Core/interface/Request/irequest';
 
 
 
@@ -15,10 +17,10 @@ import { AdminRequest } from '../../../../../../Core/interface/Admin/iadmin';
   templateUrl: './booking.html',
   styleUrl: './booking.scss'
 })
-export class Booking implements OnInit{
+export class Booking implements OnInit {
   Math = Math; // Make Math available in template
-    adminService = inject(AdminService);
-    bookings: AdminRequest[] = [];
+  adminService = inject(AdminService);
+  bookings: AdminRequest[] = [];
   filteredBookings: AdminRequest[] = [];
 
 
@@ -31,6 +33,7 @@ export class Booking implements OnInit{
   itemsPerPage: number = 5;
   totalItems: number = this.bookings.length;
 
+  router = inject(Router);
   // Status options for filter
   statusOptions = [
     { value: '', label: 'All Bookings' },
@@ -47,20 +50,18 @@ export class Booking implements OnInit{
   }
 
 
-  getallBookings() 
-  {
-    this.adminService.getAdminRequests().subscribe(res=> {
-      if(res.success)
-      {
+  getallBookings() {
+    this.adminService.getAdminRequests().subscribe(res => {
+      if (res.success) {
         this.bookings = res.data;
         this.totalItems = this.bookings.length;
         this.applyFilters();
 
       }
     });
-   }
+  }
   ngOnInit(): void {
-   this.getallBookings();
+    this.getallBookings();
   }
 
   // Filter methods
@@ -107,24 +108,23 @@ export class Booking implements OnInit{
     this.currentPage = page;
   }
 
- 
-   statusLabels: { [key: number]: string } = {
-  0: 'Pending',
-  1: 'Accepted',
-  2: 'Rejected',
-  3: 'In Progress',
-  4: 'Completed',
-  5: 'Cancelled'
-};
+
+  statusLabels: { [key: number]: string } = {
+    0: 'Pending',
+    1: 'Accepted',
+    2: 'Rejected',
+    3: 'In Progress',
+    4: 'Completed',
+    5: 'Cancelled'
+  };
 
   getStatusText(status: number): string {
-  return this.statusLabels[status] ?? 'Unknown';
-}
-
-  viewBooking(booking: IBooking): void {
-    console.log('View booking:', booking);
-    // Implement view logic
+    return this.statusLabels[status] ?? 'Unknown';
   }
+
+viewBooking(booking: IRequest): void {
+  this.router.navigate(['/admin/ViewRequest/', booking.requestId]);
+}
 
   editBooking(booking: IBooking): void {
     console.log('Edit booking:', booking);
@@ -135,7 +135,7 @@ export class Booking implements OnInit{
     console.log('Delete booking:', booking);
     // Implement delete logic
   }
-    getStatusBadgeClass(status: number): string {
+  getStatusBadgeClass(status: number): string {
     switch (status) {
       case 0: return 'badge bg-warning text-dark';
       case 1: return 'badge bg-success';
@@ -150,6 +150,6 @@ export class Booking implements OnInit{
 
 }
 
- 
+
 
 

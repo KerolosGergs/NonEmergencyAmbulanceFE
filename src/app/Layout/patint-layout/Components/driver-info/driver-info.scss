@@ -1,0 +1,70 @@
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.driver-avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 3px solid #198754;
+  box-shadow: 0 2px 8px rgba(25, 135, 84, 0.3);
+}
+
+.driver-details {
+  font-size: 0.9rem;
+}
+
+.detail-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+  
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0 !important;
+  }
+  
+  strong {
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .text-muted {
+    margin-top: 0.25rem;
+    word-break: break-word;
+  }
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+a {
+  color: #198754;
+  
+  &:hover {
+    color: #146c43;
+  }
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .driver-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .driver-details {
+    font-size: 0.85rem;
+  }
+}
+

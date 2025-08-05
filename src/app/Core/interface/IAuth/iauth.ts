@@ -26,15 +26,17 @@ export interface PatientRegister {
 }
 
 export interface ILogin {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
-export interface  IUser
- {
-     FullName :string;
-      Email :string;
-      Token :string;
-      DisplayName:string; 
-     Role :string;
- }
+export interface IUser {
+  userId: any
+  profileId: number
+  fullName: string
+  email: string
+  token: string
+  displayName: string
+  role: string
+}
+

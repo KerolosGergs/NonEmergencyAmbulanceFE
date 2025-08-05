@@ -93,7 +93,7 @@ export class PendingApprovalRequests implements OnInit {
 
      const dto:IAssignNurse  ={
       RequestId: request.requestId,
-      NurseId: this._AuthService.getId()
+      NurseId: this._AuthService.getProfileId()!
     };
     this._RequestService.assignNurse(dto).subscribe({
       next: res => console.log('Request approved successfully:', res),

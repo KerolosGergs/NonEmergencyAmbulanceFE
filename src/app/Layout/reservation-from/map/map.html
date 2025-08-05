@@ -1,0 +1,45 @@
+<div class="map-selector">
+  <div class="search-container">
+    <div class="search-wrapper">
+      <input #searchInput type="text" [(ngModel)]="searchTerm" (input)="onSearchInput($event)" class="search-input"
+        [placeholder]="'Search for ' + title.toLowerCase() + ' address in Egypt...'" />
+        @if (searchTerm) {
+          <button type="button" class="search-clear-btn" (click)="clearSearch()">
+            ×
+          </button>
+        }
+    </div>
+@if (searchResults.length>0 || (searchTerm.length > 2 && searchResults.length === 0)) {
+  <div class="search-results">
+    @if (searchTerm.length > 2 && searchResults.length === 0) {
+      <div class="no-results" >
+        <div class="no-results-icon">🔍</div>
+        <div class="no-results-text">No locations found in Egypt</div>
+        <div class="no-results-hint">Try searching for cities like Cairo, Alexandria, or Giza</div>
+      </div>
+    }
+      
+      @for (result of searchResults; track $index) {
+      <div class="search-result-item" (click)="selectSearchResult(result)">
+        <div class="result-icon">📍</div>
+        <div class="result-content">
+          <div class="result-title">{{ getResultTitle(result) }}</div>
+          <div class="result-subtitle">{{ getResultSubtitle(result) }}</div>
+        </div>
+      </div>
+      }
+
+    </div>
+}
+    
+  </div>
+
+  <div class="map-container" #mapContainer></div>
+  @if (selectedLocation) {
+  <div class="selected-address">
+    <div class="address-label">Selected {{ title }}:</div>
+    <div class="address-text">{{ selectedLocation.address }}</div>
+  </div>
+  }
+
+</div>

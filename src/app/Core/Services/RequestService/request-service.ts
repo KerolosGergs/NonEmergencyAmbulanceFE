@@ -1,3 +1,4 @@
+import { AuthService } from './../AuthServices/auth-service';
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,6 +13,7 @@ import { CreateRequest, IAssignDriver, IAssignNurse, IRequest, IUpdateRequest, U
 export class RequestService {
  private http = inject(HttpClient);
   private api = Environment.apiUrl + '/Request';
+  AuthService = inject(AuthService);
 
   /** Get all requests */
   getRequests(): Observable<GenerialResponse<IRequest[]>> {
@@ -29,8 +31,9 @@ export class RequestService {
   }
 
   /** Create a new request */
-  createRequest(userId: string, dto: CreateRequest): Observable<GenerialResponse<any>> {
-    return this.http.post<GenerialResponse<any>>(`${this.api}?userId=${userId}`, dto);
+  createRequest( dto: CreateRequest): Observable<GenerialResponse<any>> {
+    debugger
+    return this.http.post<GenerialResponse<any>>(`${this.api}?userId=${this.AuthService.getUserId()}`, dto);
   }
 
   /** Get request by ID */
@@ -69,7 +72,7 @@ export class RequestService {
   }
 
   /** Calculate Distance */
-  getDistance(from: string, to: string): Observable<GenerialResponse<any>> {
+  getDistance(from: string, to: string): Observable<GenerialResponse<{ distance: number; }>> {
     return this.http.get<GenerialResponse<any>>(`${this.api}/distance?from=${from}&to=${to}`);
   }
 }

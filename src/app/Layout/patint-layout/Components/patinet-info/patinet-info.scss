@@ -1,0 +1,66 @@
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.patient-avatar {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 3px solid #007bff;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.patient-details {
+  font-size: 0.9rem;
+}
+
+.detail-item {
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+  
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0 !important;
+  }
+  
+  strong {
+    color: #495057;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .text-muted {
+    margin-top: 0.25rem;
+    word-break: break-word;
+  }
+}
+
+.card {
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+a {
+  color: #007bff;
+  
+  &:hover {
+    color: #0056b3;
+  }
+}
+
+@media (max-width: 768px) {
+  .patient-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .patient-details {
+    font-size: 0.85rem;
+  }
+}
+

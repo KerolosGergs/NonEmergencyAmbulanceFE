@@ -6,6 +6,8 @@
 // }
 
 export interface LoginResponse {
+ userId: string
+  profileId: number
   fullName: string
   email: string
   token: string

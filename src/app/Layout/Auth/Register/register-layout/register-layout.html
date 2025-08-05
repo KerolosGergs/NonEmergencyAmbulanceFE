@@ -1,8 +1,9 @@
 <div class=" d-flex align-items-center justify-content-center bg-light m-2">
-  <div class="row shadow-lg rounded-4 overflow-hidden w-100 animate__animated animate__fadeIn" >
+  <div class="row shadow-lg rounded-4 overflow-hidden w-100 animate__animated animate__fadeIn">
 
     <!-- Left Side: Form -->
-    <div class="col-lg-4 col-12 bg-white p-5 d-flex flex-column justify-content-center animate__animated animate__slideInLeft">
+    <div
+      class="col-lg-4 col-12 bg-white p-5 d-flex flex-column justify-content-center animate__animated animate__slideInLeft">
       <div class="text-center mb-4">
         <h1 class="mb-1 text-primary fw-bold"><i class="bi bi-truck me-2"></i> MediTransport</h1>
         <p class="text-muted fs-6">Create your account</p>
@@ -13,8 +14,10 @@
         <!-- Full Name -->
         <div class="mb-3">
           <label for="fullName" class="form-label fw-semibold">Full Name</label>
-          <input type="text" id="fullName" class="form-control rounded-pill px-4 py-3" formControlName="fullName" placeholder="Enter your full name">
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('fullName')?.valid || !registerForm.get('fullName')?.touched">
+          <input type="text" id="fullName" class="form-control rounded-pill px-4 py-3" formControlName="fullName"
+            placeholder="Enter your full name">
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('fullName')?.valid || !registerForm.get('fullName')?.touched">
             Full name is required.
           </small>
         </div>
@@ -22,26 +25,77 @@
         <!-- Email -->
         <div class="mb-3">
           <label for="email" class="form-label fw-semibold">Email</label>
-          <input type="email" id="email" class="form-control rounded-pill px-4 py-3" formControlName="email" placeholder="Enter your email">
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('email')?.valid || !registerForm.get('email')?.touched">
+          <input type="email" id="email" class="form-control rounded-pill px-4 py-3" formControlName="email"
+            placeholder="Enter your email">
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('email')?.valid || !registerForm.get('email')?.touched">
             Valid email is required.
           </small>
         </div>
 
-        <!-- Password -->
-        <div class="mb-3">
+        <!-- Add Confirm Password & Image Upload -->
+
+        <!-- Password Field -->
+        <div class="mb-3 position-relative">
           <label for="password" class="form-label fw-semibold">Password</label>
-          <input type="password" id="password" class="form-control rounded-pill px-4 py-3" formControlName="password" placeholder="Enter your password">
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('password')?.valid || !registerForm.get('password')?.touched">
-            Password is required (minimum 6 characters).
+          <input [type]="showPassword ? 'text' : 'password'" id="password"
+            class="form-control rounded-pill px-4 py-3 pe-5" formControlName="password"
+            placeholder="Enter your password">
+          <button type="button"
+            class="position-absolute top-50 end-0 me-3 border-0 bg-transparent p-0"
+            (click)="toggleShowPassword()">
+            <i [class]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+          <small class="text-danger mt-1 d-block" [class.d-none]="!isFieldInvalid('password')">
+            {{ getFieldError('password') }}
           </small>
         </div>
+
+        <!-- Confirm Password Field -->
+        <div class="mb-3 position-relative">
+          <label for="confirmPassword" class="form-label fw-semibold">Confirm Password</label>
+          <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPassword"
+            class="form-control rounded-pill px-4 py-3 pe-5" formControlName="confirmPassword"
+            placeholder="Confirm your password">
+          <button type="button"
+            class="position-absolute top-50  end-0 me-3 border-0 bg-transparent p-0"
+            (click)="toggleShowConfirmPassword()">
+            <i [class]="showConfirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+          </button>
+          @if (registerForm.get('confirmPassword')?.touched &&
+          registerForm.get('confirmPassword')?.errors?.['mismatch']) {
+          <small class="text-danger mt-1 d-block">
+            Passwords do not match.
+          </small>
+          }
+        </div>
+
+
+        <!-- Image Upload -->
+        <div class="mb-3">
+          <label for="profileImage" class="form-label fw-semibold">Profile Picture</label>
+          <input type="file" id="profileImage" class="form-control rounded-pill px-4 py-3"
+            (change)="onFileChange($event)" accept="image/*">
+          @if (imageError) {
+          <small class="text-danger mt-1 d-block">{{ imageError }}</small>
+
+          }
+          @if (imagePreview) {
+
+          <div class="mt-2 text-center">
+            <img [src]="imagePreview" class="img-thumbnail" style="height: 100px; width: auto;" />
+          </div>
+          }
+        </div>
+
 
         <!-- Phone Number -->
         <div class="mb-3">
           <label for="phoneNumber" class="form-label fw-semibold">Phone Number</label>
-          <input type="tel" id="phoneNumber" class="form-control rounded-pill px-4 py-3" formControlName="phoneNumber" placeholder="Enter your phone number">
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('phoneNumber')?.valid || !registerForm.get('phoneNumber')?.touched">
+          <input type="tel" id="phoneNumber" class="form-control rounded-pill px-4 py-3" formControlName="phoneNumber"
+            placeholder="Enter your phone number">
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('phoneNumber')?.valid || !registerForm.get('phoneNumber')?.touched">
             Valid phone number is required.
           </small>
         </div>
@@ -50,7 +104,8 @@
         <div class="mb-3">
           <label for="dateOfBirth" class="form-label fw-semibold">Date of Birth</label>
           <input type="date" id="dateOfBirth" class="form-control rounded-pill px-4 py-3" formControlName="dateOfBirth">
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('dateOfBirth')?.valid || !registerForm.get('dateOfBirth')?.touched">
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('dateOfBirth')?.valid || !registerForm.get('dateOfBirth')?.touched">
             Date of birth is required.
           </small>
         </div>
@@ -63,7 +118,8 @@
             <option value=0>Male</option>
             <option value=1>Female</option>
           </select>
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('gender')?.valid || !registerForm.get('gender')?.touched">
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('gender')?.valid || !registerForm.get('gender')?.touched">
             Gender selection is required.
           </small>
         </div>
@@ -71,8 +127,10 @@
         <!-- Address -->
         <div class="mb-3">
           <label for="address" class="form-label fw-semibold">Address</label>
-          <textarea id="address" class="form-control rounded-3 px-4 py-3" formControlName="address" placeholder="Enter your address" rows="2"></textarea>
-          <small class="text-danger mt-1 d-block" [class.d-none]="registerForm.get('address')?.valid || !registerForm.get('address')?.touched">
+          <textarea id="address" class="form-control rounded-3 px-4 py-3" formControlName="address"
+            placeholder="Enter your address" rows="2"></textarea>
+          <small class="text-danger mt-1 d-block"
+            [class.d-none]="registerForm.get('address')?.valid || !registerForm.get('address')?.touched">
             Address is required.
           </small>
         </div>
@@ -80,15 +138,18 @@
         <!-- Medical History -->
         <div class="mb-4">
           <label for="medicalHistory" class="form-label fw-semibold">Medical History</label>
-          <textarea id="medicalHistory" class="form-control rounded-3 px-4 py-3" formControlName="medicalHistory" placeholder="Enter your medical history (optional)" rows="3"></textarea>
+          <textarea id="medicalHistory" class="form-control rounded-3 px-4 py-3" formControlName="medicalHistory"
+            placeholder="Enter your medical history (optional)" rows="3"></textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-semibold" [disabled]="registerForm.invalid">
+        <button type="submit" class="btn btn-primary w-100 py-3 rounded-pill fw-semibold"
+          [disabled]="registerForm.invalid">
           <i class="bi bi-person-plus me-2"></i> Create Account
         </button>
 
         <div class="text-center mt-3">
-          <p class="text-muted">Already have an account? <a href="/login" class="text-primary text-decoration-none fw-semibold">Sign in</a></p>
+          <p class="text-muted">Already have an account? <a href="/login"
+              class="text-primary text-decoration-none fw-semibold">Sign in</a></p>
         </div>
 
       </form>
@@ -98,7 +159,7 @@
     <!-- Right Side: Image -->
     <div class="col-8  d-none d-lg-block bg-primary position-relative animate__animated animate__slideInRight">
       <img src="assets/login/1.jpg" alt="Registration Image" class="img-fluid h-100 w-100 object-fit-cover">
-      
+
     </div>
 
   </div>

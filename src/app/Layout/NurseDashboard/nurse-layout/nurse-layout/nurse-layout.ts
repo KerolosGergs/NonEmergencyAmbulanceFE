@@ -38,14 +38,17 @@ export class NurseLayout implements OnInit {
   requestsData: IRequest[] = [];
   selectedRequest?: IRequest;
 
-  ngOnInit(): void {
-    this.getUnassignedRequestsForNurse();
+  async ngOnInit(): Promise<void> {
+    await this.getUnassignedRequestsForNurse();
   }
 
   /** Fetch unassigned requests for nurse */
   private getUnassignedRequestsForNurse(): void {
+    
     this.requestService.getAvailableRequestsForNurses().subscribe({
+      
       next: (data) => {
+        debugger
         if(data.success){
           this.requestsData = data.data;
 

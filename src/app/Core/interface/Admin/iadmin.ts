@@ -61,6 +61,7 @@ export interface AdminRequest {
     nurseId: number
     nurseName: string
     nursePhone: any
+    price: number
 }
 export interface AdminTrip {
     tripId: number;

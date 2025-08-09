@@ -41,6 +41,7 @@
           <th scope="col">Date & Time</th>
           <th scope="col">Pickup Location</th>
           <th scope="col">Destination</th>
+          <th scope="col">Price</th>
           <th scope="col">Status</th>
           <th scope="col">Assigned Nurse</th>
           <th scope="col">Assigned Driver</th>
@@ -48,13 +49,22 @@
         </tr>
       </thead>
       <tbody>
-       
+
         <tr *ngFor="let booking of paginatedBookings" class="animate__animated animate__fadeIn">
           <td>{{ booking.requestId }}</td>
           <td>{{ booking.patientName }}</td>
           <td>{{ booking.requestDate | date: 'dd/MM/yyyy, hh:mm a' }}</td>
           <td>{{ booking.pickupAddress }}</td>
           <td>{{ booking.dropOffAddress }}</td>
+          <td class="text-success fw-bold">
+            @if (booking.price === 0) {
+            Free
+            } @else if (booking.price) {
+            {{ booking.price | number:'1.2-2' }} EGP
+            } @else {
+            N/A
+            }
+          </td>
           <td>
             <span [class]="getStatusBadgeClass(booking.status)">
               {{ getStatusText(booking.status) }}

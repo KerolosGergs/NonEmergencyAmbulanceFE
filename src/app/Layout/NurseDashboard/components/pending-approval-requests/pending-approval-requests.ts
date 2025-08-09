@@ -7,6 +7,7 @@ import { IRequestData } from '../../../../Core/interface/irequest';
 import { IAssignNurse, IRequest } from '../../../../Core/interface/Request/irequest';
 import { RequestService } from '../../../../Core/Services/RequestService/request-service';
 import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-pending-approval-requests',
@@ -22,6 +23,7 @@ export class PendingApprovalRequests implements OnInit {
   // Inputs & Outputs
   @Input() requests: IRequest[] = [];
   @Output() selected = new EventEmitter<IRequest>();
+  toastr = inject(ToastrService);
 
   // State
   searchTerm: string = '';
@@ -87,19 +89,32 @@ export class PendingApprovalRequests implements OnInit {
   }
 
   /** Approve a request */
-  approveRequest(request: IRequest): void {
-   
-    this.requests = this.requests.filter(r => r.requestId !== request.requestId);
+ approveRequest(request: IRequest): void {
+  const dto: IAssignNurse = {
+    RequestId: request.requestId,
+    NurseId:1010
+    // NurseId: this._AuthService.getProfileId()!
+  };
 
-     const dto:IAssignNurse  ={
-      RequestId: request.requestId,
-      NurseId: this._AuthService.getProfileId()!
-    };
-    this._RequestService.assignNurse(dto).subscribe({
-      next: res => console.log('Request approved successfully:', res),
-      error: err => console.error('Error approving request:', err),
-    });
-  }
+  this._RequestService.assignNurse(dto).subscribe({
+    next: (res) => {
+      if (res.success) {
+        // Remove the approved request from the list
+        // this.requests = this.requests.filter(r => r.requestId !== request.requestId);
+
+        // Success Toast Message
+        this.toastr.success(res.message || 'Request approved successfully!', 'Success');
+      } else {
+        // Handle API returned failure case
+        this.toastr.error(res.message || 'Failed to approve the request.', 'Error');
+      }
+    },
+    error: (err) => {
+      console.error('Error approving request:', err);
+      this.toastr.error('An error occurred while approving the request.', 'Error');
+    }
+  });
+}
 
   /** Decline a request */
   declineRequest(request: IRequest): void {

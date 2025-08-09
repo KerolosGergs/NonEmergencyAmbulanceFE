@@ -2,7 +2,6 @@ import { AdminService } from './../../../../../../Core/Services/AdminServices/ad
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IBooking } from '../../../../../../Core/interface/request-data';
 import { AdminRequest } from '../../../../../../Core/interface/Admin/iadmin';
 import { Router } from '@angular/router';
 import { IRequest } from '../../../../../../Core/interface/Request/irequest';
@@ -13,7 +12,7 @@ import { IRequest } from '../../../../../../Core/interface/Request/irequest';
 @Component({
   selector: 'app-booking',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule ],
   templateUrl: './booking.html',
   styleUrl: './booking.scss'
 })
@@ -51,8 +50,10 @@ export class Booking implements OnInit {
 
 
   getallBookings() {
+    
     this.adminService.getAdminRequests().subscribe(res => {
       if (res.success) {
+        debugger
         this.bookings = res.data;
         this.totalItems = this.bookings.length;
         this.applyFilters();
@@ -94,7 +95,8 @@ export class Booking implements OnInit {
   }
 
   // Pagination methods
-  get paginatedBookings(): IBooking[] {
+  get paginatedBookings(): AdminRequest[] {
+    
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
     return this.filteredBookings.slice(startIndex, endIndex);
@@ -122,16 +124,16 @@ export class Booking implements OnInit {
     return this.statusLabels[status] ?? 'Unknown';
   }
 
-viewBooking(booking: IRequest): void {
+viewBooking(booking: AdminRequest): void {
   this.router.navigate(['/admin/ViewRequest/', booking.requestId]);
 }
 
-  editBooking(booking: IBooking): void {
+  editBooking(booking: AdminRequest): void {
     console.log('Edit booking:', booking);
     // Implement edit logic
   }
 
-  deleteBooking(booking: IBooking): void {
+  deleteBooking(booking: AdminRequest): void {
     console.log('Delete booking:', booking);
     // Implement delete logic
   }

@@ -21,4 +21,5 @@ export interface IBooking {
   nurseId: any
   nurseName: any
   nursePhone: any
+  Price:Number
 }

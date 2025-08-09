@@ -27,4 +27,5 @@ export interface EmergencyFormData {
   notes: string;
   pickupLocation?: LocationMap;
   dropoffLocation?: LocationMap;
+  Price: number;
 }

@@ -16,12 +16,16 @@ import { GenerialResponse } from '../../Core/interface/GenerialResponse/Generial
   styleUrl: './reservation-from.scss'
 })
 export class ReservationFrom implements OnInit {
+  distance: number = 0;
+  price: number = 0;
+  isloading: boolean = false;
   formData: EmergencyFormData = {
     pickupAddress: '',
     dropOffAddress: '',
     scheduledDate: '',
     emergencyType: '',
-    notes: ''
+    notes: '',
+    Price: 0   
   };
 
   pickupLocation: LocationMap | null = null;
@@ -48,6 +52,9 @@ export class ReservationFrom implements OnInit {
     this.formData.pickupAddress = location.address;
     this.formData.pickupLocation = location;
     this.clearMessages();
+    if ( this.formData.dropOffAddress) {
+      this.calculateDistanceAndPrice(this.formData.pickupAddress, this.formData.dropOffAddress);
+    }
   }
 
   onPickupLocationCleared() {
@@ -61,7 +68,13 @@ export class ReservationFrom implements OnInit {
     this.formData.dropOffAddress = location.address;
     this.formData.dropoffLocation = location;
     this.clearMessages();
+
+    // Trigger Distance & Price Calculation if pickupAddress exists
+    if (this.formData.pickupAddress) {
+      this.calculateDistanceAndPrice(this.formData.pickupAddress, this.formData.dropOffAddress);
+    }
   }
+
 
   onDropoffLocationCleared() {
     this.dropoffLocation = null;
@@ -71,9 +84,9 @@ export class ReservationFrom implements OnInit {
   RequestService = inject(RequestService)
   toastr = inject(ToastrService);
   onSubmit(): void {
-    debugger
+    
     this.clearMessages();
-    debugger
+    this.formData.Price = this.price;
     if (this.validateForm()) {
       this.isSubmitting = true;
 
@@ -144,7 +157,8 @@ export class ReservationFrom implements OnInit {
       dropOffAddress: '',
       scheduledDate: '',
       emergencyType: '',
-      notes: ''
+      notes: '',
+      Price:0
     };
     this.pickupLocation = null;
     this.dropoffLocation = null;
@@ -154,37 +168,25 @@ export class ReservationFrom implements OnInit {
   trackByIndex(index: number): number {
     return index;
   }
-  distance: number = 0;
-  price: number = 0;
 
-  onAddressChange(): void {
-    if (this.formData.pickupAddress && this.formData.dropOffAddress) {
-      // Simulate distance calculation (replace this with real API/logic)
-      // this.calculateDistanceAndPrice(this.formData.pickupAddress, this.formData.dropOffAddress);
-      this.RequestService.getDistance(this.formData.pickupAddress, this.formData.dropOffAddress).subscribe({
-        next: (response: GenerialResponse<{ distance: number; }>) => {
-          if (response.success) {
-            this.distance = response.data.distance;
 
-            this.price = response.data.distance * 20;
-          }
-        }
-      })
-    } else {
+
+
+private calculateDistanceAndPrice(pickupAddress: string, dropoffAddress: string): void {
+  this.isloading = true; // Start loading spinner
+  
+  this.RequestService.getDistance(pickupAddress, dropoffAddress).subscribe({
+    next: (response) => {
+      this.distance = response.data.distance; // KM
+      this.price = this.distance * 10; // EGP
+      this.isloading = false; // Stop loading after success
+    },
+    error: (err) => {
+      console.error('Failed to calculate distance', err);
       this.distance = 0;
       this.price = 0;
+      this.isloading = false; // Stop loading after error
     }
-  }
-
-  // private calculateDistanceAndPrice(pickup: string, dropoff: string): void {
-  //   // Example: Random distance simulation (replace with real logic)
-  //   const simulatedDistance = Math.random() * (20 - 5) + 5; // Simulate between 5km to 20km
-  //   this.distance = simulatedDistance;
-
-  //   // Example Pricing: 20 EGP base + 5 EGP per km
-  //   const basePrice = 20;
-  //   const pricePerKm = 5;
-  //   this.price = basePrice + (this.distance * pricePerKm);
-  // }
-
+  });
+}
 }

@@ -28,7 +28,7 @@ export class PatientService {
     return this._.delete<GenerialResponse<any>>(this.api + '/' + id);
   }
   getPatientRequests(): Observable<GenerialResponse<PatientRequest[]>> {
-    return this._.get<GenerialResponse<PatientRequest[]>>(this.api + `/${1007}`+'/requests').pipe(
+    return this._.get<GenerialResponse<PatientRequest[]>>(this.api + `/${1011}`+'/requests').pipe(
       map((response: GenerialResponse<PatientRequest[]>) => {
       response.data.forEach((request: PatientRequest) => {
           request.nurseImg = `${Environment.ImgUrl}${request.nurseImg}`

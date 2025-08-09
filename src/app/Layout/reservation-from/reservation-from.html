@@ -29,100 +29,103 @@
       </div>
 
       <!-- Form Fields -->
-      <div class="field-group">
-        <label for="pickupAddress">Pickup Address *</label>
-        <textarea id="pickupAddress" name="pickupAddress" [(ngModel)]="formData.pickupAddress" required
-          class="form-textarea address-field" readonly rows="2" placeholder="Select a location on the pickup map"
-          (ngModelChange)="onAddressChange()"></textarea>
-      </div>
+      <div class="form-fields">
+        <div class="field-group">
+          <label for="pickupAddress">Pickup Address *</label>
+          <textarea id="pickupAddress" name="pickupAddress" [(ngModel)]="formData.pickupAddress" required
+            class="form-textarea address-field" readonly rows="2"
+            placeholder="Select a location on the pickup map"></textarea>
+        </div>
 
-      <div class="field-group">
-        <label for="dropOffAddress">Drop-off Address *</label>
-        <textarea id="dropOffAddress" name="dropOffAddress" [(ngModel)]="formData.dropOffAddress" required
-          class="form-textarea address-field" readonly rows="2" placeholder="Select a location on the drop-off map"
-          (ngModelChange)="onAddressChange()"></textarea>
-      </div>
+        <div class="field-group">
+          <label for="dropOffAddress">Drop-off Address *</label>
+          <textarea id="dropOffAddress" name="dropOffAddress" [(ngModel)]="formData.dropOffAddress" required
+            class="form-textarea address-field" readonly rows="2"
+            placeholder="Select a location on the drop-off map"></textarea>
+        </div>
+        @if (distance && price) {
+        <div class="field-group text-center">
+          <span class="text-info fs-5">
+            Distance: {{ distance.toFixed(2) }} KM | Price: {{ price.toFixed(2) }} EGP
+          </span>
+        </div>
+        } @else if (isloading) {
+        <div class="field-group text-center">
+          <span class="text-info fs-5 text-success">Calculating distance and price...</span>
+        </div>
+        }
 
-      <!-- Distance & Price Info -->
-       @if(distance && price)
-       {
-         <div class="field-group" >
-           <span class="text-info">
-             Distance: {{ distance.toFixed(2) }} KM | Price: {{ price.toFixed(2) }} EGP
-           </span>
-         </div>
 
-       }
+        <div class="field-group">
+          <label for="scheduledDate">Scheduled Date & Time *</label>
+          <input type="datetime-local" id="scheduledDate" name="scheduledDate" [(ngModel)]="formData.scheduledDate"
+            required class="form-input" [min]="minDateTime" />
+        </div>
 
-      <div class="field-group">
-        <label for="scheduledDate">Scheduled Date & Time *</label>
-        <input type="datetime-local" id="scheduledDate" name="scheduledDate" [(ngModel)]="formData.scheduledDate"
-          required class="form-input" [min]="minDateTime" />
-      </div>
+        <div class="field-group">
+          <label for="emergencyType">Emergency Type *</label>
+          <select id="emergencyType" name="emergencyType" [(ngModel)]="formData.emergencyType" required
+            class="form-input">
+            <option value="">Select emergency type</option>
+            <option value="medical">🏥 Medical Emergency</option>
+            <option value="fire">🔥 Fire Emergency</option>
+            <option value="police">👮 Police Emergency</option>
+            <option value="transport">🚗 Emergency Transport</option>
+            <option value="other">❓ Other</option>
+          </select>
+        </div>
 
-      <div class="field-group">
-        <label for="emergencyType">Emergency Type *</label>
-        <select id="emergencyType" name="emergencyType" [(ngModel)]="formData.emergencyType" required
-          class="form-input">
-          <option value="">Select emergency type</option>
-          <option value="medical">🏥 Medical Emergency</option>
-          <option value="fire">🔥 Fire Emergency</option>
-          <option value="police">👮 Police Emergency</option>
-          <option value="transport">🚗 Emergency Transport</option>
-          <option value="other">❓ Other</option>
-        </select>
-      </div>
+        <div class="field-group">
+          <label for="notes">Additional Notes</label>
+          <textarea id="notes" name="notes" [(ngModel)]="formData.notes" class="form-textarea"
+            placeholder="Provide any additional details about the emergency..." rows="4"></textarea>
+        </div>
 
-      <div class="field-group">
-        <label for="notes">Additional Notes</label>
-        <textarea id="notes" name="notes" [(ngModel)]="formData.notes" class="form-textarea"
-          placeholder="Provide any additional details about the emergency..." rows="4"></textarea>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="submit-btn" [disabled]="emergencyForm.invalid || isSubmitting">
-          <span class="btn-icon">{{ isSubmitting ? '⏳' : '🚨' }}</span>
-          {{ isSubmitting ? 'Submitting...' : 'Submit Emergency Request' }}
-        </button>
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" [disabled]="emergencyForm.invalid || isSubmitting">
+            <span class="btn-icon">{{ isSubmitting ? '⏳' : '🚨' }}</span>
+            {{ isSubmitting ? 'Submitting...' : 'Submit Emergency Request' }}
+          </button>
+        </div>
       </div>
     </div>
 
-<!-- Status Messages -->
-<div class="status-messages">
-  @if (successMessage) {
-  <div class="success-message">
-    <span class="message-icon">✅</span>
-    {{ successMessage }}
-  </div>
-  }
-
-  @if (errorMessage) {
-  <div class="error-message">
-    <span class="message-icon">❌</span>
-    {{ errorMessage }}
-  </div>
-  }
-
-  @if (validationErrors.length > 0) {
-  @if (validationErrors.length > 0) {
-  <div class="validation-errors">
-    <div class="error-header">
-      <span class="message-icon">⚠️</span>
-      Please fix the following errors:
-    </div>
-    <ul>
-      @for (error of validationErrors; track $index) {
-
-      <li>{{ error }}</li>
+    <!-- Status Messages -->
+    <div class="status-messages">
+      @if (successMessage) {
+      <div class="success-message">
+        <span class="message-icon">✅</span>
+        {{ successMessage }}
+      </div>
       }
-    </ul>
-  </div>
-  }
 
-  }
+      @if (errorMessage) {
+      <div class="error-message">
+        <span class="message-icon">❌</span>
+        {{ errorMessage }}
+      </div>
+      }
 
-</div>
-</form>
+      @if (validationErrors.length > 0) {
+      @if (validationErrors.length > 0) {
+      <div class="validation-errors">
+        <div class="error-header">
+          <span class="message-icon">⚠️</span>
+          Please fix the following errors:
+        </div>
+        <ul>
+          @for (error of validationErrors; track $index) {
+
+          <li>{{ error }}</li>
+          }
+        </ul>
+      </div>
+      }
+
+      }
+
+    </div>
+  </form>
 </div>
 
 <app-footer></app-footer>

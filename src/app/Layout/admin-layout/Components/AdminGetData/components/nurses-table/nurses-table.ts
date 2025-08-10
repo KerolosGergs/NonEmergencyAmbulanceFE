@@ -7,11 +7,12 @@ import { ToastrService } from 'ngx-toastr';
 import { AdminService } from '../../../../../../Core/Services/AdminServices/admin-service';
 import { NurseService } from '../../../../../../Core/Services/NurseServise/nurse-service';
 import { AdminNurse } from '../../../../../../Core/interface/Admin/iadmin';
+import { EditNurseModalComponent } from "./edit-nurse-modal/edit-nurse-modal";
 
 @Component({
   selector: 'app-nurses-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EditNurseModalComponent],
   templateUrl: './nurses-table.html',
   styleUrl: './nurses-table.css'
 })
@@ -33,6 +34,10 @@ export class NursesTableComponent implements OnInit {
     totalPages: 0
   };
 
+  // Properties to manage the edit modal
+  isEditModalVisible = false;
+  selectedNurse: AdminNurse | null = null;
+
   constructor(private NurseService: NurseService, private adminService: AdminService) { }
 
   ngOnInit(): void {
@@ -46,7 +51,7 @@ export class NursesTableComponent implements OnInit {
         if(data.success){
           this.nurses = data.data;
           this.applyFilters();
-          
+
         }
         this.loading = false;
       },
@@ -135,9 +140,20 @@ export class NursesTableComponent implements OnInit {
     }
   }
 
+    // This method now opens the modal
   editNurse(nurse: AdminNurse): void {
-    // Placeholder for edit functionality
-    alert(`Edit functionality for ${nurse.fullName} would be implemented here`);
+    this.selectedNurse = nurse;
+    this.isEditModalVisible = true;
+  }
+
+  // This method handles the closing of the modal
+  handleCloseModal(wasUpdated: boolean): void {
+    this.isEditModalVisible = false;
+    this.selectedNurse = null;
+    // If the data was updated in the modal, refresh the table to show changes
+    if (wasUpdated) {
+      this.loadNurses();
+    }
   }
 
   getStatusBadgeClass(isAvailable: boolean): string {
@@ -151,5 +167,7 @@ export class NursesTableComponent implements OnInit {
     }
     return pages;
   }
+
+
 }
 

@@ -30,7 +30,14 @@ export class DriverService {
   // getdriverById(driverId: number): Observable<IDriver> {
   //   return this._httpClient.get<IDriver>(Environment.apiUrl + `/Driver/${driverId}`);
   // }
-  /// my Api 
+  /// my Api
+
+    /**
+   * Sends a PATCH request to update the availability status of a specific driver.
+   * @param id The ID of the driver to update.
+   * @param isAvailable The new availability status.
+   * @returns An Observable with the server's response.
+   */
   getDrivers(): Observable<GenerialResponse<IDriver[]>> {
     return this._httpClient.get<GenerialResponse<IDriver[]>>(this.Api);
   }
@@ -41,7 +48,7 @@ export class DriverService {
     return this._httpClient.get<GenerialResponse<IDriver>>(this.Api + '/' + id);
   }
   updateDriver(id: number, value: IDriver) : Observable<GenerialResponse<any>> {
-    return this._httpClient.patch<GenerialResponse<any>>(this.Api + '/' + id, value);
+    return this._httpClient.put<GenerialResponse<any>>(this.Api + '/' + id, value);
   }
   deleteDriver(id: number) : Observable<GenerialResponse<any>> {
     return this._httpClient.delete<GenerialResponse<any>>(this.Api + '/' + id);

@@ -1,0 +1,82 @@
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <i class="bi bi-pencil-square me-2"></i>
+          Edit Ambulance: <strong>{{ ambulanceData.plateNumber }}</strong>
+        </h5>
+        <button type="button" class="btn-close" (click)="close()"></button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="modal-body">
+        <form #editForm="ngForm" (ngSubmit)="onSubmit(editForm)">
+          <div class="row g-3">
+            <!-- Plate Number -->
+            <div class="col-12">
+              <label for="plateNumber" class="form-label">
+                <i class="bi bi-truck-front me-2"></i>Plate Number
+              </label>
+              <input type="text" class="form-control" id="plateNumber" name="plateNumber" [(ngModel)]="ambulanceData.plateNumber" required>
+            </div>
+
+            <!-- Current Location -->
+            <div class="col-12">
+              <label for="currentLocation" class="form-label">
+                <i class="bi bi-geo-alt me-2"></i>Current Location
+              </label>
+              <input type="text" class="form-control" id="currentLocation" name="currentLocation" [(ngModel)]="ambulanceData.currentLocation" required>
+            </div>
+
+            <!-- Status Dropdown -->
+            <div class="col-md-6">
+              <label for="status" class="form-label">
+                <i class="bi bi-activity me-2"></i>Status
+              </label>
+              <select class="form-select" id="status" name="status" [(ngModel)]="ambulanceData.status">
+                <option *ngFor="let option of statusOptions" [ngValue]="option.value">
+                  {{ option.label }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Type Dropdown -->
+            <div class="col-md-6">
+              <label for="type" class="form-label">
+                <i class="bi bi-hospital me-2"></i>Type
+              </label>
+              <select class="form-select" id="type" name="type" [(ngModel)]="ambulanceData.type">
+                <option [ngValue]="0">Basic</option>
+                <option [ngValue]="1">Advanced</option>
+              </select>
+            </div>
+
+            <!-- Driver Dropdown -->
+            <div class="col-12">
+              <label for="driverId" class="form-label">
+                <i class="bi bi-person-badge me-2"></i>Driver
+              </label>
+              <select class="form-select" id="driverId" name="driverId" [(ngModel)]="ambulanceData.driverId">
+                <option [ngValue]="null">-- No Driver Assigned --</option>
+                <option *ngFor="let driver of drivers" [ngValue]="driver.id">
+                  {{ driver.userFullName }}
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Modal Footer -->
+          <div class="modal-footer mt-4">
+            <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!editForm.valid">
+              <i class="bi bi-check-circle me-2"></i>Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

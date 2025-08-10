@@ -39,7 +39,7 @@ export class NurseService {
   }
 
   updateNurse(id: number, value: INurse) : Observable<GenerialResponse<INurse>> {
-    return this._httpClient.patch<GenerialResponse<INurse>>(this.api + '/' + id, value);
+    return this._httpClient.put<GenerialResponse<INurse>>(this.api + '/' + id, value);
   }
 
   deleteNurse(id: number): Observable<GenerialResponse<any>> {
@@ -49,7 +49,7 @@ export class NurseService {
     return this._httpClient.get<GenerialResponse<INurse[]>>(this.api + '/available');
   }
   NurseAvailability(id: number, isAvailable: boolean): Observable<GenerialResponse<any>> {
-    return this._httpClient.patch<GenerialResponse<any>>(this.api + '/' + id + '/toggle-availability', { isAvailable });
+    return this._httpClient.patch<GenerialResponse<any>>(this.api + '/' + id + '/toggle-availability', { isAvailable } );
   }
 
 }

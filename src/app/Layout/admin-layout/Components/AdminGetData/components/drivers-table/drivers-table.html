@@ -129,9 +129,9 @@
             <i class="bi bi-chevron-left"></i>
           </button>
         </li>
-        <li 
-          *ngFor="let page of getPageNumbers()" 
-          class="page-item" 
+        <li
+          *ngFor="let page of getPageNumbers()"
+          class="page-item"
           [class.active]="page === pagination.currentPage"
         >
           <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
@@ -145,4 +145,11 @@
     </nav>
   </div>
 </div>
+
+
+<app-edit-driver-modal
+  *ngIf="isEditModalVisible"
+  [driver]="selectedDriver"
+  (closeModal)="handleCloseModal($event)"
+></app-edit-driver-modal>
 

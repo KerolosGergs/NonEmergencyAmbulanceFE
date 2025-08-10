@@ -14,3 +14,9 @@ export interface AmbulanceDto {
   type: number
   driverId: number
 }
+
+
+
+
+
+

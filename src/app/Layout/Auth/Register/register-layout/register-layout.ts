@@ -40,7 +40,7 @@ export class RegisterLayout implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(100)]],
       confirmPassword: ['', Validators.required],
-      phoneNumber: ['', [Validators.required, Validators.pattern(/^[\+]?[1-9][\d]{0,15}$/)]],
+      phoneNumber: ['', [Validators.required, Validators.pattern(/^0\d{10}$/)]],
       dateOfBirth: ['', [Validators.required, this.dateOfBirthValidator]],
       gender: ['', [Validators.required]],
       address: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
@@ -146,7 +146,7 @@ export class RegisterLayout implements OnInit {
         if(!res.success){
           this.toastr.success(res.message, 'Success');
           this.router.navigate(['/login']);
-          
+
         }else{
           this.toastr.error(res.message, 'Error');
         }

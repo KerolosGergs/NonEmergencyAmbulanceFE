@@ -12,6 +12,7 @@ import { AdminGetDataComponent } from './Layout/admin-layout/Components/AdminGet
 import { ReservationFrom } from './Layout/reservation-from/reservation-from';
 import { BookingViewComponent } from './Layout/admin-layout/Components/AdminDashborad/Components/view-booking/view-booking';
 import { PatintLayout } from './Layout/patint-layout/patint-layout';
+import { PatientDetails } from './Layout/NurseDashboard/components/patient-details/patient-details';
 
 export const routes: Routes = [
 
@@ -34,6 +35,9 @@ export const routes: Routes = [
                     { path: 'dashboard', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/admin-layout/admin-layout').then(m => m.AdminLayout) },
                     { path: 'forms', loadComponent: () => import('./Layout/admin-layout/Components/AdminForms/dashboard-layout/dashboard-layout').then(m => m.DashboardLayoutComponent) },
                     { path: 'get-data', loadComponent: () => import('./Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout').then(m => m.AdminGetDataComponent) },
+                    // { path: 'withdrawal-summary', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/withdrawal-summary/withdrawal-summary').then(m => m.) },
+                    { path: 'withdrawal-management', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/withdrawal-management/withdrawal-management').then(m => m.WithdrawalManagementComponent) },
+                    { path: 'profit-management', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/profit-management/profit-management').then(m => m.ProfitManagementComponent) },
                 ]
             },
             {path: 'patient', component: PatintLayout},

@@ -6,6 +6,9 @@ export interface IDriver {
   isAvailable: boolean
   userId: string
   userFullName: string
+  // Optional image fields (API may return one of these)
+  imgUrl?: string
+  driverImg?: string
 }
 export interface IDriverRegister {
   email: string

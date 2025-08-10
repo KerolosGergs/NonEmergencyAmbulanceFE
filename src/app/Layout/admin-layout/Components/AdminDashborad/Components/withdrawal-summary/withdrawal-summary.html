@@ -1,0 +1,66 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Withdrawal Summary</h2>
+
+  <div *ngIf="loading" class="alert alert-info">Loading...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div *ngIf="summary && !loading" class="row g-3">
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Total Requests</h5>
+          <p class="display-6">{{ summary.totalRequests }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Pending</h5>
+          <p class="display-6 text-warning">{{ summary.pendingRequests }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Approved</h5>
+          <p class="display-6 text-success">{{ summary.approvedRequests }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title">Completed</h5>
+          <p class="display-6 text-info">{{ summary.completedRequests }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6>Total Requested Amount</h6>
+          <p class="fs-4">${{ summary.totalRequestedAmount | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6>Total Approved Amount</h6>
+          <p class="fs-4 text-success">${{ summary.totalApprovedAmount | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center">
+        <div class="card-body">
+          <h6>Total Completed Amount</h6>
+          <p class="fs-4 text-info">${{ summary.totalCompletedAmount | number:'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

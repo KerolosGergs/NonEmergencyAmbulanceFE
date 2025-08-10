@@ -1,0 +1,56 @@
+<div class="container-fluid">
+  <h2 class="mb-4">Profit Management</h2>
+
+  <div *ngIf="loading" class="alert alert-info">Loading...</div>
+  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+  <div class="table-responsive" *ngIf="!loading">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Trip</th>
+          <th>Total Price</th>
+          <th>Driver Profit</th>
+          <th>Nurse Profit</th>
+          <th>Platform Profit</th>
+          <th>Distribution Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of profitDistributions">
+          <td>{{ d.id }}</td>
+          <td>#{{ d.tripId }}</td>
+          <td>${{ d.totalTripPrice | number: '1.2-2' }}</td>
+          <td>${{ d.driverProfit || 0 | number: '1.2-2' }}</td>
+          <td>${{ d.nurseProfit || 0 | number: '1.2-2' }}</td>
+          <td>${{ d.platformProfit || 0 | number: '1.2-2' }}</td>
+          <td>{{ d.distributionDate | date: 'medium' }}</td>
+          <td>
+            <button class="btn btn-sm btn-primary" (click)="openDistributeModal(d.tripId)">Redistribute</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Distribute Modal -->
+  <div class="modal" tabindex="-1" [class.show]="showDistributeModal" [style.display]="showDistributeModal ? 'block' : 'none'">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Distribute Profits</h5>
+          <button type="button" class="btn-close" (click)="closeDistributeModal()"></button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to distribute profits for Trip #{{ selectedTripId }}?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeDistributeModal()">Cancel</button>
+          <button type="button" class="btn btn-primary" (click)="distributeProfits()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

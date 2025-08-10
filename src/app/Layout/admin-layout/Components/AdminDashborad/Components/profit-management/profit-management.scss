@@ -1,0 +1,42 @@
+/* Profit Management Styles */
+.table {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+
+  thead th {
+    background: #f8fafc;
+    color: #374151;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-size: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  tbody tr {
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+
+  tbody tr:hover {
+    background: #f9fafb;
+    transform: scale(1.003);
+  }
+
+  td, th {
+    vertical-align: middle;
+  }
+}
+
+.btn {
+  border-radius: 10px;
+}
+
+.modal.show {
+  background: rgba(0,0,0,0.5);
+}
+.modal .modal-content {
+  border-radius: 14px;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}

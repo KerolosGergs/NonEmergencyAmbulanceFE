@@ -5,23 +5,25 @@
       <p>Track and manage your ambulance trips</p>
     </div>
 
-    <div class="loading" *ngIf="loading">
+    @if (loading) {
       <div class="spinner"></div>
       <p>Loading trips...</p>
-    </div>
+    }
 
-    <div class="error" *ngIf="error && !loading">
+    @if (error && !loading) {
       <p>{{ error }}</p>
-    </div>
+    }
 
-    <div class="trips-container" *ngIf="!loading && !error">
-      <div class="no-trips" *ngIf="trips.length === 0">
+    @if (!loading && !error) {
+    <div class="trips-container">
+      @if (trips.length === 0) {
         <div class="no-trips-icon">🚑</div>
         <h3>No trips found</h3>
         <p>You haven't taken any trips yet. Book an ambulance to get started!</p>
-      </div>
+      }
 
-      <div class="trip-card" *ngFor="let trip of trips">
+      @for (trip of trips; track trip.tripId) {
+      <div class="trip-card">
         <div class="trip-header">
           <div class="trip-id">Trip #{{ trip.tripId }}</div>
           <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
@@ -92,12 +94,22 @@
           </div>
         </div>
 
-        <div class="trip-actions" *ngIf="trip.tripStatus === 2">
+        <!-- Tracking toggle and map -->
+        <div class="track-controls">
+          <details>
+            <summary>Show trip map</summary>
+            <app-trip-tracker [trip]="trip"></app-trip-tracker>
+          </details>
+        </div>
+
+        @if (trip.tripStatus === 2) {
           <button class="btn btn-primary" (click)="completeTrip(trip.tripId)">
             Complete Trip
           </button>
-        </div>
+        }
       </div>
+      }
     </div>
+    }
   </div>
 </div>

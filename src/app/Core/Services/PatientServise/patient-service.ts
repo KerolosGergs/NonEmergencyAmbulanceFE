@@ -5,6 +5,7 @@ import { GenerialResponse } from '../../interface/GenerialResponse/GenerialRespo
 import { map, Observable } from 'rxjs';
 import { IPatient, PatientRequest, RequestStatus } from '../../interface/Patient/ipatient';
 import { AuthService } from '../AuthServices/auth-service';
+import { ITrip } from '../../interface/Trip/itrip';
 
 
 @Injectable({
@@ -27,8 +28,8 @@ export class PatientService {
   deletePatient(id: number): Observable<GenerialResponse<any>> {
     return this._.delete<GenerialResponse<any>>(this.api + '/' + id);
   }
-  getPatientRequests(): Observable<GenerialResponse<PatientRequest[]>> {
-    return this._.get<GenerialResponse<PatientRequest[]>>(this.api + `/${1011}`+'/requests').pipe(
+  getPatientRequests(id:number): Observable<GenerialResponse<PatientRequest[]>> {
+    return this._.get<GenerialResponse<PatientRequest[]>>(this.api + `/${id}`+'/requests').pipe(
       map((response: GenerialResponse<PatientRequest[]>) => {
       response.data.forEach((request: PatientRequest) => {
           request.nurseImg = `${Environment.ImgUrl}${request.nurseImg}`
@@ -40,8 +41,8 @@ export class PatientService {
       })
     );
   }
-  getPatientTrips(): Observable<GenerialResponse<IPatient[]>> {
-    return this._.get<GenerialResponse<IPatient[]>>(this.api + '/trips');
+  getPatientTrips(id:number): Observable<GenerialResponse<ITrip[]>> {
+    return this._.get<GenerialResponse<ITrip[]>>(this.api +`/${id}`+ '/trips');
   }
 
     getStatusText(status: RequestStatus): string {

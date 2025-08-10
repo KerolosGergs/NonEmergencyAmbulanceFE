@@ -11,12 +11,24 @@ import { DriverInfo, NurseInfo, PatientInfo } from './Models/patient-model';
 import { DriverInfoComponent } from "./Components/driver-info/driver-info";
 import { NurseInfoComponent } from './Components/nurse-info/nurse-info';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgClass } from '@angular/common';
+import { NgClass, CommonModule } from '@angular/common';
 import { Nav } from "../../Shared/Components/nav/nav";
 import { Footer } from "../../Shared/Components/footer/footer";
+import { TripPage } from './Components/trip-page/trip-page';
+import { PatientRequestsComponent } from './Components/patient-requests/patient-requests';
 @Component({
   selector: 'app-patint-layout',
-  imports: [PatinetInfoComponent, DriverInfoComponent, NurseInfoComponent, FormsModule, ReactiveFormsModule, NgClass, Nav, Footer],
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    Nav,
+    Footer,
+    // Patient views
+    PatientRequestsComponent,
+    TripPage
+  ],
   templateUrl: './patint-layout.html',
   styleUrl: './patint-layout.scss'
 })
@@ -35,7 +47,7 @@ export class PatintLayout implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(
-      this.patientService.getPatientRequests().subscribe(
+      this.patientService.getPatientRequests(1).subscribe(
         requests => {
           this.requests = requests.data;
         }

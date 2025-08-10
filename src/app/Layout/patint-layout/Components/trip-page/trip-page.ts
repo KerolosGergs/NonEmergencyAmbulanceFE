@@ -1,21 +1,25 @@
+import { Patient } from './../../../admin-layout/Components/AdminGetData/models/interfaces';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TripService } from '../../../../Core/Services/TripService/trip';
 import { ITrip } from '../../../../Core/interface/Trip/itrip';
 import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
 import { Environment } from '../../../../../environments/environment';
+import { TripTracker } from '../trip-tracker/trip-tracker';
+import { PatientService } from '../../../../Core/Services/PatientServise/patient-service';
+import { IPatient } from '../../../../Core/interface/Patient/ipatient';
 
 @Component({
   selector: 'app-trip-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TripTracker],
   templateUrl: './trip-page.html',
   styleUrls: ['./trip-page.scss']
 })
 export class TripPage implements OnInit {
   private readonly tripService = inject(TripService);
   private readonly authService = inject(AuthService);
-
+  private readonly PatientService = inject(PatientService);
   trips: ITrip[] = [];
   loading = false;
   error = '';
@@ -26,10 +30,11 @@ export class TripPage implements OnInit {
 
   loadPatientTrips(): void {
     this.loading = true;
-    const patientId = this.authService.getProfileId();
+    // const patientId = this.authService.getProfileId();
+    // const patientId:number = 1;
 
-    if (patientId) {
-      this.tripService.getTripsForPatient(patientId).subscribe({
+    if (1) {
+      this.PatientService.getPatientTrips(1).subscribe({
         next: (response) => {
           if (response.success) {
             this.trips = response.data;
@@ -51,16 +56,16 @@ export class TripPage implements OnInit {
   }
 
   completeTrip(tripId: number): void {
-    this.tripService.updateTripStatus(tripId, 3).subscribe({
-      next: (response) => {
-        if (response.success) {
-          this.loadPatientTrips();
-        }
-      },
-      error: (err) => {
-        console.error('Error completing trip:', err);
-      }
-    });
+    // this.tripService.updateTripStatus(tripId, 3).subscribe({
+    //   next: (response) => {
+    //     if (response.success) {
+    //       this.loadPatientTrips();
+    //     }
+    //   },
+    //   error: (err) => {
+    //     console.error('Error completing trip:', err);
+    //   }
+    // });
   }
 
   getStatusText(status: number): string {

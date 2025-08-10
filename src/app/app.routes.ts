@@ -35,7 +35,7 @@ export const routes: Routes = [
                     { path: 'dashboard', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/admin-layout/admin-layout').then(m => m.AdminLayout) },
                     { path: 'forms', loadComponent: () => import('./Layout/admin-layout/Components/AdminForms/dashboard-layout/dashboard-layout').then(m => m.DashboardLayoutComponent) },
                     { path: 'get-data', loadComponent: () => import('./Layout/admin-layout/Components/AdminGetData/dashboard-layout/dashboard-layout').then(m => m.AdminGetDataComponent) },
-                    // { path: 'withdrawal-summary', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/withdrawal-summary/withdrawal-summary').then(m => m.) },
+                    { path: 'withdrawal-summary', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/withdrawal-summary/withdrawal-summary').then(m => m.WithdrawalSummaryComponent) },
                     { path: 'withdrawal-management', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/withdrawal-management/withdrawal-management').then(m => m.WithdrawalManagementComponent) },
                     { path: 'profit-management', loadComponent: () => import('./Layout/admin-layout/Components/AdminDashborad/Components/profit-management/profit-management').then(m => m.ProfitManagementComponent) },
                 ]

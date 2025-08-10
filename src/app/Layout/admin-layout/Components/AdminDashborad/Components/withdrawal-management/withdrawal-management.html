@@ -1,10 +1,15 @@
 <div class="container-fluid">
   <h2 class="mb-4">Withdrawal Management</h2>
 
-  <div *ngIf="loading" class="alert alert-info">Loading...</div>
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+  @if (loading) {
+    <div class="alert alert-info">Loading...</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
 
-  <div class="table-responsive" *ngIf="!loading">
+  @if (!loading) {
+  <div class="table-responsive">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -19,7 +24,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let r of withdrawalRequests">
+        @for (r of withdrawalRequests; track r.id) {
+        <tr>
           <td>{{ r.id }}</td>
           <td>{{ r.userName }}</td>
           <td>{{ r.userType }}</td>
@@ -33,9 +39,11 @@
             <button class="btn btn-sm btn-primary" (click)="openActionModal(r, 'complete')">Complete</button>
           </td>
         </tr>
+        }
       </tbody>
     </table>
   </div>
+  }
 
   <!-- Action Modal -->
   <div class="modal" tabindex="-1" [class.show]="showActionModal" [style.display]="showActionModal ? 'block' : 'none'">
@@ -46,14 +54,18 @@
           <button type="button" class="btn-close" (click)="closeActionModal()"></button>
         </div>
         <div class="modal-body">
-          <div *ngIf="actionType !== 'complete'" class="mb-3">
+          @if (actionType !== 'complete') {
+          <div class="mb-3">
             <label>Admin Notes (optional)</label>
             <textarea [(ngModel)]="notes" class="form-control" rows="3"></textarea>
           </div>
-          <div *ngIf="selectedRequest">
+          }
+          @if (selectedRequest) {
+          <div>
             <p>User: <strong>{{ selectedRequest.userName }}</strong></p>
             <p>Amount: <strong>${{ selectedRequest.amount | number: '1.2-2' }}</strong></p>
           </div>
+          }
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" (click)="closeActionModal()">Cancel</button>

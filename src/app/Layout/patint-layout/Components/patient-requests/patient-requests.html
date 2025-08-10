@@ -1,0 +1,95 @@
+<div class="patient-requests">
+  @if (loading) {
+    <div class="alert alert-info">Loading requests...</div>
+  }
+  @if (error) {
+    <div class="alert alert-danger">{{ error }}</div>
+  }
+
+  @for (request of requests; track request.requestId) {
+  <div class="simple-request-card mb-3">
+    <div class="request-main">
+      <div class="request-left">
+        <div class="request-icon"><i class="fas fa-ambulance"></i></div>
+        <div class="request-details">
+          <h5 class="request-title">{{request.emergencyType}} Emergency</h5>
+          <div class="request-meta">
+            <span class="meta-item">
+              <i class="fas fa-calendar text-muted"></i>
+              {{formatDate(request.requestDate)}}
+            </span>
+            <span class="meta-item">
+              <i class="fas fa-map-marker-alt text-muted"></i>
+              {{request.pickupAddress}}
+            </span>
+            <span class="meta-item">
+              <i class="fas fa-flag-checkered text-muted"></i>
+              {{request.dropOffAddress}}
+            </span>
+          </div>
+          @if (request.notes) {
+          <div class="request-notes">
+            <i class="fas fa-sticky-note text-muted"></i>
+            {{request.notes}}
+          </div>
+          }
+        </div>
+      </div>
+
+      <div class="request-right">
+        <div class="price-section">
+          <div class="price-label">Total Price</div>
+          <div class="price-amount">${{getEstimatedPrice(request)}}</div>
+        </div>
+        <div class="status-section">
+          <span class="status-badge" [ngClass]="getStatusClass(request.status)">{{ getStatusText(request.status) }}</span>
+        </div>
+        @if (request.status === 3) {
+        <div class="action-section">
+          <button class="btn btn-sm btn-outline-danger me-2" (click)="cancelRequest(request.requestId)" [disabled]="isProcessing">
+            <i class="fas fa-times"></i> Cancel
+          </button>
+          <button class="btn btn-sm btn-success" (click)="confirmRequest(request.requestId)" [disabled]="isProcessing">
+            <i class="fas fa-check"></i> Confirm
+          </button>
+        </div>
+        }
+      </div>
+    </div>
+
+    @if (request.driverId || request.nurseId) {
+    <div class="team-info">
+      <div class="team-title">Assigned Team</div>
+      <div class="team-members">
+        @if (request.driverId) {
+        <div class="team-member">
+          <img [src]="getImageUrl(request.driverImg)" class="member-avatar" alt="Driver">
+          <div class="member-details">
+            <div class="member-name">{{request.driverName}}</div>
+            <div class="member-role">Driver</div>
+          </div>
+        </div>
+        }
+        @if (request.nurseId) {
+        <div class="team-member">
+          <img [src]="getImageUrl(request.nurseImg)" class="member-avatar" alt="Nurse">
+          <div class="member-details">
+            <div class="member-name">{{request.nurseName}}</div>
+            <div class="member-role">Nurse</div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  }
+
+  @if (!loading && requests.length === 0) {
+  <div class="text-center py-5">
+    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">No requests available</h4>
+    <p class="text-muted">There are currently no patient requests to display.</p>
+  </div>
+  }
+</div>

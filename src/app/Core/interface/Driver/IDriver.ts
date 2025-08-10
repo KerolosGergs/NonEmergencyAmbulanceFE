@@ -5,4 +5,5 @@ export interface IDriver {
   isAvailable: boolean
   userId: string
   userFullName: string
+  imgUrl:string
 }

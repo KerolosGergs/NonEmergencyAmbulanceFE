@@ -30,7 +30,7 @@
           <th scope="col">From</th>
           <th scope="col">To</th>
           <th scope="col">Date & Time</th>
-          <th scope="col">Priority</th>
+          <th scope="col">Price</th>
           <th scope="col">Actions</th>
         </tr>
       </thead>
@@ -47,7 +47,6 @@
               />
               <div>
                 <div class="fw-bold">{{ r.patientName }}</div>
-                <div class="text-muted small">ID: {{ r.patientId }}</div>
               </div>
             </div>
           </td>
@@ -58,8 +57,8 @@
             <div class="text-muted small">{{ r.scheduledDate | date: 'h:mm a' }}</div>
           </td>
           <td>
-            <span class="fw-bold" [ngStyle]="getEmergencyStyle(r.emergencyType)">
-              {{ r.emergencyType }}
+            <span class="fw-bold text-success" >
+              {{ r.price.toString() | currency:'EGP':'symbol':'1.2-2' }}
             </span>
           </td>
           <td>

@@ -1,0 +1,129 @@
+.withdrawal-summary-container {
+  .summary-card {
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+      
+      i {
+        opacity: 0.9;
+        font-size: 2rem;
+      }
+      
+      h4 {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      
+      p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+      }
+    }
+  }
+  
+  .amount-card {
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-body {
+      padding: 1.5rem;
+      
+      h6 {
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+      
+      h3 {
+        font-weight: 700;
+        margin-bottom: 0;
+      }
+    }
+  }
+  
+  .status-breakdown {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    
+    .status-item {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border: 1px solid #e9ecef;
+      transition: background-color 0.3s ease;
+      
+      &:hover {
+        background: #e9ecef;
+      }
+      
+      .badge {
+        font-size: 0.75rem;
+        padding: 0.5rem 0.75rem;
+      }
+      
+      .status-count {
+        font-weight: 600;
+        color: #495057;
+        margin-left: 0.5rem;
+      }
+    }
+  }
+  
+  .card-header {
+    border-radius: 12px 12px 0 0 !important;
+    
+    h5 {
+      font-weight: 600;
+      
+      i {
+        opacity: 0.9;
+      }
+    }
+  }
+  
+  .alert {
+    border-radius: 8px;
+    border: none;
+    
+    i {
+      opacity: 0.8;
+    }
+  }
+  
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .withdrawal-summary-container {
+    .summary-card, .amount-card {
+      margin-bottom: 1rem;
+    }
+    
+    .status-breakdown {
+      flex-direction: column;
+      
+      .status-item {
+        justify-content: center;
+      }
+    }
+  }
+}

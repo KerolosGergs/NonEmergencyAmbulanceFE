@@ -1,8 +1,13 @@
 import { NurseService } from './../../../../Core/Services/NurseServise/nurse-service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+<<<<<<< Updated upstream
 import { ITripData } from './../../../../Core/interface/itrip-data';
 import { Trip } from '../../../../Core/Services/TripService/trip';
+=======
+import { ITrip } from '../../../../Core/interface/Trip/itrip';
+import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-your-schedule',
@@ -14,7 +19,12 @@ import { Trip } from '../../../../Core/Services/TripService/trip';
 export class YourSchedule implements OnInit {
   // Dependencies
   private readonly nurseService = inject(NurseService);
+<<<<<<< Updated upstream
 
+=======
+  private readonly TripService = inject(TripService);
+  private readonly authService = inject(AuthService);
+>>>>>>> Stashed changes
   // Data
   schedule: ITripData[] = [];
   scheduleDate: Date = new Date();
@@ -22,7 +32,7 @@ export class YourSchedule implements OnInit {
   /** Lifecycle hook */
   ngOnInit(): void {
 
-    this.getTrips(4);
+    this.getTrips(this.authService.getProfileId()!);
   }
 
   /** Fetch trip data from service */

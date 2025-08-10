@@ -1,0 +1,103 @@
+<div class="trip-page">
+  <div class="container">
+    <div class="header">
+      <h1>My Trips</h1>
+      <p>Track and manage your ambulance trips</p>
+    </div>
+    
+    <div class="loading" *ngIf="loading">
+      <div class="spinner"></div>
+      <p>Loading trips...</p>
+    </div>
+
+    <div class="error" *ngIf="error && !loading">
+      <p>{{ error }}</p>
+    </div>
+
+    <div class="trips-container" *ngIf="!loading && !error">
+      <div class="no-trips" *ngIf="trips.length === 0">
+        <div class="no-trips-icon">🚑</div>
+        <h3>No trips found</h3>
+        <p>You haven't taken any trips yet. Book an ambulance to get started!</p>
+      </div>
+
+      <div class="trip-card" *ngFor="let trip of trips">
+        <div class="trip-header">
+          <div class="trip-id">Trip #{{ trip.tripId }}</div>
+          <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
+            {{ getStatusText(trip.tripStatus) }}
+          </div>
+        </div>
+
+        <div class="trip-details">
+          <div class="detail-row">
+            <div class="detail-item">
+              <i class="icon">📍</i>
+              <div class="detail-content">
+                <label>Pickup</label>
+                <span>{{ trip.pickupAddress }}</span>
+              </div>
+            </div>
+            <div class="detail-item">
+              <i class="icon">🎯</i>
+              <div class="detail-content">
+                <label>Destination</label>
+                <span>{{ trip.dropOffAddress }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-item">
+              <i class="icon">👨‍⚕️</i>
+              <div class="detail-content">
+                <label>Driver</label>
+                <span>{{ trip.driverName || 'Not assigned' }}</span>
+              </div>
+            </div>
+            <div class="detail-item">
+              <i class="icon">👩‍⚕️</i>
+              <div class="detail-content">
+                <label>Nurse</label>
+                <span>{{ trip.nurseName || 'Not assigned' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-row">
+            <div class="detail-item">
+              <i class="icon">📅</i>
+              <div class="detail-content">
+                <label>Date</label>
+                <span>{{ trip.startTime | date:'medium' }}</span>
+              </div>
+            </div>
+            <div class="detail-item">
+              <i class="icon">💰</i>
+              <div class="detail-content">
+                <label>Price</label>
+                <span class="price">${{ trip.price }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-row" *ngIf="trip.distanceKM">
+            <div class="detail-item">
+              <i class="icon">📏</i>
+              <div class="detail-content">
+                <label>Distance</label>
+                <span>{{ trip.distanceKM }} km</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trip-actions" *ngIf="trip.tripStatus === 2">
+          <button class="btn btn-primary" (click)="completeTrip(trip.tripId)">
+            Complete Trip
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

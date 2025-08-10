@@ -3,14 +3,20 @@ import { DriverHeader } from "../../components/driver-header/driver-header";
 import { PendingRequests } from "../../components/pending-requests/pending-requests";
 import { TripDetails } from "../../components/trip-details/trip-details";
 import { Schedule } from "../../components/schedule/schedule";
+<<<<<<< Updated upstream
 import { Nav } from "../../../../Shared/Components/nav/nav";
 import { Footer } from "../../../../Shared/Components/footer/footer";
 import { ITripData } from '../../../../Core/interface/itrip-data';
 import { Driver } from '../../../../Core/Services/Driver/driver';
+=======
+import { DriverService } from '../../../../Core/Services/Driver/driver';
+import { TripService } from '../../../../Core/Services/TripService/trip';
+import { ITrip } from '../../../../Core/interface/Trip/itrip';
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-driver-layout',
-  imports: [DriverHeader, PendingRequests, TripDetails, Schedule, Nav, Footer],
+  imports: [DriverHeader, PendingRequests, TripDetails, Schedule],
   templateUrl: './driver-layout.html',
   styleUrl: './driver-layout.scss'
 })

@@ -1,0 +1,107 @@
+<div class="nurse-requests card shadow-sm">
+  <div class="card-header d-flex flex-wrap gap-2 justify-content-between align-items-center">
+    <div class="title d-flex align-items-center gap-2">
+      <i class="bi bi-clipboard2-pulse fs-5 text-primary"></i>
+      <h6 class="m-0 fw-bold">Assigned Requests</h6>
+      <span class="badge bg-primary-subtle text-primary">{{ filtered.length }}</span>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      <div class="money-badge px-3 py-2 rounded border text-success fw-semibold">
+        <i class="bi bi-cash-stack me-1"></i>${{ totalMoney | number:'1.2-2' }}
+      </div>
+
+      <input class="form-control form-control-sm search"
+             placeholder="Search patient, phone, address…"
+             [(ngModel)]="q" (ngModelChange)="applyFilters()">
+
+      <div class="d-flex gap-2">
+        <select class="form-select form-select-sm" [(ngModel)]="sortBy" (change)="applyFilters()">
+          <option value="scheduledDate">Sort by Date</option>
+          <option value="price">Sort by Price</option>
+        </select>
+        <select class="form-select form-select-sm" [(ngModel)]="sortDir" (change)="applyFilters()">
+          <option value="desc">Desc</option>
+          <option value="asc">Asc</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-body">
+    @if (loading) {
+      <div class="placeholder-grid">
+        @for ( i of [1,2,3,4];track $index) {
+          <div class="skeleton"></div>
+        }
+      </div>
+    } @else if (error) {
+      <div class="alert alert-danger d-flex align-items-center gap-2">
+        <i class="bi bi-exclamation-triangle"></i>
+        {{ error }}
+      </div>
+    } @else if (!filtered.length) {
+      <div class="empty text-center py-4">
+        <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+        <div class="text-muted">No requests assigned to this nurse.</div>
+      </div>
+    } @else {
+      <div class="row g-3">
+        @for (req of filtered; track req.requestId) {
+          <div class="col-12 col-md-6 col-xl-4">
+            <div class="req-card h-100 shadow-sm rounded border">
+              <div class="req-card-header d-flex justify-content-between align-items-start p-3 border-bottom">
+                <div>
+                  <div class="fw-semibold">{{ req.patientName }}</div>
+                  <div class="small text-muted">
+                    <i class="bi bi-telephone me-1"></i>{{ req.patientPhone }}
+                  </div>
+                </div>
+                <span class="badge {{ statusBadgeClass(req.status) }}">
+                  {{ statusText(req.status) }}
+                </span>
+              </div>
+
+              <div class="p-3 d-grid gap-2">
+                <div class="d-flex gap-2 align-items-start">
+                  <i class="bi bi-geo-alt text-primary mt-1"></i>
+                  <div>
+                    <div class="small text-muted">Pickup</div>
+                    <div class="fw-medium">{{ req.pickupAddress }}</div>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 align-items-start">
+                  <i class="bi bi-flag text-primary mt-1"></i>
+                  <div>
+                    <div class="small text-muted">Drop-off</div>
+                    <div class="fw-medium">{{ req.dropOffAddress }}</div>
+                  </div>
+                </div>
+
+                <div class="d-flex gap-2 align-items-center">
+                  <i class="bi bi-calendar3 text-primary"></i>
+                  <div class="small">
+                    {{ req.scheduledDate | date:'EEE, MMM d, y, h:mm a' }}
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-1">
+                  <span class="badge bg-light text-dark px-3 py-2">
+                    <i class="bi bi-activity me-1"></i>{{ req.emergencyType | titlecase }}
+                  </span>
+
+                  <span class="price fw-semibold text-success">
+                    ${{ (req.price.toString()) | number:'1.2-2' }}
+                  </span>
+                </div>
+              </div>
+
+             
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>

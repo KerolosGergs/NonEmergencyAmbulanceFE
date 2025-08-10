@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
@@ -7,7 +7,7 @@ import { IRequestData } from '../../../../Core/interface/irequest';
 
 @Component({
   selector: 'app-pending-approval-requests',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,CurrencyPipe],
   templateUrl: './pending-approval-requests.html',
   styleUrls: ['./pending-approval-requests.scss'],
 })
@@ -83,6 +83,7 @@ export class PendingApprovalRequests implements OnInit {
   }
 
   /** Approve a request */
+<<<<<<< Updated upstream
   approveRequest(request: IRequestData): void {
     this.requests = this.requests.filter(r => r.requestId !== request.requestId);
     this._nurseService.assignNurseToRequest(request.requestId, 4).subscribe({
@@ -90,6 +91,35 @@ export class PendingApprovalRequests implements OnInit {
       error: err => console.error('Error approving request:', err),
     });
   }
+=======
+ approveRequest(request: IRequest): void {
+  const dto: IAssignNurse = {
+    RequestId: request.requestId,
+    NurseId:this._AuthService.getProfileId()!
+    // NurseId: this._AuthService.getProfileId()!
+  };
+
+  this._RequestService.assignNurse(dto).subscribe({
+    next: (res) => {
+      if (res.success) {
+        // Remove the approved request from the list
+        this.requests = this.requests.filter(r => r.requestId !== request.requestId);
+
+        // Success Toast Message
+        this.toastr.success(res.message || 'Request approved successfully!', 'Success');
+
+      } else {
+        // Handle API returned failure case
+        this.toastr.error(res.message || 'Failed to approve the request.', 'Error');
+      }
+    },
+    error: (err) => {
+      console.error('Error approving request:', err);
+      this.toastr.error('An error occurred while approving the request.', 'Error');
+    }
+  });
+}
+>>>>>>> Stashed changes
 
   /** Decline a request */
   declineRequest(request: IRequestData): void {

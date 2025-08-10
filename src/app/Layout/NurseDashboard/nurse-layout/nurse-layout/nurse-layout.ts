@@ -12,6 +12,11 @@ import { PatientDetails } from '../../components/patient-details/patient-details
 import { YourSchedule } from '../../components/your-schedule/your-schedule';
 import { Nav } from '../../../../Shared/Components/nav/nav';
 import { Footer } from '../../../../Shared/Components/footer/footer';
+<<<<<<< Updated upstream
+=======
+import { IRequest } from '../../../../Core/interface/Request/irequest';
+import { NurseRequests } from "../../components/nurse-requests/nurse-requests";
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-nurse-layout',
@@ -22,9 +27,9 @@ import { Footer } from '../../../../Shared/Components/footer/footer';
     PendingApprovalRequests,
     PatientDetails,
     YourSchedule,
-    Nav,
-    Footer
-  ],
+   
+    NurseRequests
+],
   templateUrl: './nurse-layout.html',
   styleUrls: ['./nurse-layout.scss']
 })
@@ -44,7 +49,15 @@ export class NurseLayout implements OnInit {
   private getUnassignedRequestsForNurse(): void {
     this.nurseService.GetUnassignedRequestsForNurse().subscribe({
       next: (data) => {
+<<<<<<< Updated upstream
         this.requestsData = data;
+=======
+        
+        if(data.success){
+          this.requestsData = data.data;
+
+        }
+>>>>>>> Stashed changes
         console.log('Fetched requests:', data);
       },
       error: (err) => {

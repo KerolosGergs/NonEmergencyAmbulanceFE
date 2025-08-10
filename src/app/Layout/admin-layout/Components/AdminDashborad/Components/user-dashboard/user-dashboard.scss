@@ -1,0 +1,188 @@
+.user-dashboard-container {
+  padding: 20px;
+
+  .card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+
+    .card-header {
+      border-radius: 10px 10px 0 0 !important;
+      border-bottom: none;
+      
+      h4 {
+        font-weight: 600;
+      }
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+  }
+
+  .balance-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      text-align: center;
+
+      i {
+        font-size: 2.5rem;
+        opacity: 0.9;
+        margin-bottom: 1rem;
+      }
+
+      h4 {
+        font-size: 1.75rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .table {
+    th {
+      font-weight: 600;
+      border-top: none;
+      background-color: #343a40;
+      color: white;
+    }
+
+    td {
+      vertical-align: middle;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.5em 0.75em;
+    }
+
+    .text-success {
+      color: #28a745 !important;
+    }
+  }
+
+  .btn {
+    border-radius: 6px;
+    font-weight: 500;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+  }
+
+  .btn-success {
+    &:hover:not(:disabled) {
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    }
+  }
+
+  .btn-outline-info {
+    &:hover {
+      box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    }
+  }
+
+  .modal {
+    .modal-content {
+      border-radius: 10px;
+      border: none;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      border-bottom: 1px solid #dee2e6;
+      border-radius: 10px 10px 0 0;
+    }
+
+    .modal-footer {
+      border-top: 1px solid #dee2e6;
+      border-radius: 0 0 10px 10px;
+    }
+  }
+
+  .modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  .spinner-border {
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .alert {
+    border-radius: 8px;
+    border: none;
+  }
+
+  .text-muted {
+    color: #6c757d !important;
+  }
+
+  .display-1 {
+    font-size: 4rem;
+    font-weight: 300;
+  }
+
+  .fw-bold {
+    font-weight: 700 !important;
+  }
+
+  .form-control {
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    
+    &:focus {
+      border-color: #80bdff;
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+  }
+
+  .form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+  }
+
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    padding: 10px;
+
+    .balance-card {
+      .card-body {
+        padding: 1rem;
+        
+        i {
+          font-size: 2rem;
+        }
+        
+        h4 {
+          font-size: 1.5rem;
+        }
+      }
+    }
+
+    .table-responsive {
+      font-size: 0.875rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+    }
+  }
+}

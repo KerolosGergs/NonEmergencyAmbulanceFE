@@ -1,0 +1,171 @@
+<div class="withdrawal-management-container">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+              <i class="bi bi-cash-stack me-2"></i>
+              Withdrawal Management
+            </h4>
+          </div>
+          <div class="card-body">
+            <!-- Loading State -->
+            <div *ngIf="loading" class="text-center py-4">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+              <p class="mt-2 text-muted">Loading withdrawal requests...</p>
+            </div>
+
+            <!-- Error State -->
+            <div *ngIf="error" class="alert alert-danger">
+              <i class="bi bi-exclamation-triangle me-2"></i>
+              {{ error }}
+            </div>
+
+            <!-- Content -->
+            <div *ngIf="!loading && !error">
+              <!-- Refresh Button -->
+              <div class="mb-3">
+                <button class="btn btn-outline-primary" (click)="loadWithdrawalRequests()">
+                  <i class="bi bi-arrow-clockwise me-2"></i>
+                  Refresh
+                </button>
+              </div>
+
+              <!-- Requests Table -->
+              <div class="table-responsive">
+                <table class="table table-striped table-hover">
+                  <thead class="table-dark">
+                    <tr>
+                      <th>ID</th>
+                      <th>User ID</th>
+                      <th>Amount</th>
+                      <th>Status</th>
+                      <th>Request Date</th>
+                      <th>Bank Info</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let request of withdrawalRequests">
+                      <td>{{ request.id }}</td>
+                      <td>{{ request.userId }}</td>
+                      <td class="fw-bold text-success">${{ request.amount.toFixed(2) }}</td>
+                      <td>
+                        <span [class]="getStatusClass(request.status)">
+                          {{ getStatusText(request.status) }}
+                        </span>
+                      </td>
+                      <td>{{ formatDate(request.requestDate) }}</td>
+                      <td>
+                        <div *ngIf="request.bankName">
+                          <small class="text-muted">{{ request.bankName }}</small><br>
+                          <small>{{ request.bankAccount }}</small>
+                        </div>
+                        <span *ngIf="!request.bankName" class="text-muted">-</span>
+                      </td>
+                      <td>
+                        <div class="btn-group" role="group">
+                          <button 
+                            *ngIf="request.status === 'Pending'"
+                            class="btn btn-sm btn-success me-1" 
+                            (click)="openActionModal(request, 'approve')"
+                            title="Approve">
+                            <i class="bi bi-check-lg"></i>
+                          </button>
+                          <button 
+                            *ngIf="request.status === 'Pending'"
+                            class="btn btn-sm btn-danger me-1" 
+                            (click)="openActionModal(request, 'reject')"
+                            title="Reject">
+                            <i class="bi bi-x-lg"></i>
+                          </button>
+                          <button 
+                            *ngIf="request.status === 'Approved'"
+                            class="btn btn-sm btn-info me-1" 
+                            (click)="openActionModal(request, 'complete')"
+                            title="Complete">
+                            <i class="bi bi-check-circle"></i>
+                          </button>
+                          <button 
+                            class="btn btn-sm btn-outline-secondary" 
+                            (click)="openActionModal(request, 'approve')"
+                            title="View Details">
+                            <i class="bi bi-eye"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Empty State -->
+              <div *ngIf="withdrawalRequests.length === 0" class="text-center py-4">
+                <i class="bi bi-inbox display-1 text-muted"></i>
+                <h5 class="text-muted mt-3">No withdrawal requests found</h5>
+                <p class="text-muted">There are currently no withdrawal requests to display.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Modal -->
+  <div class="modal fade" [class.show]="showActionModal" [style.display]="showActionModal ? 'block' : 'none'" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">
+            <span *ngIf="actionType === 'approve'" class="text-success">
+              <i class="bi bi-check-lg me-2"></i>Approve Withdrawal
+            </span>
+            <span *ngIf="actionType === 'reject'" class="text-danger">
+              <i class="bi bi-x-lg me-2"></i>Reject Withdrawal
+            </span>
+            <span *ngIf="actionType === 'complete'" class="text-info">
+              <i class="bi bi-check-circle me-2"></i>Complete Withdrawal
+            </span>
+          </h5>
+          <button type="button" class="btn-close" (click)="closeActionModal()"></button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="selectedRequest" class="mb-3">
+            <p><strong>User ID:</strong> {{ selectedRequest.userId }}</p>
+            <p><strong>Amount:</strong> ${{ selectedRequest.amount.toFixed(2) }}</p>
+            <p><strong>Request Date:</strong> {{ formatDate(selectedRequest.requestDate) }}</p>
+          </div>
+          
+          <div *ngIf="actionType !== 'complete'" class="mb-3">
+            <label for="notes" class="form-label">Notes (Optional)</label>
+            <textarea 
+              id="notes" 
+              class="form-control" 
+              rows="3" 
+              [(ngModel)]="notes"
+              placeholder="Enter any additional notes..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeActionModal()">Cancel</button>
+          <button 
+            type="button" 
+            class="btn"
+            [class]="actionType === 'approve' ? 'btn-success' : actionType === 'reject' ? 'btn-danger' : 'btn-info'"
+            (click)="performAction()">
+            <span *ngIf="actionType === 'approve'">Approve</span>
+            <span *ngIf="actionType === 'reject'">Reject</span>
+            <span *ngIf="actionType === 'complete'">Complete</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Backdrop -->
+  <div *ngIf="showActionModal" class="modal-backdrop fade show"></div>
+</div>

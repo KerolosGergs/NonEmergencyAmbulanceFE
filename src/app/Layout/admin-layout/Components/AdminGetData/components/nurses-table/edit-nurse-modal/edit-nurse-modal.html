@@ -1,0 +1,80 @@
+<div class="modal-backdrop" (click)="close()"></div>
+
+<div class="modal-dialog">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">
+        <i class="bi bi-pencil-square icon"></i>
+        <span>Edit Nurse Details</span>
+      </h5>
+      <button type="button" class="btn-close" (click)="close()" aria-label="Close"></button>
+    </div>
+
+    <form #editNurseForm="ngForm" (ngSubmit)="onFormSubmit(editNurseForm)">
+      <div class="modal-body">
+        <p class="text-muted mb-4">
+          You are editing the profile for <strong>{{ nurse?.fullName }}</strong>.
+        </p>
+
+        <div class="mb-4">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="fullName"
+            name="fullName"
+            [(ngModel)]="editableNurse.fullName"
+            required
+            #fullName="ngModel"
+            [class.is-invalid]="fullName.invalid && fullName.touched"
+          />
+          <div *ngIf="fullName.invalid && fullName.touched" class="invalid-feedback">
+            Full name is required.
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label for="phoneNumber" class="form-label">Phone Number</label>
+          <input
+            type="text"
+            class="form-control"
+            id="phoneNumber"
+            name="phoneNumber"
+            [(ngModel)]="editableNurse.phoneNumber"
+            required
+            #phoneNumber="ngModel"
+            [class.is-invalid]="phoneNumber.invalid && phoneNumber.touched"
+          />
+          <div *ngIf="phoneNumber.invalid && phoneNumber.touched" class="invalid-feedback">
+            Phone number is required.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="certification" class="form-label">Certification</label>
+          <input
+            type="text"
+            class="form-control"
+            id="certification"
+            name="certification"
+            [(ngModel)]="editableNurse.certification"
+            required
+            #certification="ngModel"
+            [class.is-invalid]="certification.invalid && certification.touched"
+          />
+          <div *ngIf="certification.invalid && certification.touched" class="invalid-feedback">
+            Certification is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isLoading || editNurseForm.invalid">
+          <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Saving...' : 'Save Changes' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

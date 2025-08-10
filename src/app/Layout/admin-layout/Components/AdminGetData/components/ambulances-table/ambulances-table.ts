@@ -7,16 +7,21 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Ambulance, FilterOptions, PaginationInfo, AmbulanceStatus, getAmbulanceStatusLabel, getAmbulanceTypeLabel, getAmbulanceStatusBadgeClass } from '../../models/interfaces';
 import { AmbulanceDto } from '../../../../../../Core/interface/Ambulance/iambulance';
+import { EditAmbulanceModalComponent } from "./edit-ambulance-modal/edit-ambulance-modal";
+import { IDriver } from '../../../../../../Core/interface/Driver/IDriver';
+import { DriverService } from '../../../../../../Core/Services/Driver/driver';
 
 @Component({
   selector: 'app-ambulances-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EditAmbulanceModalComponent],
   templateUrl: './ambulances-table.html',
   styleUrl: './ambulances-table.css'
 })
 export class AmbulancesTableComponent implements OnInit {
   ambulances: Ambulance[] = [];
+  drivers: IDriver[] = []; // Add a property to hold the list of drivers
+
   filteredAmbulances: Ambulance[] = [];
   loading = false;
   toastr = inject(ToastrService);
@@ -42,10 +47,15 @@ export class AmbulancesTableComponent implements OnInit {
     { value: '3', label: getAmbulanceStatusLabel(AmbulanceStatus.OUT_OF_SERVICE) }
   ];
 
-  constructor(private AdminService: AdminService, private ambulanceService: AmbulanceService) {}
+  isEditModalVisible = false;
+  selectedAmbulance: Ambulance | null = null;
+
+  constructor(private AdminService: AdminService, private ambulanceService: AmbulanceService, private driverService: DriverService) {}
 
   ngOnInit(): void {
     this.loadAmbulances();
+    this.loadDrivers(); // Load drivers when the component initializes
+
   }
 
   loadAmbulances(): void {
@@ -66,13 +76,26 @@ export class AmbulancesTableComponent implements OnInit {
     });
   }
 
+    loadDrivers(): void {
+    this.driverService.getDrivers().subscribe({
+      next: (response) => {
+        if (response.success) {
+          this.drivers = response.data;
+        } else {
+          this.toastr.error('Failed to load drivers.', 'Error');
+        }
+      },
+      error: (err) => console.error('Error loading drivers:', err)
+    });
+  }
+
   applyFilters(): void {
     let filtered = [...this.ambulances];
 
     // Search filter
     if (this.filter.searchTerm) {
       const searchTerm = this.filter.searchTerm.toLowerCase();
-      filtered = filtered.filter(ambulance => 
+      filtered = filtered.filter(ambulance =>
         ambulance.plateNumber.toLowerCase().includes(searchTerm) ||
         ambulance.currentLocation.toLowerCase().includes(searchTerm) ||
         this.ambulanceService.getAmbulanceById(ambulance.driverId).subscribe(driver => driver.data.driverName.toLowerCase().includes(searchTerm))
@@ -92,7 +115,7 @@ export class AmbulancesTableComponent implements OnInit {
   updatePagination(): void {
     this.pagination.totalItems = this.filteredAmbulances.length;
     this.pagination.totalPages = Math.ceil(this.pagination.totalItems / this.pagination.itemsPerPage);
-    
+
     if (this.pagination.currentPage > this.pagination.totalPages) {
       this.pagination.currentPage = 1;
     }
@@ -156,9 +179,25 @@ export class AmbulancesTableComponent implements OnInit {
     }
   }
 
+/**
+   * Opens the edit modal with the selected ambulance's data.
+   * @param ambulance The ambulance object to be edited.
+   */
   editAmbulance(ambulance: Ambulance): void {
-    // Placeholder for edit functionality
-    alert(`Edit functionality for ambulance ${ambulance.plateNumber} would be implemented here`);
+    this.selectedAmbulance = ambulance;
+    this.isEditModalVisible = true;
+  }
+
+  /**
+   * Handles the close event from the modal.
+   * @param shouldRefresh Indicates whether the ambulance list should be reloaded.
+   */
+  handleModalClose(shouldRefresh: boolean): void {
+    this.isEditModalVisible = false;
+    this.selectedAmbulance = null;
+    if (shouldRefresh) {
+      this.loadAmbulances(); // Reload data to show changes
+    }
   }
 
   getStatusLabel(status: number): string {
@@ -173,7 +212,7 @@ export class AmbulancesTableComponent implements OnInit {
     return getAmbulanceStatusBadgeClass(status as AmbulanceStatus);
   }
 
- 
+
 
   getPageNumbers(): number[] {
     const pages: number[] = [];

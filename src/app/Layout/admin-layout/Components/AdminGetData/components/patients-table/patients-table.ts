@@ -6,11 +6,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {  FilterOptions, PaginationInfo, Gender, getGenderLabel } from '../../models/interfaces';
 import { PatientService } from '../../../../../../Core/Services/PatientServise/patient-service';
+import { EditPatientModalComponent } from "./edit-patient-modal/edit-patient-modal";
 
 @Component({
   selector: 'app-patients-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, EditPatientModalComponent],
   templateUrl: './patients-table.html',
   styleUrl: './patients-table.css'
 })
@@ -18,7 +19,7 @@ export class PatientsTableComponent implements OnInit {
   patients: AdminPatient[] = [];
   filteredPatients: AdminPatient[] = [];
   loading = false;
-  
+
   filter: FilterOptions = {
     searchTerm: '',
     availabilityFilter: 'all',
@@ -31,6 +32,9 @@ export class PatientsTableComponent implements OnInit {
     totalItems: 0,
     totalPages: 0
   };
+
+  isEditModalVisible = false;
+  selectedPatient: AdminPatient | null = null;
 
   constructor(private PatientService: PatientService,private AdminService: AdminService) {}
 
@@ -57,13 +61,15 @@ export class PatientsTableComponent implements OnInit {
     });
   }
 
+
+
   applyFilters(): void {
     let filtered = [...this.patients];
 
     // Search filter
     if (this.filter.searchTerm) {
       const searchTerm = this.filter.searchTerm.toLowerCase();
-      filtered = filtered.filter(patient => 
+      filtered = filtered.filter(patient =>
         patient.fullName.toLowerCase().includes(searchTerm) ||
         patient.phoneNumber.includes(searchTerm) ||
         patient.address.toLowerCase().includes(searchTerm) ||
@@ -78,7 +84,7 @@ export class PatientsTableComponent implements OnInit {
   updatePagination(): void {
     this.pagination.totalItems = this.filteredPatients.length;
     this.pagination.totalPages = Math.ceil(this.pagination.totalItems / this.pagination.itemsPerPage);
-    
+
     if (this.pagination.currentPage > this.pagination.totalPages) {
       this.pagination.currentPage = 1;
     }
@@ -101,6 +107,8 @@ export class PatientsTableComponent implements OnInit {
     this.applyFilters();
   }
 
+  
+
   deletePatient(patient: AdminPatient): void {
     if (confirm(`Are you sure you want to delete ${patient.fullName}?`)) {
       this.PatientService.deletePatient(patient.id).subscribe({
@@ -117,9 +125,20 @@ export class PatientsTableComponent implements OnInit {
   }
 
   editPatient(patient: AdminPatient): void {
-    // Placeholder for edit functionality
-    alert(`Edit functionality for ${patient.fullName} would be implemented here`);
+    this.selectedPatient = patient;
+    this.isEditModalVisible = true;
   }
+
+  closeEditModal(): void {
+    this.isEditModalVisible = false;
+    this.selectedPatient = null;
+  }
+
+  handlePatientUpdated(): void {
+    this.closeEditModal();
+    this.loadPatients(); // Refresh the data to show changes
+  }
+
 
   viewPatientDetails(patient: AdminPatient): void {
     // Placeholder for view details functionality
@@ -151,11 +170,11 @@ export class PatientsTableComponent implements OnInit {
     const birthDate = new Date(dateOfBirth);
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
       age--;
     }
-    
+
     return age;
   }
 

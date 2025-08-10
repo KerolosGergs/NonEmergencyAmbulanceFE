@@ -129,9 +129,9 @@
             <i class="bi bi-chevron-left"></i>
           </button>
         </li>
-        <li 
-          *ngFor="let page of getPageNumbers()" 
-          class="page-item" 
+        <li
+          *ngFor="let page of getPageNumbers()"
+          class="page-item"
           [class.active]="page === pagination.currentPage"
         >
           <button class="page-link" (click)="onPageChange(page)">{{ page }}</button>
@@ -145,4 +145,12 @@
     </nav>
   </div>
 </div>
+
+
+<!-- Add the Edit Nurse Modal Component at the end of the file -->
+<app-edit-nurse-modal
+  *ngIf="isEditModalVisible"
+  [nurse]="selectedNurse"
+  (closeModal)="handleCloseModal($event)"
+></app-edit-nurse-modal>
 

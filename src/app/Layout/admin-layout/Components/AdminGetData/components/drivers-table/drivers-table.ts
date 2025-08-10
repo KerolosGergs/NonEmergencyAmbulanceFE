@@ -7,11 +7,13 @@ import { FormsModule } from '@angular/forms';
 import { Driver, FilterOptions, PaginationInfo, getStatusBadgeClass } from '../../models/interfaces';
 import { IDriver } from '../../../../../../Core/interface/Driver/IDriver';
 import { response } from 'express';
+import { EditDriverModalComponent } from './edit-driver-modal/edit-driver-modal';
+
 
 @Component({
   selector: 'app-drivers-table',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,EditDriverModalComponent],
   templateUrl: './drivers-table.html',
   styleUrl: './drivers-table.css'
 })
@@ -20,7 +22,7 @@ export class DriversTableComponent implements OnInit {
   filteredDrivers: IDriver[] = [];
   loading = false;
   toastr = inject(ToastrService)
-  
+
   filter: FilterOptions = {
     searchTerm: '',
     availabilityFilter: 'all',
@@ -33,6 +35,10 @@ export class DriversTableComponent implements OnInit {
     totalItems: 0,
     totalPages: 0
   };
+
+  isEditModalVisible = false;
+  selectedDriver: IDriver | null = null;
+
 
   constructor(private AdminService: AdminService,private driverService: DriverService) {}
 
@@ -64,7 +70,7 @@ export class DriversTableComponent implements OnInit {
     // Search filter
     if (this.filter.searchTerm) {
       const searchTerm = this.filter.searchTerm.toLowerCase();
-      filtered = filtered.filter(driver => 
+      filtered = filtered.filter(driver =>
         driver.userFullName.toLowerCase().includes(searchTerm) ||
         driver.licenseNumber.toLowerCase().includes(searchTerm) ||
         driver.phoneNumber.includes(searchTerm)
@@ -84,7 +90,7 @@ export class DriversTableComponent implements OnInit {
   updatePagination(): void {
     this.pagination.totalItems = this.filteredDrivers.length;
     this.pagination.totalPages = Math.ceil(this.pagination.totalItems / this.pagination.itemsPerPage);
-    
+
     if (this.pagination.currentPage > this.pagination.totalPages) {
       this.pagination.currentPage = 1;
     }
@@ -107,19 +113,19 @@ export class DriversTableComponent implements OnInit {
     this.applyFilters();
   }
 
-  toggleAvailability(driver: Driver): void {
+
+toggleAvailability(driver: Driver): void {
     this.driverService.toggleAvailability(driver.id, !driver.isAvailable).subscribe({
       next: (response) => {
-        if(response.success)
-        {
+        if (response.success) {
           driver.isAvailable = !driver.isAvailable;
           this.toastr.success(response.message, 'Success');
-        }
-        else {
-          this.toastr.error(response.message);
+        } else {
+          this.toastr.error(response.message, 'Error');
         }
       },
       error: (error) => {
+        this.toastr.error('Failed to update driver availability.', 'API Error');
         console.error('Error updating driver availability:', error);
       }
     });
@@ -145,9 +151,18 @@ export class DriversTableComponent implements OnInit {
     }
   }
 
-  editDriver(driver: Driver): void {
-    // Placeholder for edit functionality
-    alert(`Edit functionality for ${driver.userFullName} would be implemented here`);
+  editDriver(driver: IDriver): void {
+    this.selectedDriver = driver;
+    this.isEditModalVisible = true;
+  }
+
+    handleCloseModal(wasUpdated: boolean): void {
+    this.isEditModalVisible = false;
+    this.selectedDriver = null;
+    // If the data was updated in the modal, refresh the table to show the changes
+    if (wasUpdated) {
+      this.loadDrivers();
+    }
   }
 
   getStatusBadgeClass(isAvailable: boolean): string {

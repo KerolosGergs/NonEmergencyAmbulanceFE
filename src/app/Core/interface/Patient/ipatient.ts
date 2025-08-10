@@ -1,15 +1,17 @@
 import { Patient } from './../../../Layout/admin-layout/Components/AdminGetData/models/interfaces';
-export interface IPatient {
+  export interface IPatient {
 
-  id: number
-  fullName: string
-  phoneNumber: string
-  address: string
-  medicalHistory: string
-  gender: number
-  dateOfBirth: string
-  userId: string
-}
+    id: number
+    fullName: string
+    phoneNumber: string
+    address: string
+    medicalHistory: string
+    gender: number
+    dateOfBirth: string
+    userId: string
+  }
+
+
 
 export interface PatientRequest {
   requestId: number;

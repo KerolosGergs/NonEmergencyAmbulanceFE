@@ -2,28 +2,57 @@
   <div class="top-bar">
     <div class="container-fluid">
       <div class="row justify-content-between align-items-center">
+        <!-- Brand -->
         <div class="col-auto">
           <div class="d-flex align-items-center brand-logo">
             <i class="bi bi-truck me-2"></i>
             <span class="brand-name">MediTransport</span>
           </div>
         </div>
+
+        <!-- Main nav (always visible) -->
         <div class="col-auto d-none d-lg-block">
           <ul class="nav main-nav">
-            <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Services</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">How It Works</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">About Us</a></li>
-            <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/home">Home</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/services">Services</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/how-it-works">How It Works</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/about">About Us</a></li>
+            <li class="nav-item"><a class="nav-link" routerLink="/contact">Contact</a></li>
+
+            <!-- Example role-based links -->
+            @if (isAdmin) {
+              <li class="nav-item"><a class="nav-link" routerLink="/admin">Admin</a></li>
+            }
+            @if (isDriver) {
+              <li class="nav-item"><a class="nav-link" routerLink="/driver">Driver Panel</a></li>
+            }
+            @if (isNurse) {
+              <li class="nav-item"><a class="nav-link" routerLink="/nurse">Nurse Panel</a></li>
+            }
+            @if (isPatient) {
+              <li class="nav-item"><a class="nav-link" routerLink="/patient">My Bookings</a></li>
+            }
           </ul>
         </div>
-        <div class="col-auto buttons-group">
-          <button class="btn btn-outline-light me-2">Log In</button>
-          <button class="btn btn-warning text-dark fw-bold">Book Now</button>
+
+        <!-- Right buttons / user menu -->
+        <div class="col-auto buttons-group d-flex align-items-center gap-2">
+          @if (!isLoggedIn) {
+            <button class="btn btn-outline-light" routerLink="/login">Log In</button>
+            <button class="btn btn-warning text-dark fw-bold" routerLink="/FormRequest">Book Now</button>
+          } @else {
+            <div class="text-end me-2 small d-none d-md-block">
+              <div class="fw-semibold">{{ displayName || 'User' }}</div>
+              <div class="opacity-75">{{ role }}</div>
+            </div>
+            <button class="btn btn-warning text-dark fw-bold" routerLink="/FormRequest">Book Now</button>
+            <button class="btn btn-outline-light" (click)="onLogout()">Logout</button>
+          }
         </div>
       </div>
     </div>
   </div>
+
   <div class="bottom-bar">
     <div class="container-fluid">
       <div class="row">
@@ -37,7 +66,8 @@
         </div>
         <div class="col-md-4 info-item">
           <i class="bi bi-headset"></i>
-          <span [innerText] = '`Customer Support: support@meditransport.com`'></span>
+          <!-- keep your binding, simplified -->
+          <span [innerText] = "'Customer Support: support @meditransport.com'"></span>
         </div>
       </div>
     </div>

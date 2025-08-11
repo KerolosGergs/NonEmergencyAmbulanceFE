@@ -143,7 +143,7 @@ export class RegisterLayout implements OnInit {
 
     this.Login.register(formData).subscribe({
       next: (res: IRegisterResponse) => {
-        if(!res.success){
+        if(res.success){
           this.toastr.success(res.message, 'Success');
           this.router.navigate(['/login']);
 

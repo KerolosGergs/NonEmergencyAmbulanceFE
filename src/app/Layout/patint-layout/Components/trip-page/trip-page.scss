@@ -1,354 +1,42 @@
-/* Trip Page Enhanced Styles */
-.trip-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  padding: 2rem 0;
-  
-  @media (max-width: 768px) {
-    padding: 1rem 0;
-  }
-}
+.nav-link { cursor: pointer; }
 
-/* Header Section */
-.header {
-  text-align: center;
-  margin-bottom: 3rem;
-  
-  h1 {
-    font-size: 3rem;
-    font-weight: 700;
-    color: #2c3e50;
-    margin-bottom: 1rem;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-    
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 5px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      border-radius: 3px;
-    }
-    
-    @media (max-width: 768px) {
-      font-size: 2.25rem;
-    }
-    
-    @media (max-width: 576px) {
-      font-size: 2rem;
-    }
-  }
-  
-  p {
-    font-size: 1.25rem;
-    color: #6c757d;
-    font-weight: 500;
-    max-width: 600px;
-    margin: 0 auto;
-    
-    @media (max-width: 768px) {
-      font-size: 1.1rem;
-    }
-  }
-}
-
-/* Trips Container */
-.trips-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-/* Trip Card Enhanced */
 .trip-card {
-  background: white;
-  border-radius: 25px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  transition: all 0.4s ease;
-  border: none;
-  position: relative;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  }
-  
-  &:hover {
-    transform: translateY(-12px) scale(1.02);
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  }
-  
-  .trip-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 2rem;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-      animation: rotate 20s linear infinite;
-    }
-    
-    h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      position: relative;
-      z-index: 1;
-    }
-    
-    .trip-id {
-      font-size: 0.9rem;
-      opacity: 0.9;
-      font-weight: 500;
-      position: relative;
-      z-index: 1;
-    }
-  }
-  
-  .trip-body {
-    padding: 2rem;
-  }
-  
-  .trip-status {
-    text-align: center;
-    margin-bottom: 2rem;
-    
-    .status-badge {
-      display: inline-block;
-      padding: 0.75rem 1.5rem;
-      border-radius: 25px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: -100%;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-        transition: left 0.5s ease;
-      }
-      
-      &:hover::before {
-        left: 100%;
-      }
-      
-      &.status-pending {
-        background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
-        color: #212529;
-      }
-      
-      &.status-ongoing {
-        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-        color: white;
-      }
-      
-      &.status-completed {
-        background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%);
-        color: white;
-      }
-      
-      &.status-cancelled {
-        background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
-        color: white;
-      }
-      
-      &.status-failed {
-        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
-        color: white;
-      }
-    }
-  }
-  
-  .trip-details {
-    .detail-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2rem;
-      margin-bottom: 2rem;
-      
-      @media (max-width: 480px) {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-      }
-    }
-    
-    .detail-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1.25rem;
-      background: #f8f9fa;
-      border-radius: 15px;
-      border-left: 4px solid #667eea;
-      transition: all 0.3s ease;
-      
-      &:hover {
-        background: #e9ecef;
-        transform: translateX(5px);
-        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
-      }
-      
-      .icon {
-        font-size: 1.4rem;
-        color: #667eea;
-        margin-top: 0.2rem;
-        width: 24px;
-        text-align: center;
-      }
-      
-      .detail-content {
-        flex: 1;
-        
-        label {
-          display: block;
-          font-size: 0.8rem;
-          font-weight: 700;
-          color: #495057;
-          text-transform: uppercase;
-          letter-spacing: 0.8px;
-          margin-bottom: 0.5rem;
-        }
-        
-        span {
-          display: block;
-          font-size: 1.1rem;
-          color: #2c3e50;
-          font-weight: 600;
-          line-height: 1.4;
-          
-          &.price {
-            color: #28a745;
-            font-weight: 700;
-            font-size: 1.3rem;
-            text-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);
-          }
-        }
-      }
-    }
-  }
-  
-  .trip-actions {
-    margin-top: 2rem;
-    padding-top: 2rem;
-    border-top: 2px solid #f0f0f0;
-    text-align: center;
-    
-    .btn {
-      padding: 1rem 2.5rem;
-      border: none;
-      border-radius: 30px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      
-      &.btn-primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        
-        &:hover {
-          transform: translateY(-3px);
-          box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
-        }
-        
-        &:active {
-          transform: translateY(-1px);
-        }
-      }
-      
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-        transform: none !important;
-      }
-    }
-  }
+  border: 1px solid #eee;
+  border-radius: .75rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fff;
 }
 
-/* No Trips Message */
-.no-trips {
-  text-align: center;
-  padding: 4rem 2rem;
-  
-  .no-trips-icon {
-    font-size: 4rem;
-    color: #dee2e6;
-    margin-bottom: 2rem;
-    opacity: 0.7;
-  }
-  
-  h3 {
-    font-size: 2rem;
-    font-weight: 600;
-    color: #6c757d;
-    margin-bottom: 1rem;
-  }
-  
-  p {
-    font-size: 1.1rem;
-    color: #adb5bd;
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
+.trip-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: .75rem;
 }
 
-/* Loading State */
-.loading {
-  text-align: center;
-  padding: 3rem 2rem;
-}
-.loading .spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #667eea;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 1rem;
+.trip-status {
+  padding: .15rem .5rem;
+  border-radius: .5rem;
+  font-size: .85rem;
+  font-weight: 600;
 }
 
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.status-pending { background: #fff7d6; color: #8a6d00; }
+.status-assigned { background: #e7f1ff; color: #0b5ed7; }
+.status-ongoing { background: #e6fffb; color: #0a8f7a; }
+.status-completed { background: #e9ffe6; color: #2e7d32; }
+.status-cancelled { background: #ffe6e6; color: #c62828; }
+.status-failed { background: #fde2e2; color: #b00020; }
+
+.detail-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .75rem;
+  margin-bottom: .5rem;
 }
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+.detail-item { display: flex; gap: .5rem; }
+.detail-content label { display:block; font-size:.8rem; color:#666; }
+.price { font-weight: 700; }
+
+.no-trips-icon { font-size: 2rem; margin-bottom: .25rem; }

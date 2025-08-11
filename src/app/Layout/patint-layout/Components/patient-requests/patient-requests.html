@@ -1,16 +1,19 @@
 <div class="patient-requests">
   @if (loading) {
-    <div class="alert alert-info">Loading requests...</div>
+  <div class="alert alert-info">Loading requests...</div>
   }
   @if (error) {
-    <div class="alert alert-danger">{{ error }}</div>
+  <div class="alert alert-danger">{{ error }}</div>
   }
 
   @for (request of requests; track request.requestId) {
   <div class="simple-request-card mb-3">
     <div class="request-main">
       <div class="request-left">
-        <div class="request-icon"><i class="fas fa-ambulance"></i></div>
+        <div class=" fs-4">
+          <i [ngClass]="getStatusIconClasses(request.status)" aria-hidden="true"></i>
+        </div>
+
         <div class="request-details">
           <h5 class="request-title">{{request.emergencyType}} Emergency</h5>
           <div class="request-meta">
@@ -39,14 +42,16 @@
       <div class="request-right">
         <div class="price-section">
           <div class="price-label">Total Price</div>
-          <div class="price-amount">${{getEstimatedPrice(request)}}</div>
+          <div class="price-amount">{{ request.price.toString() |currency:'EGP':true }}</div>
         </div>
         <div class="status-section">
-          <span class="status-badge" [ngClass]="getStatusClass(request.status)">{{ getStatusText(request.status) }}</span>
+          <span class="status-badge" [ngClass]="getStatusClass(request.status)">{{ getStatusText(request.status)
+            }}</span>
         </div>
         @if (request.status === 3) {
         <div class="action-section">
-          <button class="btn btn-sm btn-outline-danger me-2" (click)="cancelRequest(request.requestId)" [disabled]="isProcessing">
+          <button class="btn btn-sm btn-outline-danger me-2" (click)="cancelRequest(request.requestId)"
+            [disabled]="isProcessing">
             <i class="fas fa-times"></i> Cancel
           </button>
           <button class="btn btn-sm btn-success" (click)="confirmRequest(request.requestId)" [disabled]="isProcessing">
@@ -57,31 +62,50 @@
       </div>
     </div>
 
-    @if (request.driverId || request.nurseId) {
-    <div class="team-info">
-      <div class="team-title">Assigned Team</div>
-      <div class="team-members">
-        @if (request.driverId) {
-        <div class="team-member">
-          <img [src]="getImageUrl(request.driverImg)" class="member-avatar" alt="Driver">
-          <div class="member-details">
-            <div class="member-name">{{request.driverName}}</div>
-            <div class="member-role">Driver</div>
+   @if (request?.driverId || request?.nurseId) {
+  <div class="team-info">
+    <div class="team-title">Assigned Team</div>
+
+    <div class="team-members">
+      <!-- Driver card (shows Unassigned if missing) -->
+      <div class="team-member" [class.unassigned]="!request?.driverId">
+        <img
+          [src]="request?.driverId ? getImageUrl(request.driverImg) : 'assets/avatar-placeholder.png'"
+          class="member-avatar"
+          alt="Driver"
+        />
+        <div class="member-details">
+          <div class="member-name">
+            @if (request?.driverId) { {{ request.driverName }} } @else { Unassigned }
           </div>
+          <div class="member-role">Driver</div>
         </div>
-        }
-        @if (request.nurseId) {
-        <div class="team-member">
-          <img [src]="getImageUrl(request.nurseImg)" class="member-avatar" alt="Nurse">
-          <div class="member-details">
-            <div class="member-name">{{request.nurseName}}</div>
-            <div class="member-role">Nurse</div>
+      </div>
+
+      <!-- Nurse card (shows Unassigned if missing) -->
+      <div class="team-member" [class.unassigned]="!request?.nurseId">
+        <img
+          [src]="request?.nurseId ? getImageUrl(request.nurseImg) : 'assets/avatar-placeholder.png'"
+          class="member-avatar"
+          alt="Nurse"
+        />
+        <div class="member-details">
+          <div class="member-name">
+            @if (request?.nurseId) { {{ request.nurseName }} } @else { Unassigned }
           </div>
+          <div class="member-role">Nurse</div>
         </div>
-        }
       </div>
     </div>
-    }
+  </div>
+} @else {
+  <div class="team-info empty">
+    <div class="empty-icon"><i class="bi bi-people"></i></div>
+    <div class="empty-text">No team assigned yet</div>
+    <div class="empty-sub">Assign a driver or nurse to get started.</div>
+  </div>
+}
+
   </div>
   }
 

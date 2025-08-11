@@ -6,6 +6,7 @@ export interface INurse {
   phoneNumber: string
   userId: string
   fullName: string
+  imgUrl: string
 }
 export interface INurseRegister {
   email: string

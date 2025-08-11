@@ -35,8 +35,13 @@ export class LoginLayout {
         next: (res) => {
           if(res.success){
             
-            this.AuthService.setUserSession(  res.data);
-            this.router.navigate(['/home']);
+            this.AuthService.setUserSession(res.data);
+            if(res.data.role == 'Patient'){
+              
+              this.router.navigate(['/home']);
+            }else if(res.data.role == 'Nurse'){
+              this.router.navigate(['/nurse']);
+            }
             this.toastr.success(res.message, 'Success');
           }
 

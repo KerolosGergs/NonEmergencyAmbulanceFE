@@ -1,0 +1,36 @@
+.nurse-dashboard {
+  .patient-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid rgba(0,0,0,.08);
+  }
+
+  .badge.bg-soft {
+    background: rgba(0,0,0,.04);
+    color: #555;
+  }
+
+  table td, table th {
+    vertical-align: middle;
+  }
+
+  @media (max-width: 768px) {
+    thead { display: none; }
+    table, tbody, tr, td {
+      display: block;
+      width: 100%;
+    }
+    tr {
+      border-bottom: 1px solid #eee;
+      padding: .75rem 1rem;
+    }
+    td {
+      padding: .25rem 0;
+    }
+    td:last-child {
+      margin-top: .5rem;
+    }
+  }
+}

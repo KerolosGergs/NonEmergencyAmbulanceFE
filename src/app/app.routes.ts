@@ -43,7 +43,7 @@ export const routes: Routes = [
             {path: 'patient', component: PatintLayout},
             { path: 'FormRequest', component: ReservationFrom },
             {
-                path: 'nurse', component: NurseLayout
+                path: 'nurse', component: NurseLayout,title:'Nurse Dashboard',
             }
             ,
             {

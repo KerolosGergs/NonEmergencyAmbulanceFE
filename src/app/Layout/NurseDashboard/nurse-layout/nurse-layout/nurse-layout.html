@@ -1,6 +1,5 @@
-<app-nav></app-nav>
-<app-n-header></app-n-header>
 <div class="container-fluid px-3 py-2">
+  <app-n-header></app-n-header>
   <div class="row g-3">
     <!-- Requests Table (Full width on small screens, 8-cols on md+) -->
     <div class="col-12 col-lg-8">
@@ -15,6 +14,6 @@
       <app-patient-details [patient]="selectedRequest"></app-patient-details>
       <app-your-schedule></app-your-schedule>
     </div>
+    <app-approved-request></app-approved-request>
   </div>
 </div>
-<app-footer></app-footer>

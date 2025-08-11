@@ -85,12 +85,11 @@ export class PendingRequests implements OnInit {
 
   Accept(requestId: number) {
   // Remove the request from the original array
-  this.requests = this.requests.filter(r => r.requestId !== requestId);
-  this.calculatePagination();
+ 
 
   //call a service to update the request status on the server
 
-  this.assignDriverToRequest(requestId, 1010); // Assuming driverId is 4 for this example
+  this.assignDriverToRequest(requestId, 1); // Assuming driverId is 4 for this example
 
 }
 

@@ -35,6 +35,7 @@ export class PatientService {
           request.nurseImg = `${Environment.ImgUrl}${request.nurseImg}`
           request.driverImg = `${Environment.ImgUrl}${request.driverImg}`
           request.patientImageUrl = `${Environment.ImgUrl}${request.patientImageUrl}`
+          request.price=Math.floor(Number(request.price));
           
         });
         return response;
@@ -42,7 +43,15 @@ export class PatientService {
     );
   }
   getPatientTrips(id:number): Observable<GenerialResponse<ITrip[]>> {
-    return this._.get<GenerialResponse<ITrip[]>>(this.api +`/${id}`+ '/trips');
+    return this._.get<GenerialResponse<ITrip[]>>(this.api +`/${id}`+ '/trips').pipe(
+      map((response: GenerialResponse<ITrip[]>) => {
+      response.data.forEach((trip: ITrip) => {
+        trip.price =   Math.floor(Number(trip.price));
+        trip.distanceKM= Math.floor(Number(trip.distanceKM));
+        });
+        return response;
+      })
+    );
   }
 
     getStatusText(status: RequestStatus): string {

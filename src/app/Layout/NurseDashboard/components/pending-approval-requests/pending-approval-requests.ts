@@ -92,7 +92,7 @@ export class PendingApprovalRequests implements OnInit {
  approveRequest(request: IRequest): void {
   const dto: IAssignNurse = {
     RequestId: request.requestId,
-    NurseId:1010
+    NurseId:this._AuthService.getProfileId()!
     // NurseId: this._AuthService.getProfileId()!
   };
 
@@ -100,7 +100,7 @@ export class PendingApprovalRequests implements OnInit {
     next: (res) => {
       if (res.success) {
         // Remove the approved request from the list
-        // this.requests = this.requests.filter(r => r.requestId !== request.requestId);
+        this.requests = this.requests.filter(r => r.requestId !== request.requestId);
 
         // Success Toast Message
         this.toastr.success(res.message || 'Request approved successfully!', 'Success');

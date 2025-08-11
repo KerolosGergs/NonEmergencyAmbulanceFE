@@ -10,15 +10,19 @@
       </button>
     </div>
   </div>
+
   <div class="card-body">
-  @if (loading) {
-    <div class="loading">
-      <div class="spinner"></div>
-      <p>Loading map...</p>
-    </div>
-  }
-  @if (showMap && !loading) {
-    <div #mapContainer class="map-container"></div>
-  }
+    @if (loading) {
+      <div class="loading">
+        <div class="spinner"></div>
+        <p>Loading map...</p>
+      </div>
+    }
+    @if (showMap && !loading) {
+      <div #mapContainer class="map-container"></div>
+    }
+    @if (!loading && !showMap) {
+      <div class="text-muted small">Couldn’t plot the trip on the map.</div>
+    }
   </div>
 </div>

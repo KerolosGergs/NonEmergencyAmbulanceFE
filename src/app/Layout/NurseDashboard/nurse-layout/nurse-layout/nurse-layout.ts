@@ -13,6 +13,7 @@ import { YourSchedule } from '../../components/your-schedule/your-schedule';
 import { Nav } from '../../../../Shared/Components/nav/nav';
 import { Footer } from '../../../../Shared/Components/footer/footer';
 import { IRequest } from '../../../../Core/interface/Request/irequest';
+import { ApprovedRequest } from "../../components/approved-request/approved-request";
 
 @Component({
   selector: 'app-nurse-layout',
@@ -23,9 +24,8 @@ import { IRequest } from '../../../../Core/interface/Request/irequest';
     PendingApprovalRequests,
     PatientDetails,
     YourSchedule,
-    Nav,
-    Footer
-  ],
+    ApprovedRequest
+],
   templateUrl: './nurse-layout.html',
   styleUrls: ['./nurse-layout.scss']
 })

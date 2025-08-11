@@ -32,7 +32,7 @@ export class PatientRequestsComponent implements OnInit {
 
   loadRequests(): void {
     // const patientId = this.authService.getProfileId();
-    const patientId = 1;    
+    const patientId = 7;    
 
     if (!patientId) {
       this.error = 'Not authenticated';
@@ -131,4 +131,15 @@ export class PatientRequestsComponent implements OnInit {
     base += 25;
     return base;
   }
+  getStatusIconClasses(status: RequestStatus): string[] {
+  switch (status) {
+    case RequestStatus.Pending:     return ['bi', 'bi-hourglass-split', 'text-warning'];
+    case RequestStatus.Accepted:    return ['bi', 'bi-check2-circle', 'text-primary'];
+    case RequestStatus.Rejected:    return ['bi', 'bi-x-circle', 'text-danger'];
+    case RequestStatus.InProgress:  return ['bi', 'bi-arrow-repeat', 'text-info', 'spin'];
+    case RequestStatus.Completed:   return ['bi', 'bi-patch-check', 'text-success'];
+    case RequestStatus.Cancelled:   return ['bi', 'bi-slash-circle', 'text-secondary'];
+    default:                        return ['bi', 'bi-question-circle', 'text-muted'];
+  }
+}
 }

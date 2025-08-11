@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { WithdrawalService } from '../../../../Core/Services/AdminServices/withdrawal-service';
 import { ProfitService } from '../../../../Core/Services/AdminServices/profit.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
 
 @Component({
   selector: 'app-n-header',
@@ -15,72 +16,75 @@ import { Router } from '@angular/router';
   styleUrl: './n-header.scss'
 })
 export class NHeader implements OnInit {
-  title = 'Nurse Dashboard';
-  date = new Date().toLocaleDateString('en-US', {
-    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-  });
-  newRequests!: number;
+fullName: string | null = null;
+  certification: string | null = null;
+  phoneNumber: string | null = null;
+  imgUrl: string | null = null;
+
+  today = new Date();
   totalMoney = 0;
   withdrawAmount = 0;
+  loading = true;
 
-  _requestService = inject(RequestService);
-  _withdrawalService = inject(WithdrawalService);
-  _profitService = inject(ProfitService);
-  _router = inject(Router);
+  // private readonly _requestService = inject(RequestService);
+  private readonly _withdrawalService = inject(WithdrawalService);
+  private readonly _profitService = inject(ProfitService);
+  private readonly _nurseService = inject(NurseService);
+  private readonly _auth = inject(AuthService);
+  private readonly _router = inject(Router);
 
   ngOnInit(): void {
-    this.getRequestCount();
+    this.loadProfile();
+    this.getTotalMoney();
   }
 
-  getRequestCount() {
-    this._requestService.getAvailableRequestsForNurses().subscribe({
-      next: (data) => {
-        if(data.success){
-          this.newRequests = data.data.length;
+  private loadProfile(): void {
+    this._nurseService.getById(this._auth.getProfileId()!).subscribe({
+      next: (res) => {
+        if (res?.success && res.data) {
+          // const d = res.data as { fullName?: string; certification?: string; phoneNumber?: string; imgUrl?: string };
+          this.fullName = res.data.fullName ?? this._auth.getFullName();
+          this.certification = res.data.certification ?? null;
+          this.phoneNumber = res.data.phoneNumber ?? null;
+          this.imgUrl = res.data.imgUrl ?? null;
+        } else {
+          this.fullName = this._auth.getFullName();
         }
-        console.log('Fetched requests:', data);},
-      error: (err) => {
-        console.error('Error fetching request count:', err);
+        this.loading = false;
+      },
+      error: () => {
+        this.fullName = this._auth.getFullName();
+        this.loading = false;
       }
     });
   }
 
-  ngAfterViewInit(): void {
-    this.getTotalMoney();
-  }
 
-  getTotalMoney() {
+
+  private getTotalMoney(): void {
     this._profitService.getUserBalance().subscribe({
-      next: (resp) => {
-        if (resp.success && resp.data) {
-          this.totalMoney = resp.data.currentBalance;
-        } else {
-          this.totalMoney = 0;
-        }
-      },
-      error: () => this.totalMoney = 0
+      next: (res) => { this.totalMoney = (res?.success && res.data?.currentBalance) ? res.data.currentBalance : 0; },
+      error: () => (this.totalMoney = 0)
     });
   }
 
-  confirmWithdraw() {
-    if (this.withdrawAmount <= 0) {
-      alert('Please enter a valid amount.');
-      return;
-    }
-    if (this.withdrawAmount > this.totalMoney) {
-      alert('You cannot withdraw more than your total money.');
-      return;
-    }
+  withdraw(): void {
+    if (this.withdrawAmount <= 0) return alert('Please enter a valid amount.');
+    if (this.withdrawAmount > this.totalMoney) return alert('You cannot withdraw more than your total balance.');
     this._withdrawalService.createWithdrawalRequest(this.withdrawAmount).subscribe({
-      next: (resp) => {
-        if (resp.success) {
-          alert(`Withdrawal request submitted for $${this.withdrawAmount.toFixed(2)}`);
+      next: (res) => {
+        if (res?.success) {
+          alert(`تم إرسال طلب سحب بقيمة ${this.withdrawAmount.toFixed(2)} EGP`);
           this.withdrawAmount = 0;
-        } else {
-          alert(resp.message || 'Failed to submit withdrawal request');
-        }
+          this.getTotalMoney();
+        } else alert(res?.message || 'Failed to submit withdrawal request');
       },
       error: () => alert('Error submitting withdrawal request')
     });
+  }
+
+  logout(): void {
+    this._auth.logout();
+    this._router.navigate(['/login']);
   }
 }

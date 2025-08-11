@@ -1,0 +1,36 @@
+.patient-photo {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.section-title {
+  border-top: 1px solid #eee;
+  padding-top: .5rem;
+  margin-top: .75rem;
+}
+
+.empty-state {
+  min-height: 240px;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+
+  .empty-icon {
+    width: 72px;
+    height: 72px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, .04);
+    color: #666;
+    font-size: 34px;
+    border: 1px solid rgba(0,0,0,.06);
+  }
+}
+
+/* Optional: tighter look on small screens */
+@media (max-width: 576px) {
+  .patient-photo { width: 84px; height: 84px; }
+  .empty-state { min-height: 180px; }
+}

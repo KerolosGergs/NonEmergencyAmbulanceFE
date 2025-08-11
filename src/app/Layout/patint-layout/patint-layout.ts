@@ -47,7 +47,7 @@ export class PatintLayout implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subscription.add(
-      this.patientService.getPatientRequests(1).subscribe(
+      this.patientService.getPatientRequests(7).subscribe(
         requests => {
           this.requests = requests.data;
         }

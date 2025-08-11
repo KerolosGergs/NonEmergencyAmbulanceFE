@@ -1,4 +1,5 @@
-<div class="p-3 border-start bg-white" *ngIf="patient">
+@if(patient){
+  <div class="p-3 border-start bg-white" >
   <h6 class="fw-bold">Patient Details</h6>
 
   <!-- Centered Image and Basic Info -->
@@ -8,8 +9,6 @@
     <div class="text-muted">ID: {{ patient.patientId }} </div>
     <div class="text-muted">Phone: {{ patient.patientPhone }} </div>
   </div>
-
-
 
   <!-- Transport Details -->
   <h6 class="fw-bold border-top pt-2">Transport Details</h6>
@@ -35,3 +34,18 @@
 
 
 </div>
+}
+
+@else {
+  <div class="p-3 border-start bg-white d-flex align-items-center justify-content-center">
+    <div class="empty-state text-center">
+      <div class="empty-icon mb-2">
+        <i class="bi bi-person-circle"></i>
+      </div>
+      <h6 class="fw-bold mb-1">No patient selected</h6>
+      <p class="text-muted mb-0">
+        Choose a request from the list to view patient details here.
+      </p>
+    </div>
+  </div>
+}

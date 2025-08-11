@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Environment } from '../../../../environments/environment';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { IRequestData } from '../../interface/irequest';
 import { ITripData } from '../../interface/itrip-data';
 import { GenerialResponse } from '../../interface/GenerialResponse/GenerialResponse';
@@ -35,7 +35,12 @@ export class NurseService {
   }
 
   getById(id: number): Observable<GenerialResponse<INurse>> {
-    return this._httpClient.get<GenerialResponse<INurse>>(this.api + '/' + id);
+    return this._httpClient.get<GenerialResponse<INurse>>(this.api + '/' + id).pipe(
+      map((response: GenerialResponse<INurse>) =>{
+        response.data.imgUrl = `${Environment.ImgUrl}${response.data.imgUrl}`
+        return response
+      })
+    );
   }
 
   updateNurse(id: number, value: INurse) : Observable<GenerialResponse<INurse>> {

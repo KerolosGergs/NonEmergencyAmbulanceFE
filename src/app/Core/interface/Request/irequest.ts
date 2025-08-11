@@ -21,7 +21,7 @@ export interface IRequest {
     nurseId?: number;
     nurseName?: string;
     nursePhone?: string;
-     Price:Number;
+     price:Number;
 }
 export interface AssignUpdateRequest {
     requestId: number;

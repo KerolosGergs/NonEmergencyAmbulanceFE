@@ -2,7 +2,7 @@ import { register } from './../../interface/register';
 import { Environment } from './../../../../environments/environment';
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { GenerialResponse } from '../../interface/GenerialResponse/GenerialResponse';
 import { DriverRegister, ILogin, IUser, NurseRegister, PatientRegister } from '../../interface/IAuth/iauth';
 
@@ -19,7 +19,8 @@ export class AuthService {
     return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 
-
+ private sessionSubject = new BehaviorSubject<any>(this.getSessionData());
+  sessionChanges$ = this.sessionSubject.asObservable();
 
   // New: Set Full User Session
   setUserSession(IUser: {

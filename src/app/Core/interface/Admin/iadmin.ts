@@ -14,6 +14,7 @@ export interface AdminNurse {
     phoneNumber: string
     userId: string
     fullName: string
+    imgUrl: string
 }
 
 export interface AdminAmbulance {

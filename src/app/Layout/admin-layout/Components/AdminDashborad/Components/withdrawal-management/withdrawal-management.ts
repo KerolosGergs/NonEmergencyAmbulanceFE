@@ -1,3 +1,4 @@
+import { AuthService } from './../../../../../../Core/Services/AuthServices/auth-service';
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -13,13 +14,28 @@ import { GenerialResponse } from '../../../../../../Core/interface/GenerialRespo
   styleUrls: ['./withdrawal-management.scss']
 })
 export class WithdrawalManagementComponent implements OnInit {
+
   withdrawalRequests: IWithdrawalRequest[] = [];
+
+  // NEW: grouped lists
+  pendingRequests: IWithdrawalRequest[] = [];
+  approvedRequests: IWithdrawalRequest[] = [];
+  rejectedRequests: IWithdrawalRequest[] = [];
+  completedRequests: IWithdrawalRequest[] = [];
+  authService =inject(AuthService);
+  // NEW: active tab
+  activeTab: 'pending' | 'approved' | 'rejected' | 'completed' = 'pending';
+
   loading = false;
   error = '';
   selectedRequest: IWithdrawalRequest | null = null;
   notes = '';
   showActionModal = false;
   actionType: 'approve' | 'reject' | 'complete' = 'approve';
+  // adminId = this.authService.getProfileId();
+  adminId =1;
+
+  readonly WithdrawalStatus = WithdrawalStatus; // for template use
 
   private readonly withdrawalService = inject(WithdrawalService);
 
@@ -35,6 +51,7 @@ export class WithdrawalManagementComponent implements OnInit {
       next: (response: GenerialResponse<IWithdrawalRequest[]>) => {
         if (response.success && response.data) {
           this.withdrawalRequests = response.data;
+          this.refreshGroups(); // NEW: split into lists
         } else {
           this.error = response.message || 'Failed to load withdrawal requests';
         }
@@ -47,6 +64,29 @@ export class WithdrawalManagementComponent implements OnInit {
       }
     });
   }
+
+  // NEW: split master list into 4 arrays
+  private refreshGroups(): void {
+    this.pendingRequests   = this.withdrawalRequests.filter(r => r.status === WithdrawalStatus.Pending);
+    this.approvedRequests  = this.withdrawalRequests.filter(r => r.status === WithdrawalStatus.Approved);
+    this.rejectedRequests  = this.withdrawalRequests.filter(r => r.status === WithdrawalStatus.Rejected);
+    this.completedRequests = this.withdrawalRequests.filter(r => r.status === WithdrawalStatus.Completed);
+  }
+
+  // Helper to get the current list for the active tab
+  get currentList(): IWithdrawalRequest[] {
+    switch (this.activeTab) {
+      case 'approved':  return this.approvedRequests;
+      case 'rejected':  return this.rejectedRequests;
+      case 'completed': return this.completedRequests;
+      default:          return this.pendingRequests;
+    }
+  }
+
+  // Limit actions based on status (optional but recommended)
+  canApprove(r: IWithdrawalRequest)  { return r.status === WithdrawalStatus.Pending; }
+  canReject(r: IWithdrawalRequest)   { return r.status === WithdrawalStatus.Pending; }
+  canComplete(r: IWithdrawalRequest) { return r.status === WithdrawalStatus.Approved; }
 
   openActionModal(request: IWithdrawalRequest, action: 'approve' | 'reject' | 'complete'): void {
     this.selectedRequest = request;
@@ -69,10 +109,10 @@ export class WithdrawalManagementComponent implements OnInit {
 
     switch (this.actionType) {
       case 'approve':
-        action$ = this.withdrawalService.approveWithdrawalRequest(requestId, this.notes);
+        action$ = this.withdrawalService.approveWithdrawalRequest(requestId,this.adminId, this.notes);
         break;
       case 'reject':
-        action$ = this.withdrawalService.rejectWithdrawalRequest(requestId, this.notes);
+        action$ = this.withdrawalService.rejectWithdrawalRequest(requestId,this.adminId, this.notes);
         break;
       case 'complete':
         action$ = this.withdrawalService.completeWithdrawalRequest(requestId);
@@ -83,7 +123,7 @@ export class WithdrawalManagementComponent implements OnInit {
       action$.subscribe({
         next: (response: GenerialResponse<IWithdrawalRequest>) => {
           if (response.success) {
-            this.loadWithdrawalRequests();
+            this.loadWithdrawalRequests(); // will re-split again
             this.closeActionModal();
           } else {
             this.error = response.message || 'Action failed';
@@ -99,11 +139,11 @@ export class WithdrawalManagementComponent implements OnInit {
 
   getStatusClass(status: WithdrawalStatus): string {
     switch (status) {
-      case WithdrawalStatus.Pending: return 'badge bg-warning';
-      case WithdrawalStatus.Approved: return 'badge bg-success';
-      case WithdrawalStatus.Rejected: return 'badge bg-danger';
+      case WithdrawalStatus.Pending:   return 'badge bg-warning';
+      case WithdrawalStatus.Approved:  return 'badge bg-success';
+      case WithdrawalStatus.Rejected:  return 'badge bg-danger';
       case WithdrawalStatus.Completed: return 'badge bg-info';
-      default: return 'badge bg-secondary';
+      default:                         return 'badge bg-secondary';
     }
   }
 }

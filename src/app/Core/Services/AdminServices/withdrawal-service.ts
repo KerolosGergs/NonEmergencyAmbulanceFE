@@ -30,12 +30,12 @@ export class WithdrawalService {
     return this.http.get<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/${requestId}`);
   }
 
-  approveWithdrawalRequest(requestId: number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
-    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/approve/${requestId}`, notes ?? '');
+  approveWithdrawalRequest(requestId: number,adminId:number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
+    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/approve/${requestId}/${adminId}`, notes ?? '');
   }
 
-  rejectWithdrawalRequest(requestId: number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
-    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/reject/${requestId}`, notes ?? '');
+  rejectWithdrawalRequest(requestId: number,adminId:number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
+    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/reject/${requestId}/${adminId}`, notes ?? '');
   }
 
   completeWithdrawalRequest(requestId: number): Observable<GenerialResponse<IWithdrawalRequest>> {

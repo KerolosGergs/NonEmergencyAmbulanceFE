@@ -40,6 +40,7 @@ export interface PatientRequest {
   nurseName?: string;
   nursePhone?: string;
   nurseImg?: string;
+  price:number
 }
 export interface PatientTrip {
   tripId: number;

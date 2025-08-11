@@ -9,40 +9,79 @@
   }
 
   @if (!loading) {
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>User</th>
-          <th>User Type</th>
-          <th>Amount</th>
-          <th>Status</th>
-          <th>Requested</th>
-          <th>Processed</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (r of withdrawalRequests; track r.id) {
-        <tr>
-          <td>{{ r.id }}</td>
-          <td>{{ r.userName }}</td>
-          <td>{{ r.userType }}</td>
-          <td>${{ r.amount | number: '1.2-2' }}</td>
-          <td><span [class]="getStatusClass(r.status)">{{ r.status }}</span></td>
-          <td>{{ r.requestDate | date: 'medium' }}</td>
-          <td>{{ r.processedDate ? (r.processedDate | date: 'medium') : '-' }}</td>
-          <td>
-            <button class="btn btn-sm btn-success me-2" (click)="openActionModal(r, 'approve')">Approve</button>
-            <button class="btn btn-sm btn-danger me-2" (click)="openActionModal(r, 'reject')">Reject</button>
-            <button class="btn btn-sm btn-primary" (click)="openActionModal(r, 'complete')">Complete</button>
-          </td>
-        </tr>
-        }
-      </tbody>
-    </table>
-  </div>
+    <!-- Tabs -->
+    <ul class="nav nav-pills mb-3">
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'pending'" (click)="activeTab = 'pending'">
+          Pending <span class="badge text-bg-light ms-1">{{ pendingRequests.length }}</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'approved'" (click)="activeTab = 'approved'">
+          Approved <span class="badge text-bg-light ms-1">{{ approvedRequests.length }}</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'rejected'" (click)="activeTab = 'rejected'">
+          Rejected <span class="badge text-bg-light ms-1">{{ rejectedRequests.length }}</span>
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link" [class.active]="activeTab === 'completed'" (click)="activeTab = 'completed'">
+          Completed <span class="badge text-bg-light ms-1">{{ completedRequests.length }}</span>
+        </button>
+      </li>
+    </ul>
+
+    <!-- Table -->
+    <div class="table-responsive">
+      <table class="table table-striped align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>User</th>
+            <th>User Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Requested</th>
+            <th>Processed</th>
+            <th style="width:220px">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (currentList.length === 0) {
+            <tr>
+              <td colspan="8" class="text-center py-4 opacity-75">No records found.</td>
+            </tr>
+          } @else {
+            @for (r of currentList; track r.id) {
+              <tr>
+                <td>{{ r.id }}</td>
+                <td>{{ r.userName }}</td>
+                <td>{{ r.userType }}</td>
+                <td>${{ r.amount | number: '1.2-2' }}</td>
+                <td><span [class]="getStatusClass(r.status)">{{ r.status }}</span></td>
+                <td>{{ r.requestDate   | date: 'medium' }}</td>
+                <td>{{ r.processedDate ? (r.processedDate | date: 'medium') : '-' }}</td>
+                <td>
+                  <div class="d-flex gap-2">
+                    @if (canApprove(r)) {
+                      <button class="btn btn-sm btn-success" (click)="openActionModal(r, 'approve')">Approve</button>
+                    }
+                    @if (canReject(r)) {
+                      <button class="btn btn-sm btn-danger" (click)="openActionModal(r, 'reject')">Reject</button>
+                    }
+                    @if (canComplete(r)) {
+                      <button class="btn btn-sm btn-primary" (click)="openActionModal(r, 'complete')">Complete</button>
+                    }
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
   }
 
   <!-- Action Modal -->
@@ -55,16 +94,16 @@
         </div>
         <div class="modal-body">
           @if (actionType !== 'complete') {
-          <div class="mb-3">
-            <label>Admin Notes (optional)</label>
-            <textarea [(ngModel)]="notes" class="form-control" rows="3"></textarea>
-          </div>
+            <div class="mb-3">
+              <label class="form-label">Admin Notes (optional)</label>
+              <textarea [(ngModel)]="notes" class="form-control" rows="3"></textarea>
+            </div>
           }
           @if (selectedRequest) {
-          <div>
-            <p>User: <strong>{{ selectedRequest.userName }}</strong></p>
-            <p>Amount: <strong>${{ selectedRequest.amount | number: '1.2-2' }}</strong></p>
-          </div>
+            <div>
+              <p>User: <strong>{{ selectedRequest.userName }}</strong></p>
+              <p>Amount: <strong>${{ selectedRequest.amount | number: '1.2-2' }}</strong></p>
+            </div>
           }
         </div>
         <div class="modal-footer">

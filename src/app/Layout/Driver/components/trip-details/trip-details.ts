@@ -7,7 +7,7 @@ import { ITripData } from '../../../../Core/interface/itrip-data';
   templateUrl: './trip-details.html',
   styleUrl: './trip-details.scss'
 })
-export class TripDetails {
+export class DriverTripDetails {
     @Input() trip: ITripData | null = null;
 
 }

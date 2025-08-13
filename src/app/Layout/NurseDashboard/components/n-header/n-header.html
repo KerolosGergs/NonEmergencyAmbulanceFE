@@ -1,73 +1,120 @@
-<header class="profile-banner border-bottom">
-  <div class="profile-gradient"></div>
+<div class="nurse-header position-relative overflow-hidden">
+  <!-- Background Gradient -->
+  <div class="header-gradient position-absolute w-100 h-100"></div>
+  
+  <!-- Background Pattern -->
+  <div class="header-pattern position-absolute w-100 h-100"></div>
 
   <div class="container-fluid position-relative">
-    <div class="row align-items-center gx-4 gy-4 py-4">
-
-      <!-- Avatar + identity -->
-      <div class="col-12 col-lg-4 d-flex align-items-center gap-3">
-        <div class="avatar-wrap">
-          <img
-            [class.skeleton]="loading"
-            [src]="imgUrl || 'assets/images/avatar-nurse.png'"
-            alt="Profile"
-            class="avatar" />
-          <span class="status-dot" title="Available"></span>
-        </div>
-
-        <div class="min-w-0">
-          <div class="d-flex align-items-center gap-2 flex-wrap">
-            <h4 class="mb-0 fw-semibold text-truncate" [class.skeleton-text]="loading">
-              {{ fullName || '—' }}
-            </h4>
-            <span class="badge rounded-pill bg-soft badge-outline" [class.skeleton-pill]="loading">
-              {{ certification || '—' }}
-            </span>
+    <div class="row align-items-center py-4 g-4">
+      
+      <!-- Profile Section -->
+      <div class="col-12 col-lg-6">
+        <div class="d-flex align-items-center gap-3">
+          <!-- Avatar with Status -->
+          <div class="position-relative">
+            <img
+              [src]="imgUrl || 'https://images.pexels.com/photos/5327585/pexels-photo-5327585.jpeg?auto=compress&cs=tinysrgb&w=150'"
+              alt="Profile"
+              class="nurse-avatar rounded-4 border border-3 border-white shadow-lg"
+              [class.placeholder-glow]="loading" />
+            <span class="status-indicator position-absolute bg-success border border-3 border-white rounded-circle"></span>
           </div>
-          <small class="text-muted d-block mt-1" *ngIf="phoneNumber && !loading">
-            <i class="bi bi-telephone me-1"></i>{{ phoneNumber }}
-          </small>
+
+          <!-- Profile Info -->
+          <div class="flex-grow-1 min-w-0">
+            <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+              <h4 class="mb-0 fw-bold text-white text-truncate" [class.placeholder]="loading">
+                {{ fullName || 'Dr. Sarah Johnson' }}
+              </h4>
+              <span class="badge bg-white bg-opacity-20 backdrop-blur rounded-pill px-3 py-1 text-primary" [class.placeholder]="loading">
+                {{ certification || 'RN, BSN' }}
+              </span>
+            </div>
+
+            <div class="d-flex align-items-center gap-3 text-white-50 small">
+              @if (phoneNumber) {
+
+                <div class="d-flex align-items-center gap-1" >
+                  <i class="bi bi-telephone"></i>
+                  <span>{{ phoneNumber }}</span>
+                </div>
+              }
+              <div class="d-flex align-items-center gap-1">
+                <i class="bi bi-calendar3"></i>
+                <span>{{ today | date:'EEEE, MMM d' }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- Today + requests -->
-      <div class="col-12 col-md-4 d-flex flex-wrap align-items-center gap-2 justify-content-md-center">
-        <div class="chip">
-          <i class="bi bi-calendar3 me-2"></i>
-          <span [class.skeleton-text]="loading">{{ today | date:'EEEE, d MMMM y' }}</span>
+      <!-- Stats Section -->
+      <!-- <div class="col-12 col-md-4 d-flex justify-content-center">
+        <div class="stats-chip bg-white bg-opacity-10 backdrop-blur rounded-4 px-4 py-3 border border-white border-opacity-20">
+          <div class="d-flex align-items-center gap-3">
+            <div class="text-center">
+              <div class="fw-bold text-white fs-5">24</div>
+              <small class="text-white-50">Trips</small>
+            </div>
+            <div class="vr bg-white bg-opacity-30"></div>
+            <div class="text-center">
+              <div class="fw-bold text-white fs-5">4.9</div>
+              <small class="text-white-50">Rating</small>
+            </div>
+          </div>
         </div>
-        <!-- <div class="chip chip-info">
-          <i class="bi bi-bell-fill me-2"></i>
-          <span [class.skeleton-text]="loading">{{ newRequests }} New Requests</span>
-        </div> -->
-      </div>
+      </div> -->
 
-      <!-- Balance + actions -->
-      <div class="col-12 col-lg-4 d-flex align-items-center gap-3 justify-content-lg-end">
-        <div class="balance" [class.skeleton-text]="loading">
-          <i class="bi bi-wallet2 me-2"></i>
-          <span class="text-muted me-1">Balance</span>
-          <strong>{{ totalMoney | currency:'EGP' }}</strong>
+      <!-- Actions Section -->
+      <div class="col-12 col-lg-6">
+        <div class="d-flex align-items-center gap-3 justify-content-lg-end">
+          <!-- Balance Display -->
+          <div class="balance-card bg-white bg-opacity-10 backdrop-blur rounded-4 px-4 py-3 border border-white border-opacity-20">
+            <div class="d-flex align-items-center gap-2">
+              <i class="bi bi-wallet2 text-white fs-5"></i>
+              <div>
+                <small class="text-white-50 d-block">Balance</small>
+                <div class="fw-bold text-white" [class.placeholder]="loading">
+                  {{ totalMoney | currency:'EGP':'symbol':'1.2-2' }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Withdraw Form -->
+          <form [formGroup]="withdrawForm" (ngSubmit)="withdraw()" class="d-flex gap-2">
+            <div class="input-group input-group-sm withdraw-input">
+              <input
+                type="number"
+                class="form-control bg-white bg-opacity-90 border-0"
+                formControlName="amount"
+                placeholder="Amount"
+                [disabled]="loading"
+                step="0.01"
+                min="0" />
+              <button 
+                class="btn btn-light fw-semibold px-3"
+                type="submit"
+                [disabled]="loading || withdrawForm.invalid">
+                <i class="bi bi-cash-coin me-1"></i>
+                {{ loading ? 'Processing...' : 'Withdraw' }}
+              </button>
+            </div>
+          </form>
+
+          <!-- Action Buttons -->
+          <div class="d-flex gap-2">
+            <button 
+              class="btn btn-danger btn-md bg-opacity-20 border-danger border-opacity-30"
+              (click)="logout()">
+              <i class="bi bi-box-arrow-right me-1"></i>
+              Logout
+            </button>
+          </div>
         </div>
-
-        <div class="input-group input-group-sm withdraw-group">
-          <input
-            type="number"
-            min="0"
-            class="form-control"
-            [(ngModel)]="withdrawAmount"
-            [disabled]="loading"
-            placeholder="Amount (EGP)"
-            aria-label="Withdraw amount" />
-          <button class="btn btn-primary" (click)="withdraw()" [disabled]="loading || !withdrawAmount">
-            <i class="bi bi-cash-coin me-1"></i> Withdraw
-          </button>
-        </div>
-
-        <button class="btn btn-outline-danger btn-sm" (click)="logout()" [disabled]="loading">
-          <i class="bi bi-box-arrow-right me-1"></i> Logout
-        </button>
       </div>
     </div>
+
   </div>
-</header>
+</div>

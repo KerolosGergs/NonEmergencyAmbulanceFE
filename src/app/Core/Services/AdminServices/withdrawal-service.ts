@@ -1,16 +1,21 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { GenerialResponse } from '../../interface/GenerialResponse/GenerialResponse';
 import { IWithdrawalRequest, WithdrawalSummaryDTO } from '../../interface/Admin/iwithdrawal';
 import { Environment } from '../../../../environments/environment';
+import { AuthService } from '../AuthServices/auth-service';
+export interface WithdrawalRequest {
+  userId: string;
+  amount: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class WithdrawalService {
   private apiUrl = Environment.apiUrl;
-
+  private auth = inject(AuthService);
   constructor(private http: HttpClient) { }
 
   getWithdrawalSummary(): Observable<GenerialResponse<WithdrawalSummaryDTO>> {
@@ -30,21 +35,24 @@ export class WithdrawalService {
     return this.http.get<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/${requestId}`);
   }
 
-  approveWithdrawalRequest(requestId: number,adminId:number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
+  approveWithdrawalRequest(requestId: number,adminId:String, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
     return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/approve/${requestId}/${adminId}`, notes ?? '');
   }
 
-  rejectWithdrawalRequest(requestId: number,adminId:number, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
+  rejectWithdrawalRequest(requestId: number,adminId:String, notes?: string): Observable<GenerialResponse<IWithdrawalRequest>> {
     return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/reject/${requestId}/${adminId}`, notes ?? '');
   }
 
-  completeWithdrawalRequest(requestId: number): Observable<GenerialResponse<IWithdrawalRequest>> {
-    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/complete/${requestId}`, {});
+  completeWithdrawalRequest(requestId: number,adminId:String): Observable<GenerialResponse<IWithdrawalRequest>> {
+    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/withdrawal/complete/${requestId}/${adminId}`, {});
   }
 
   // User endpoints
   createWithdrawalRequest(amount: number): Observable<GenerialResponse<IWithdrawalRequest>> {
-    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/profit/withdrawal/request`, { amount });
+    return this.http.post<GenerialResponse<IWithdrawalRequest>>(`${this.apiUrl}/profit/withdrawal/request/${this.auth.getUserId()}`, {
+  "userId": this.auth.getUserId(),
+  "amount": amount
+});
   }
 
   getUserWithdrawalRequests(): Observable<GenerialResponse<IWithdrawalRequest[]>> {

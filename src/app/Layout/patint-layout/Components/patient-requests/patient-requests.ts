@@ -26,13 +26,25 @@ export class PatientRequestsComponent implements OnInit {
   loading = false;
   error = '';
 
+  // UPDATED: add tabs model + active tab state
+  readonly RequestStatus = RequestStatus; // expose enum to template
+  tabs: { key: RequestStatus; label: string }[] = [
+    { key: RequestStatus.Pending,     label: 'Pending' },
+    { key: RequestStatus.Accepted,    label: 'Accepted' },
+    { key: RequestStatus.Rejected,    label: 'Rejected' },
+    { key: RequestStatus.InProgress,  label: 'In Progress' },
+    { key: RequestStatus.Completed,   label: 'Completed' },
+    { key: RequestStatus.Cancelled,   label: 'Cancelled' },
+  ];
+  activeStatus: RequestStatus = RequestStatus.Pending; // default
+
   ngOnInit(): void {
     this.loadRequests();
   }
 
   loadRequests(): void {
     // const patientId = this.authService.getProfileId();
-    const patientId = 7;    
+    const patientId = 7;
 
     if (!patientId) {
       this.error = 'Not authenticated';
@@ -41,7 +53,7 @@ export class PatientRequestsComponent implements OnInit {
     this.loading = true;
     this.patientService.getPatientRequests(patientId).subscribe({
       next: (res) => {
-        this.requests = res.data;
+        this.requests = res.data ?? [];
         this.loading = false;
       },
       error: () => {
@@ -55,34 +67,55 @@ export class PatientRequestsComponent implements OnInit {
     this.isProcessing = true;
     this.requestService.confirmRequestByPatient(requestId).subscribe({
       next: (response) => {
-        if (response.success) {
-          this.toastr.success(response.message, 'Success');
+        if (response?.success) {
+          this.toastr.success(response.message ?? 'Request confirmed.', 'Success');
           this.loadRequests();
         } else {
-          this.toastr.error(response.message, 'Error');
+          this.toastr.error(response?.message ?? 'Could not confirm request.', 'Error');
         }
         this.isProcessing = false;
       },
-      error: (err) => {
+      error: () => {
         this.toastr.error('Error confirming request', 'Error');
         this.isProcessing = false;
       }
     });
   }
 
+  // UPDATED: make cancelRequest use Observable + proper feedback
   cancelRequest(requestId: number): void {
     this.isProcessing = true;
-    try {
-      this.requestService.cancelRequest(requestId);
-      this.toastr.warning('Request has been cancelled.', 'Cancelled');
-      this.loadRequests();
-    } catch {
-      this.toastr.error('Failed to cancel request. Please try again.', 'Error');
-    } finally {
-      this.isProcessing = false;
-    }
+    this.requestService.cancelRequest(requestId).subscribe({
+      next: (response) => {
+        if (response?.success) {
+          this.toastr.warning(response.message ?? 'Request has been cancelled.', 'Cancelled');
+          this.loadRequests();
+        } else {
+          this.toastr.error(response?.message ?? 'Failed to cancel request.', 'Error');
+        }
+        this.isProcessing = false;
+      },
+      error: () => {
+        this.toastr.error('Failed to cancel request. Please try again.', 'Error');
+        this.isProcessing = false;
+      }
+    });
   }
 
+  // UPDATED: helper to filter by active tab (status)
+  getRequestsByStatus(status: RequestStatus): PatientRequest[] {
+    return this.requests.filter(r => r.status === status);
+  }
+
+  // UPDATED: counts for badges on tabs
+  countByStatus(status: RequestStatus): number {
+    return this.requests.reduce((acc, r) => acc + (r.status === status ? 1 : 0), 0);
+  }
+
+  // UPDATED: trackBy to optimize rendering
+  trackByRequestId = (_: number, item: PatientRequest) => item.requestId;
+
+  // existing helpers
   getStatusText(status: RequestStatus): string {
     switch (status) {
       case RequestStatus.Pending: return 'Pending';
@@ -131,15 +164,16 @@ export class PatientRequestsComponent implements OnInit {
     base += 25;
     return base;
   }
+
   getStatusIconClasses(status: RequestStatus): string[] {
-  switch (status) {
-    case RequestStatus.Pending:     return ['bi', 'bi-hourglass-split', 'text-warning'];
-    case RequestStatus.Accepted:    return ['bi', 'bi-check2-circle', 'text-primary'];
-    case RequestStatus.Rejected:    return ['bi', 'bi-x-circle', 'text-danger'];
-    case RequestStatus.InProgress:  return ['bi', 'bi-arrow-repeat', 'text-info', 'spin'];
-    case RequestStatus.Completed:   return ['bi', 'bi-patch-check', 'text-success'];
-    case RequestStatus.Cancelled:   return ['bi', 'bi-slash-circle', 'text-secondary'];
-    default:                        return ['bi', 'bi-question-circle', 'text-muted'];
+    switch (status) {
+      case RequestStatus.Pending:     return ['bi', 'bi-hourglass-split', 'text-warning'];
+      case RequestStatus.Accepted:    return ['bi', 'bi-check2-circle', 'text-primary'];
+      case RequestStatus.Rejected:    return ['bi', 'bi-x-circle', 'text-danger'];
+      case RequestStatus.InProgress:  return ['bi', 'bi-arrow-repeat', 'text-info', 'spin'];
+      case RequestStatus.Completed:   return ['bi', 'bi-patch-check', 'text-success'];
+      case RequestStatus.Cancelled:   return ['bi', 'bi-slash-circle', 'text-secondary'];
+      default:                        return ['bi', 'bi-question-circle', 'text-muted'];
+    }
   }
-}
 }

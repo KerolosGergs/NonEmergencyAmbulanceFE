@@ -1,83 +1,89 @@
 .patient-requests {
-  .simple-request-card {
-    background: #fff;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
-  }
-  .request-main { display: flex; justify-content: space-between; align-items: flex-start; padding: 20px; gap: 20px; }
-  .request-left { display: flex; gap: 15px; flex: 1; }
-  // .request-icon { width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display:flex;align-items:center;justify-content:center; color:#fff; font-size: 20px; }
-  .request-title { font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 8px; }
-  .request-meta { display: flex; flex-direction: column; gap: 6px; color: #6b7280; }
-  .request-notes { background: #f8f9fa; border-left: 3px solid #e5e7eb; padding: 8px 12px; border-radius: 6px; margin-top: 8px; }
-  .request-right { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; min-width: 200px; }
-  .price-section { background: linear-gradient(135deg, #22c55e, #10b981); color:#fff; padding: 12px 16px; border-radius: 10px; text-align: center; }
-  .price-label { font-size: 12px; opacity: 0.9; }
-  .price-amount { font-weight: 700; font-size: 22px; }
-  .status-badge { padding: 6px 12px; border-radius: 999px; font-weight: 600; font-size: 12px; }
-  .action-section { display: flex; gap: 8px; flex-wrap: wrap; }
-  .team-info { background: #f8f9fa; border-top: 1px solid #e9ecef; padding: 16px; }
-  .team-title { font-weight: 600; color: #6b7280; text-transform: uppercase; letter-spacing: .4px; font-size: 12px; margin-bottom: 12px; }
-  .team-members { display: flex; gap: 12px; flex-wrap: wrap; }
-  .team-member { display:flex; align-items:center; gap: 10px; background:#fff; border:1px solid #e5e7eb; border-radius:8px; padding: 10px 12px; }
-  .member-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid #e5e7eb; }
-  .member-name { font-weight: 600; }
-  @media (max-width: 768px) { .request-main { flex-direction: column; } .request-right { align-items: stretch; min-width: auto; } }
-}
-.team-info {
-  .team-title { font-weight: 700; margin-bottom: .5rem; }
-
-  .team-members {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: .75rem;
-  }
-
-  .team-member {
+  .nav-tabs .nav-link {
+    cursor: pointer;
     display: flex;
     align-items: center;
-    gap: .75rem;
-    padding: .6rem .8rem;
-    border: 1px solid rgba(0,0,0,.08);
+    gap: .5rem;
+  }
+
+  .simple-request-card {
+    border: 1px solid #e9ecef;
     border-radius: .75rem;
-    background: #fff;
-
-    &.unassigned {
-      border-style: dashed;
-      border-color: rgba(0,0,0,.16);
-      .member-name { color: #6c757d; }
-    }
-  }
-
-  .member-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 1px solid rgba(0,0,0,.08);
-    background: #f8f9fa;
-  }
-
-  .member-name { font-weight: 600; }
-  .member-role { font-size: .85rem; color: #6c757d; }
-
-  &.empty {
-    display: grid; place-items: center;
     padding: 1rem;
-    border: 1px dashed rgba(0,0,0,.15);
-    border-radius: .75rem;
     background: #fff;
-    text-align: center;
-
-    .empty-icon {
-      width: 56px; height: 56px; border-radius: 50%;
-      display: grid; place-items: center;
-      background: rgba(13,110,253,.08);
-      color: #0d6efd; font-size: 26px;
-      margin-bottom: .5rem;
-    }
-    .empty-text { font-weight: 700; }
-    .empty-sub  { color: #6c757d; font-size: .9rem; }
   }
+
+  .request-main {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .request-left {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .request-details .request-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: .5rem;
+
+    .meta-item i {
+      margin-inline-end: .35rem;
+    }
+  }
+
+  .request-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .5rem;
+
+    .price-label { font-size: .85rem; color: #6c757d; }
+    .price-amount { font-weight: 700; }
+  }
+
+  .team-info {
+    margin-top: 1rem;
+    border-top: 1px dashed #e9ecef;
+    padding-top: 1rem;
+
+    .team-title { font-weight: 600; margin-bottom: .5rem; }
+
+    .team-members {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: .75rem;
+    }
+
+    .team-member {
+      display: flex;
+      gap: .75rem;
+      align-items: center;
+      border: 1px solid #eef2f5;
+      border-radius: .5rem;
+      padding: .5rem .75rem;
+      &.unassigned { opacity: .75; }
+    }
+
+    .member-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .empty {
+      text-align: center;
+      color: #6c757d;
+      .empty-icon { font-size: 2rem; }
+    }
+  }
+
+  /* optional: spin class for InProgress icon */
+  .spin { animation: spin 1s linear infinite; }
+  @keyframes spin { from { transform: rotate(0); } to { transform: rotate(360deg); } }
 }

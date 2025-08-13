@@ -1,264 +1,244 @@
 <div class="trip-page">
-  <div class="container">
-    <div class="header">
-      <h1>My Trips</h1>
-      <p>Track and manage your ambulance trips</p>
+
+
+  @if (loading) {
+  <div class="spinner"></div>
+  <p>Loading trips...</p>
+  }
+
+  @if (error && !loading) {
+  <p class="text-danger">{{ error }}</p>
+  }
+
+  @if (!loading && !error) {
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="selectedTab === 'today'" (click)="selectedTab = 'today'">
+        Today
+        <span class="badge bg-secondary ms-1">{{ todayTrips.length }}</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="selectedTab === 'upcoming'" (click)="selectedTab = 'upcoming'">
+        Upcoming
+        <span class="badge bg-secondary ms-1">{{ upcomingTrips.length }}</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="selectedTab === 'completed'" (click)="selectedTab = 'completed'">
+        Completed
+        <span class="badge bg-secondary ms-1">{{ completedTrips.length }}</span>
+      </button>
+    </li>
+  </ul>
+  <div class="text-center">
+  <!-- Empty state -->
+  @if (selectedTab === 'today' && todayTrips.length === 0) {
+  <div class="no-trips-icon">🚑</div>
+  <h3>No trips today</h3>
+  <p>When you book a trip for today, it’ll appear here.</p>
+  }
+  @if (selectedTab === 'upcoming' && upcomingTrips.length === 0) {
+  <div class="no-trips-icon">🗓️</div>
+  <h3>No upcoming trips</h3>
+  <p>Schedule a trip and it’ll show up here.</p>
+  }
+  @if (selectedTab === 'completed' && completedTrips.length === 0) {
+  <div class="no-trips-icon">✅</div>
+  <h3>No completed trips</h3>
+  <p>Your completed trips will appear here.</p>
+  }
+</div>
+  <div class="trips-container">
+    <!-- Today -->
+    @if (selectedTab === 'today') {
+    @for (trip of todayTrips; track $index) {
+    <div class="trip-card">
+      <div class="trip-header">
+        <div class="trip-id">Trip #{{ trip.tripId }}</div>
+        <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
+          {{ getStatusText(trip.tripStatus) }}
+        </div>
+      </div>
+
+      <div class="trip-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📍</i>
+            <div class="detail-content">
+              <label>Pickup</label>
+              <span>{{ trip.pickupAddress }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="icon">🎯</i>
+            <div class="detail-content">
+              <label>Destination</label>
+              <span>{{ trip.dropOffAddress }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📅</i>
+            <div class="detail-content">
+              <label>Start</label>
+              <span>{{ trip.startTime | date:'medium' }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="icon">💰</i>
+            <div class="detail-content">
+              <label>Price</label>
+              <span class="price">{{ trip.price | currency:'EGP':true }}</span>
+            </div>
+          </div>
+        </div>
+
+        @if (trip.distanceKM) {
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📏</i>
+            <div class="detail-content">
+              <label>Distance</label>
+              <span>{{ trip.distanceKM }} km</span>
+            </div>
+          </div>
+        </div>
+        }
+
+        <!-- Optional: show the live route tracker for today's trips -->
+        <app-trip-tracker [trip]="trip"></app-trip-tracker>
+
+        <div class="actions mt-3">
+          <button class="btn btn-sm btn-primary me-2" (click)="startTrip(trip.tripId)" [disabled]="!canStart(trip)">
+            Start
+          </button>
+          <button class="btn btn-sm btn-success" (click)="completeTrip(trip.tripId)" [disabled]="!canComplete(trip)">
+            Complete
+          </button>
+        </div>
+      </div>
     </div>
-
-    @if (loading) {
-      <div class="spinner"></div>
-      <p>Loading trips...</p>
+    }
     }
 
-    @if (error && !loading) {
-      <p class="text-danger">{{ error }}</p>
+    <!-- Upcoming -->
+    @if (selectedTab === 'upcoming') {
+    @for (trip of upcomingTrips; track $index) {
+    <div class="trip-card">
+      <div class="trip-header">
+        <div class="trip-id">Trip #{{ trip.tripId }}</div>
+        <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
+          {{ getStatusText(trip.tripStatus) }}
+        </div>
+      </div>
+      <div class="trip-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📍</i>
+            <div class="detail-content">
+              <label>Pickup</label>
+              <span>{{ trip.pickupAddress }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="icon">🎯</i>
+            <div class="detail-content">
+              <label>Destination</label>
+              <span>{{ trip.dropOffAddress }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📅</i>
+            <div class="detail-content">
+              <label>Start</label>
+              <span>{{ trip.startTime | date:'medium' }}</span>
+            </div>
+          </div>
+          <div class="detail-item">
+            <i class="icon">💰</i>
+            <div class="detail-content">
+              <label>Price</label>
+              <span class="price">{{ trip.price | currency:'EGP':true }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions mt-3">
+          <button class="btn btn-sm btn-primary" (click)="startTrip(trip.tripId)" [disabled]="!canStart(trip)">
+            Start
+          </button>
+        </div>
+      </div>
+    </div>
+    }
     }
 
-    @if (!loading && !error) {
-      <ul class="nav nav-tabs mb-3">
-        <li class="nav-item">
-          <button
-            class="nav-link"
-            [class.active]="selectedTab === 'today'"
-            (click)="selectedTab = 'today'">
-            Today
-            <span class="badge bg-secondary ms-1">{{ todayTrips.length }}</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button
-            class="nav-link"
-            [class.active]="selectedTab === 'upcoming'"
-            (click)="selectedTab = 'upcoming'">
-            Upcoming
-            <span class="badge bg-secondary ms-1">{{ upcomingTrips.length }}</span>
-          </button>
-        </li>
-        <li class="nav-item">
-          <button
-            class="nav-link"
-            [class.active]="selectedTab === 'completed'"
-            (click)="selectedTab = 'completed'">
-            Completed
-            <span class="badge bg-secondary ms-1">{{ completedTrips.length }}</span>
-          </button>
-        </li>
-      </ul>
-
-      <!-- Empty state -->
-      @if (selectedTab === 'today' && todayTrips.length === 0) {
-        <div class="no-trips-icon">🚑</div>
-        <h3>No trips today</h3>
-        <p>When you book a trip for today, it’ll appear here.</p>
-      }
-      @if (selectedTab === 'upcoming' && upcomingTrips.length === 0) {
-        <div class="no-trips-icon">🗓️</div>
-        <h3>No upcoming trips</h3>
-        <p>Schedule a trip and it’ll show up here.</p>
-      }
-      @if (selectedTab === 'completed' && completedTrips.length === 0) {
-        <div class="no-trips-icon">✅</div>
-        <h3>No completed trips</h3>
-        <p>Your completed trips will appear here.</p>
-      }
-
-      <div class="trips-container">
-        <!-- Today -->
-        @if (selectedTab === 'today') {
-          @for (trip of todayTrips; track $index) {
-            <div class="trip-card">
-              <div class="trip-header">
-                <div class="trip-id">Trip #{{ trip.tripId }}</div>
-                <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
-                  {{ getStatusText(trip.tripStatus) }}
-                </div>
-              </div>
-
-              <div class="trip-details">
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📍</i>
-                    <div class="detail-content">
-                      <label>Pickup</label>
-                      <span>{{ trip.pickupAddress }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">🎯</i>
-                    <div class="detail-content">
-                      <label>Destination</label>
-                      <span>{{ trip.dropOffAddress }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📅</i>
-                    <div class="detail-content">
-                      <label>Start</label>
-                      <span>{{ trip.startTime | date:'medium' }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">💰</i>
-                    <div class="detail-content">
-                      <label>Price</label>
-                      <span class="price">{{ trip.price | currency:'EGP':true }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                @if (trip.distanceKM) {
-                  <div class="detail-row">
-                    <div class="detail-item">
-                      <i class="icon">📏</i>
-                      <div class="detail-content">
-                        <label>Distance</label>
-                        <span>{{ trip.distanceKM }} km</span>
-                      </div>
-                    </div>
-                  </div>
-                }
-
-                <!-- Optional: show the live route tracker for today's trips -->
-                <app-trip-tracker [trip]="trip"></app-trip-tracker>
-
-                <div class="actions mt-3">
-                  <button class="btn btn-sm btn-primary me-2"
-                          (click)="startTrip(trip.tripId)"
-                          [disabled]="!canStart(trip)">
-                    Start
-                  </button>
-                  <button class="btn btn-sm btn-success"
-                          (click)="completeTrip(trip.tripId)"
-                          [disabled]="!canComplete(trip)">
-                    Complete
-                  </button>
-                </div>
-              </div>
+    <!-- Completed -->
+    @if (selectedTab === 'completed') {
+    @for (trip of completedTrips; track $index) {
+    <div class="trip-card">
+      <div class="trip-header">
+        <div class="trip-id">Trip #{{ trip.tripId }}</div>
+        <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
+          {{ getStatusText(trip.tripStatus) }}
+        </div>
+      </div>
+      <div class="trip-details">
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📍</i>
+            <div class="detail-content">
+              <label>Pickup</label>
+              <span>{{ trip.pickupAddress }}</span>
             </div>
-          }
-        }
-
-        <!-- Upcoming -->
-        @if (selectedTab === 'upcoming') {
-          @for (trip of upcomingTrips; track $index) {
-            <div class="trip-card">
-              <div class="trip-header">
-                <div class="trip-id">Trip #{{ trip.tripId }}</div>
-                <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
-                  {{ getStatusText(trip.tripStatus) }}
-                </div>
-              </div>
-              <div class="trip-details">
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📍</i>
-                    <div class="detail-content">
-                      <label>Pickup</label>
-                      <span>{{ trip.pickupAddress }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">🎯</i>
-                    <div class="detail-content">
-                      <label>Destination</label>
-                      <span>{{ trip.dropOffAddress }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📅</i>
-                    <div class="detail-content">
-                      <label>Start</label>
-                      <span>{{ trip.startTime | date:'medium' }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">💰</i>
-                    <div class="detail-content">
-                      <label>Price</label>
-                      <span class="price">{{ trip.price | currency:'EGP':true }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="actions mt-3">
-                  <button class="btn btn-sm btn-primary"
-                          (click)="startTrip(trip.tripId)"
-                          [disabled]="!canStart(trip)">
-                    Start
-                  </button>
-                </div>
-              </div>
+          </div>
+          <div class="detail-item">
+            <i class="icon">🎯</i>
+            <div class="detail-content">
+              <label>Destination</label>
+              <span>{{ trip.dropOffAddress }}</span>
             </div>
-          }
-        }
+          </div>
+        </div>
 
-        <!-- Completed -->
-        @if (selectedTab === 'completed') {
-          @for (trip of completedTrips; track $index) {
-            <div class="trip-card">
-              <div class="trip-header">
-                <div class="trip-id">Trip #{{ trip.tripId }}</div>
-                <div class="trip-status" [ngClass]="getStatusClass(trip.tripStatus)">
-                  {{ getStatusText(trip.tripStatus) }}
-                </div>
-              </div>
-              <div class="trip-details">
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📍</i>
-                    <div class="detail-content">
-                      <label>Pickup</label>
-                      <span>{{ trip.pickupAddress }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">🎯</i>
-                    <div class="detail-content">
-                      <label>Destination</label>
-                      <span>{{ trip.dropOffAddress }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="detail-row">
-                  <div class="detail-item">
-                    <i class="icon">📅</i>
-                    <div class="detail-content">
-                      <label>Start</label>
-                      <span>{{ trip.startTime | date:'medium' }}</span>
-                    </div>
-                  </div>
-                  <div class="detail-item">
-                    <i class="icon">💰</i>
-                    <div class="detail-content">
-                      <label>Price</label>
-                      <span class="price">{{ trip.price | currency:'EGP':true }}</span>
-                    </div>
-                  </div>
-                </div>
-
-                @if (trip.distanceKM) {
-                  <div class="detail-row">
-                    <div class="detail-item">
-                      <i class="icon">📏</i>
-                      <div class="detail-content">
-                        <label>Distance</label>
-                        <span>{{ trip.distanceKM }} km</span>
-                      </div>
-                    </div>
-                  </div>
-                }
-              </div>
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📅</i>
+            <div class="detail-content">
+              <label>Start</label>
+              <span>{{ trip.startTime | date:'medium' }}</span>
             </div>
-          }
+          </div>
+          <div class="detail-item">
+            <i class="icon">💰</i>
+            <div class="detail-content">
+              <label>Price</label>
+              <span class="price">{{ trip.price | currency:'EGP':true }}</span>
+            </div>
+          </div>
+        </div>
+
+        @if (trip.distanceKM) {
+        <div class="detail-row">
+          <div class="detail-item">
+            <i class="icon">📏</i>
+            <div class="detail-content">
+              <label>Distance</label>
+              <span>{{ trip.distanceKM }} km</span>
+            </div>
+          </div>
+        </div>
         }
       </div>
+    </div>
+    }
     }
   </div>
+  }
 </div>

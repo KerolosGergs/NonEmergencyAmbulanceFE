@@ -1,21 +1,31 @@
-<app-nav></app-nav>
+<div class="dashboard-shell">
+  <app-driver-header></app-driver-header>
 
-<app-driver-header></app-driver-header>
+  <div class="dashboard-body d-flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top d-flex align-items-center justify-content-between px-3 py-2">
+        <span class="sidebar-title fw-semibold text-truncate">Nurse Panel</span>
+      </div>
 
-<div class="container mt-3">
-  <div class="row">
-    <div class="col-lg-8 mb-4 mb-lg-0">
-      <app-pending-requests></app-pending-requests>
-    </div>
-    <div class="col-lg-4 ">
-      <app-trip-details [trip]="currentTrip"></app-trip-details>
-    </div>
-  </div>
-  <div class="row my-4">
-    <div class="col-lg-8">
-      <app-schedule [items]="todaySchedule"></app-schedule>
-    </div>
+      <nav class="nav flex-column px-2">
+        @for (item of menu; track item.path) {
+          <a class="nav-link d-flex align-items-center gap-2"
+             [routerLink]="['/driver', item.path]"  
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: item.exact === true }">
+            <i class="bi" [ngClass]="item.icon"></i>
+            <span class="label">{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content flex-grow-1">
+      <div class="content-inner">
+        <router-outlet></router-outlet> <!-- UPDATED -->
+      </div>
+    </main>
   </div>
 </div>
-
-<app-footer></app-footer>

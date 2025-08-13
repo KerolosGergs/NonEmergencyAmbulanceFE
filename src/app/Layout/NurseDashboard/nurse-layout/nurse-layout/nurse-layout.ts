@@ -1,19 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { IRequestData } from './../../../../Core/interface/irequest';
-import { NurseService } from './../../../../Core/Services/NurseServise/nurse-service';
-import { RequestService } from '../../../../Core/Services/RequestService/request-service';
+// UPDATED: use Router directives instead of embedding pages directly
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 
-// UI Components
 import { NHeader } from '../../components/n-header/n-header';
-import { PendingApprovalRequests } from '../../components/pending-approval-requests/pending-approval-requests';
-import { PatientDetails } from '../../components/patient-details/patient-details';
-import { YourSchedule } from '../../components/your-schedule/your-schedule';
-import { Nav } from '../../../../Shared/Components/nav/nav';
-import { Footer } from '../../../../Shared/Components/footer/footer';
-import { IRequest } from '../../../../Core/interface/Request/irequest';
-import { ApprovedRequest } from "../../components/approved-request/approved-request";
+
+type MenuItem = { path: string; label: string; icon: string; exact?: boolean };
 
 @Component({
   selector: 'app-nurse-layout',
@@ -21,43 +14,32 @@ import { ApprovedRequest } from "../../components/approved-request/approved-requ
   imports: [
     CommonModule,
     NHeader,
-    PendingApprovalRequests,
-    PatientDetails,
-    YourSchedule,
-    ApprovedRequest
-],
+    // UPDATED: routing directives
+    RouterLink, RouterLinkActive, RouterOutlet
+  ],
   templateUrl: './nurse-layout.html',
   styleUrls: ['./nurse-layout.scss']
 })
 export class NurseLayout implements OnInit {
-  // Injected services
-  private readonly nurseService = inject(NurseService);
-  private readonly requestService = inject(RequestService);
 
-  // Data
-  requestsData: IRequest[] = [];
-  selectedRequest?: IRequest;
+  private readonly router = inject(Router); // OPTIONAL: for programmatic nav
 
-  async ngOnInit(): Promise<void> {
-    await this.getUnassignedRequestsForNurse();
+  // UPDATED: sidebar menu (Bootstrap Icons)
+  menu: MenuItem[] = [
+    { path: 'pending',  label: 'Pending Approval', icon: 'bi-clock-history', exact: true },
+    { path: 'approved', label: 'Approved',         icon: 'bi-check2-circle' },
+    { path: 'schedule', label: 'Your Schedule',    icon: 'bi-calendar3' },
+    { path: 'withdrawal', label: 'Your withdrawal',    icon: 'bi-calendar3' }
+
+    // You can show patient details from a row click: /nurse/patient/:id
+  ];
+
+  ngOnInit(): void {
+    // The shell no longer fetches requests; each page loads its own data. // UPDATED
   }
 
-  /** Fetch unassigned requests for nurse */
-  private getUnassignedRequestsForNurse(): void {
-    
-    this.requestService.getAvailableRequestsForNurses().subscribe({
-      
-      next: (data) => {
-        debugger
-        if(data.success){
-          this.requestsData = data.data;
-
-        }
-        console.log('Fetched requests:', data);
-      },
-      error: (err) => {
-        console.error('Error fetching requests:', err);
-      }
-    });
+  // OPTIONAL: If you want to navigate to the patient page from anywhere in the shell
+  goToPatient(id?: number) {
+    if (id) this.router.navigate(['/nurse/patient', id]);
   }
 }

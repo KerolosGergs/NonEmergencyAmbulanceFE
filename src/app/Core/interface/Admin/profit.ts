@@ -17,13 +17,9 @@ export interface ProfitDistributionDTO {
 }
 
 export interface UserBalanceDTO {
-  userId: string;
-  userName: string;
-  userType: string; // Driver, Nurse, Admin
-  currentBalance: number;
-  totalEarnings: number;
-  totalWithdrawn: number;
-  pendingWithdrawals: number;
+  success: boolean
+  message: string
+  data: number
 }
 
 export interface ProfitSummaryDTO {
@@ -35,3 +31,23 @@ export interface ProfitSummaryDTO {
   fromDate: string;
   toDate: string;
 }
+export interface WithdrawalUserRequests {
+  id: number
+  userId: string
+  userName: string
+  userType: string
+  amount: number
+  requestDate: string
+  status: WithdrawalStatus
+  processedDate: any
+  adminNotes: any
+  processedByAdminId: any
+  processedByAdminName: any
+}
+  export enum WithdrawalStatus
+ {
+     Pending = 0,    // في الانتظار
+     Approved = 1,   // موافق عليه
+     Rejected = 2,   // مرفوض
+     Completed = 3   // مكتمل
+ }

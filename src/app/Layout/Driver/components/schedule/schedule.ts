@@ -9,7 +9,7 @@ import { TripStatus } from '../../../../Core/interface/Trip/itrip';
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss'
 })
-export class Schedule {
+export class DriverSchedule {
 
   scheduleDate = new Date();
   @Input() items: ITripData[] = [];

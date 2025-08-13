@@ -34,7 +34,7 @@ export class WithdrawalManagementComponent implements OnInit {
   actionType: 'approve' | 'reject' | 'complete' = 'approve';
   // adminId = this.authService.getProfileId();
   adminId =1;
-
+  adminUserId="5b28659d-79a5-4e3e-bb1e-c36c86a7162e";
   readonly WithdrawalStatus = WithdrawalStatus; // for template use
 
   private readonly withdrawalService = inject(WithdrawalService);
@@ -109,13 +109,13 @@ export class WithdrawalManagementComponent implements OnInit {
 
     switch (this.actionType) {
       case 'approve':
-        action$ = this.withdrawalService.approveWithdrawalRequest(requestId,this.adminId, this.notes);
+        action$ = this.withdrawalService.approveWithdrawalRequest(requestId,this.adminUserId, this.notes);
         break;
       case 'reject':
-        action$ = this.withdrawalService.rejectWithdrawalRequest(requestId,this.adminId, this.notes);
+        action$ = this.withdrawalService.rejectWithdrawalRequest(requestId,this.adminUserId, this.notes);
         break;
       case 'complete':
-        action$ = this.withdrawalService.completeWithdrawalRequest(requestId);
+        action$ = this.withdrawalService.completeWithdrawalRequest(requestId,this.adminUserId);
         break;
     }
 

@@ -117,4 +117,20 @@ export class RequestService {
       })
     );
   }
+    getAssignedRequestsByDriver(DriverId: number): Observable<IRequest[]> {
+    return this.getRequests().pipe(
+      map((res) => {
+        const list = (res?.success && Array.isArray(res.data)) ? res.data : [];
+        return list
+          .filter(r => r.driverId === DriverId)
+          .map(r => {
+            const base = Number(r.price ?? 0);   // <-- force number
+            return {
+              ...r,
+              price: Math.floor(base * 0.30)     // 30% share, floored
+            };
+          })
+      })
+    );
+  }
 }

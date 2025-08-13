@@ -8,19 +8,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe, NgClass } from '@angular/common';
 
 @Component({
-  selector: 'app-approved-request',
-  standalone: true,
-  // keep it standalone
+  selector: 'app-driver-approved-requests',
   imports: [FormsModule, ReactiveFormsModule, NgClass, DatePipe, CommonModule],
-  templateUrl: './approved-request.html',
-  styleUrl: './approved-request.scss'
+  templateUrl: './driver-approved-requests.html',
+  styleUrl: './driver-approved-requests.scss'
 })
-export class ApprovedRequest implements OnInit {
-  private _requests = inject(RequestService);
+export class DriverApprovedRequests {
+ private _requests = inject(RequestService);
   private _auth = inject(AuthService);
 
   requests$!: Observable<IRequest[]>;
-  nurseId!: number;
+  DriverId!: number;
 
   RequestStatus = RequestStatus;
 
@@ -38,9 +36,9 @@ export class ApprovedRequest implements OnInit {
   ngOnInit(): void {
     const profileId = this._auth.getProfileId();
     if (!profileId) return;
-    this.nurseId = profileId;
+    this.DriverId = profileId;
 
-    this.requests$ = this._requests.getAssignedRequestsByNurse(this.nurseId);
+    this.requests$ = this._requests.getAssignedRequestsByNurse(this.DriverId);
   }
 
   // UPDATED: filter helpers for template

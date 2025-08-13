@@ -1,0 +1,60 @@
+.driver-header {
+  position: relative;
+  min-height: 160px;
+  background: linear-gradient(180deg, rgba(13,71,71,0.9) 0%, rgba(20,95,95,0.85) 100%);
+}
+
+.header-gradient {
+  inset: 0;
+  background: radial-gradient(1200px 400px at 80% -10%, rgba(255,255,255,0.18), transparent 60%),
+              radial-gradient(900px 300px at 10% 0%, rgba(255,255,255,0.12), transparent 60%);
+  pointer-events: none;
+}
+
+.header-pattern {
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+    radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-position: 0 0, 16px 16px;
+  background-size: 32px 32px;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.driver-avatar {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+}
+
+.status-indicator {
+  width: 16px;
+  height: 16px;
+  right: -4px;
+  bottom: -4px;
+}
+
+.balance-card {
+  min-width: 180px;
+}
+
+.withdraw-form {
+  min-width: 260px;
+}
+
+.withdraw-input .form-control {
+  box-shadow: none !important;
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(6px);
+}
+
+/* Utility to emulate skeleton when loading */
+.placeholder-glow {
+  animation: placeholder-glow 1.2s ease-in-out infinite;
+}
+@keyframes placeholder-glow {
+  50% { opacity: .6; }
+}

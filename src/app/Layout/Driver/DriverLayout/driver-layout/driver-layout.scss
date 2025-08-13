@@ -1,0 +1,52 @@
+/* features/driver-dashboard/driver-dashboard.component.scss */
+.dashboard {
+  min-height: 100vh;
+  background: #f6f8f9;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 270px;
+  background: #1f3b3b;
+  color: #fff;
+  padding: 1rem;
+  transition: width .2s ease-in-out;
+  box-shadow: 0 4px 22px rgba(0,0,0,.08);
+  z-index: 100;
+
+  &.collapsed {
+    width: 64px;
+    .nav-link {
+      text-align: center;
+      i { margin-inline-end: 0 !important; }
+      span { display: none; }
+    }
+    .logo { display: none; }
+  }
+
+  .sidebar-header .logo {
+    font-weight: 700;
+    letter-spacing: .5px;
+  }
+
+  .nav-link {
+    color: #e9f3f3;
+    padding: .65rem .75rem;
+    border-radius: .75rem;
+    margin-bottom: .25rem;
+    transition: background .15s ease-in-out;
+    display: flex;
+    align-items: center;
+    i { margin-inline-end: .5rem; font-size: 1.1rem; }
+    &.active, &:hover {
+      background: #2a4c4c;
+      color: #fff;
+    }
+  }
+}
+
+.content {
+  padding-inline: 1rem;
+}

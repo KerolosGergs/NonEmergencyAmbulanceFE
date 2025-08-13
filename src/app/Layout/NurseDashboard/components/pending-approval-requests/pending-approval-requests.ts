@@ -33,6 +33,7 @@ export class PendingApprovalRequests implements OnInit {
   readonly pageSize: number = 3;
 
   ngOnInit(): void {
+    this.getRequests();
     // Auto-select first request after component initializes
     setTimeout(() => {
       if (this.paginatedRequests.length > 0) {
@@ -41,6 +42,18 @@ export class PendingApprovalRequests implements OnInit {
     }, 100);
   }
 
+  getRequests(): void 
+  {
+    this._RequestService.getAvailableRequestsForNurses().subscribe({
+      next: (res) => {
+        this.requests = res.data;
+      },
+      error: (err) => {
+        console.error('Error fetching requests:', err);
+      }
+    })
+
+   }
   /** Filtered requests based on search and emergency type */
   get filteredRequests(): IRequest[] {
     return (this.requests ?? []).filter(req =>

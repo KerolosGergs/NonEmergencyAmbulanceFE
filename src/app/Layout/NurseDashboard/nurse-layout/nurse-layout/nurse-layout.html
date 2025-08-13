@@ -1,19 +1,31 @@
-<div class="container-fluid px-3 py-2">
+<div class="dashboard-shell">
   <app-n-header></app-n-header>
-  <div class="row g-3">
-    <!-- Requests Table (Full width on small screens, 8-cols on md+) -->
-    <div class="col-12 col-lg-8">
-      <app-pending-approval-requests
-        [requests]="requestsData"
-        (selected)="selectedRequest = $event">
-      </app-pending-approval-requests>
-    </div>
 
-    <!-- Patient Details (Full width on small screens, 4-cols on md+) -->
-    <div class="col-12 col-lg-4">
-      <app-patient-details [patient]="selectedRequest"></app-patient-details>
-      <app-your-schedule></app-your-schedule>
-    </div>
-    <app-approved-request></app-approved-request>
+  <div class="dashboard-body d-flex">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-top d-flex align-items-center justify-content-between px-3 py-2">
+        <span class="sidebar-title fw-semibold text-truncate">Nurse Panel</span>
+      </div>
+
+      <nav class="nav flex-column px-2">
+        @for (item of menu; track item.path) {
+          <a class="nav-link d-flex align-items-center gap-2"
+             [routerLink]="['/nurse', item.path]"  
+             routerLinkActive="active"
+             [routerLinkActiveOptions]="{ exact: item.exact === true }">
+            <i class="bi" [ngClass]="item.icon"></i>
+            <span class="label">{{ item.label }}</span>
+          </a>
+        }
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <main class="content flex-grow-1">
+      <div class="content-inner">
+        <router-outlet></router-outlet> <!-- UPDATED -->
+      </div>
+    </main>
   </div>
 </div>

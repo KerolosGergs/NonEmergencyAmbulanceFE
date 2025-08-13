@@ -1,122 +1,75 @@
-import { Component, OnInit, inject } from '@angular/core';
-import { IDriver } from '../../../../Core/interface/Driver/IDriver';
-import { DriverService } from '../../../../Core/Services/Driver/driver';
-import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
-import { Router } from '@angular/router';
+import { Component, Input, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { DecimalPipe } from '@angular/common';
-import { Environment } from '../../../../../environments/environment';
-import { WithdrawalService } from '../../../../Core/Services/AdminServices/withdrawal-service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-driver-header',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,ReactiveFormsModule],
   templateUrl: './driver-header.html',
   styleUrls: ['./driver-header.scss']
 })
 export class DriverHeader implements OnInit {
   // Services
-  private readonly driverService = inject(DriverService);
-  private readonly authService = inject(AuthService);
-  private readonly router = inject(Router);
-  private readonly withdrawalService = inject(WithdrawalService);
+  private fb = inject(FormBuilder);
+  private toastr = inject(ToastrService);
 
-  // Driver data
-  driverData!: IDriver;
-  userName: string = '';
-  userImage: string = '';
-  date: string = '';
-  totalMoney: number = 0;
-  withdrawAmount: number = 0;
+  /** Inputs (feed these from parent if you have real data) */
+  @Input() driverName = 'John Miller';
+  @Input() driverId = 'DRV-10293';
+  @Input() phoneNumber?: string;
+  @Input() certification?: string; // if you want a tag like “Class B”
+  @Input() imgUrl?: string;
+  @Input() totalMoney = 0;
+
+  loading = signal(false);
+  today = new Date();
+
+  withdrawForm!: FormGroup;
 
   ngOnInit(): void {
-    this.loadDriver(4); // TODO: replace with current driver id from auth/profile
-    this.getUserInfo();
-    this.setCurrentDate();
-    this.getTotalMoney();
-  }
-
-  private buildImageUrl(maybeRelative?: string): string {
-    if (!maybeRelative) return 'assets/default-driver.png';
-    if (maybeRelative.startsWith('http://') || maybeRelative.startsWith('https://')) {
-      return maybeRelative;
-    }
-    return Environment.ImgUrl + maybeRelative;
-  }
-
-  getUserInfo() {
-    this.userName = this.authService.getFullName() || 'Driver';
-    // placeholder until driver image loads
-    this.userImage = 'assets/default-driver.png';
-  }
-
-  setCurrentDate() {
-    this.date = new Date().toLocaleDateString('en-US', {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    this.withdrawForm = this.fb.group({
+      amount: [
+        null,
+        [
+          Validators.required,
+          Validators.min(50),      // set your minimum allowed withdrawal
+          Validators.max(1000000)  // guard too-large input
+        ]
+      ]
     });
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  getTotalMoney() {
-    this.totalMoney = 0; // replace with API call
-  }
-
-  confirmWithdraw() {
-    if (this.withdrawAmount <= 0) {
-      alert('Please enter a valid amount.');
+  /** Submit withdraw */
+  withdraw(): void {
+    if (this.withdrawForm.invalid) {
+      this.withdrawForm.markAllAsTouched();
+      this.toastr.error('Please enter a valid amount.', 'Withdraw');
       return;
     }
-    if (this.withdrawAmount > this.totalMoney) {
-      alert('You cannot withdraw more than your total money.');
+    const amount = this.withdrawForm.value.amount;
+    if (amount > this.totalMoney) {
+      this.toastr.warning('Amount exceeds current balance.', 'Withdraw');
       return;
     }
 
-    this.withdrawalService.createWithdrawalRequest(this.withdrawAmount).subscribe({
-      next: (resp) => {
-        if (resp.success) {
-          alert(`Withdrawal request submitted for $${this.withdrawAmount.toFixed(2)}`);
-          this.withdrawAmount = 0;
-        } else {
-          alert(resp.message || 'Failed to submit withdrawal request');
-        }
-      },
-      error: () => alert('Error submitting withdrawal request')
-    });
+    this.loading.set(true);
+    // TODO: call your API here
+    setTimeout(() => {
+      this.loading.set(false);
+      this.totalMoney -= amount;
+      this.withdrawForm.reset();
+      this.toastr.success('Withdrawal request submitted.', 'Withdraw');
+    }, 600);
   }
 
-  /** Load driver by ID */
-  private loadDriver(driverId: number): void {
-    this.driverService.getById(driverId).subscribe({
-      next: (driver) => {
-        if (driver.success) {
-          this.driverData = driver.data;
-          // Prefer explicit imgUrl, fallback to driverImg
-          const apiImg = this.driverData.imgUrl || this.driverData.driverImg;
-          this.userImage = this.buildImageUrl(apiImg);
-          // Fallback name if not provided in Auth
-          if (!this.userName) {
-            this.userName = this.driverData.userFullName ?? 'Driver';
-          }
-        }
-      },
-      error: (error) => {
-        console.error('Error fetching driver data:', error);
-      }
-    });
+  logout(): void {
+    // TODO: plug your real logout
+    this.toastr.info('You have logged out.', 'Session');
   }
 
-  /** Convenience getters */
-  get driverName(): string {
-    return this.driverData?.userFullName ?? this.userName ?? 'Unknown Driver';
-  }
-
-  get driverId(): number | string {
-    return this.driverData?.id ?? 'N/A';
-  }
+  /** Shorthands for validation state */
+  get amountCtrl() { return this.withdrawForm.get('amount'); }
 }

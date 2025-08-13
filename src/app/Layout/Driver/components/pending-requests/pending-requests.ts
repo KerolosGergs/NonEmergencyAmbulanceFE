@@ -11,7 +11,7 @@ import { RequestService } from '../../../../Core/Services/RequestService/request
   templateUrl: './pending-requests.html',
   styleUrl: './pending-requests.scss'
 })
-export class PendingRequests implements OnInit {
+export class DriverPendingRequests implements OnInit {
   requests: IRequest[] = [];
   pagedRequests: IRequest[] = [];
   currentPage = 1;

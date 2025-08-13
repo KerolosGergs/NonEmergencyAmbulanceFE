@@ -5,6 +5,7 @@ import { TripStatus } from '../../../../Core/interface/Trip/itrip';
 
 @Component({
   selector: 'app-schedule',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './schedule.html',
   styleUrl: './schedule.scss'

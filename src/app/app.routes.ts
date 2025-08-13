@@ -10,10 +10,6 @@ import { DriverLayout } from './Layout/Driver/DriverLayout/driver-layout/driver-
 import { ReservationFrom } from './Layout/reservation-from/reservation-from';
 import { BookingViewComponent } from './Layout/admin-layout/Components/AdminDashborad/Components/view-booking/view-booking';
 import { PatintLayout } from './Layout/patint-layout/patint-layout';
-import { DriverPendingRequests } from './Layout/Driver/components/pending-requests/pending-requests';
-import { DriverSchedule } from './Layout/Driver/components/schedule/schedule';
-import { DriverTripDetails } from './Layout/Driver/components/trip-details/trip-details';
-import { DriverApprovedRequests } from './Layout/Driver/components/driver-approved-requests/driver-approved-requests';
 
 export const routes: Routes = [
 
@@ -59,10 +55,11 @@ export const routes: Routes = [
                 component: DriverLayout,
                 children: [
                     { path: '', redirectTo: 'pending-requests', pathMatch: 'full' },
-                    { path: 'pending-requests', component: DriverPendingRequests },
-                    { path: 'approved', component: DriverApprovedRequests },
-                    { path: 'trip-details', component: DriverTripDetails },
-                    { path: 'schedule', component: DriverSchedule },
+                    { path: 'pending-requests', loadComponent: () => import('../app/Layout/Driver/components/pending-requests/pending-requests').then(m => m.DriverPendingRequests) },
+                    { path: 'approved', loadComponent: () => import('../app/Layout/Driver/components/driver-approved-requests/driver-approved-requests').then(m => m.DriverApprovedRequests) },
+                    { path: 'trip-details', loadComponent: () => import('../app/Layout/Driver/components/trip-details/trip-details').then(m => m.DriverTripDetails) },
+                    { path: 'schedule', loadComponent: () => import('../app/Layout/Driver/components/schedule/schedule').then(m => m.DriverSchedule) },
+                    { path: 'withdrawal', loadComponent: () => import('../app/Layout/Driver/components/withdrawal-driver/withdrawal-driver').then(m => m.WithdrawalDriver) },
                 ]
             },
 

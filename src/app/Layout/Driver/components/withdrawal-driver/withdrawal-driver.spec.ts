@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DriverTripDetails } from './trip-details';
+import { WithdrawalDriver } from './withdrawal-driver';
 
-describe('DriverTripDetails', () => {
-  let component: DriverTripDetails;
-  let fixture: ComponentFixture<DriverTripDetails>;
+describe('WithdrawalDriver', () => {
+  let component: WithdrawalDriver;
+  let fixture: ComponentFixture<WithdrawalDriver>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DriverTripDetails]
+      imports: [WithdrawalDriver]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(DriverTripDetails);
+    fixture = TestBed.createComponent(WithdrawalDriver);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

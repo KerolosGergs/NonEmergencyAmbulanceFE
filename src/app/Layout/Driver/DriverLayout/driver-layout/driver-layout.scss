@@ -1,52 +1,71 @@
-/* features/driver-dashboard/driver-dashboard.component.scss */
-.dashboard {
-  min-height: 100vh;
-  background: #f6f8f9;
+/* Scoped dashboard theme for driver */
+:host {
+  --sidebar-w: 260px;
+  --sidebar-w-collapsed: 78px;
+  --sidebar-bg: #1f3b3b;
+  --sidebar-fg: #e2e8f0;
+  --sidebar-muted: #94a3b8;
+  --sidebar-active: #0ea5e9;
+  --content-bg: #f8fafc;
 }
 
+.dashboard-shell {
+  min-height: 100dvh;
+  background: var(--content-bg);
+}
+
+.dashboard-body {
+  min-height: calc(100dvh - 72px);
+}
+
+/* Sidebar */
 .sidebar {
+  width: var(--sidebar-w);
+  background: var(--sidebar-bg);
+  color: var(--sidebar-fg);
+  border-inline-end: 1px solid rgba(255,255,255,0.06);
+  transition: width .25s ease;
   position: sticky;
   top: 0;
-  height: 100vh;
-  width: 270px;
-  background: #1f3b3b;
-  color: #fff;
-  padding: 1rem;
-  transition: width .2s ease-in-out;
-  box-shadow: 0 4px 22px rgba(0,0,0,.08);
-  z-index: 100;
-
-  &.collapsed {
-    width: 64px;
-    .nav-link {
-      text-align: center;
-      i { margin-inline-end: 0 !important; }
-      span { display: none; }
-    }
-    .logo { display: none; }
-  }
-
-  .sidebar-header .logo {
-    font-weight: 700;
-    letter-spacing: .5px;
-  }
-
-  .nav-link {
-    color: #e9f3f3;
-    padding: .65rem .75rem;
-    border-radius: .75rem;
-    margin-bottom: .25rem;
-    transition: background .15s ease-in-out;
-    display: flex;
-    align-items: center;
-    i { margin-inline-end: .5rem; font-size: 1.1rem; }
-    &.active, &:hover {
-      background: #2a4c4c;
-      color: #fff;
-    }
-  }
+  height: calc(100dvh - 72px);
 }
 
-.content {
-  padding-inline: 1rem;
+.sidebar.collapsed { width: var(--sidebar-w-collapsed); }
+
+.sidebar-top {
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  .sidebar-title { color: var(--sidebar-fg); }
+  .btn { color: var(--sidebar-fg); border-color: rgba(255,255,255,0.2); }
+  .btn:hover { background: rgba(255,255,255,0.08); }
+}
+
+.nav-link {
+  color: var(--sidebar-fg);
+  border-radius: .5rem;
+  padding: .65rem .75rem;
+  margin: .25rem .25rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.nav-link:hover { background: rgba(255,255,255,0.06); color: #fff; }
+
+.nav-link .bi { font-size: 1.1rem; color: var(--sidebar-muted); }
+.nav-link.active {
+  color: #fff;
+  background: rgba(14,165,233,0.15);
+  border: 1px solid rgba(14,165,233,0.35);
+}
+.nav-link.active .bi { color: var(--sidebar-active); }
+.label { font-size: .95rem; }
+
+/* Main content */
+.content { overflow: hidden; }
+.content-inner {
+  padding: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 991.98px) {
+  .sidebar { position: fixed; z-index: 1040; height: 100dvh; }
+  .content-inner { padding-top: 1rem; }
 }

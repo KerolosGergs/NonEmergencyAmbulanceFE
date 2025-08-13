@@ -7,6 +7,7 @@ import { RequestService } from '../../../../Core/Services/RequestService/request
 
 @Component({
   selector: 'app-pending-requests',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './pending-requests.html',
   styleUrl: './pending-requests.scss'

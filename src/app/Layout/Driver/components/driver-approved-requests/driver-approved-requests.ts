@@ -9,6 +9,7 @@ import { CommonModule, DatePipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-driver-approved-requests',
+  standalone: true,
   imports: [FormsModule, ReactiveFormsModule, NgClass, DatePipe, CommonModule],
   templateUrl: './driver-approved-requests.html',
   styleUrl: './driver-approved-requests.scss'

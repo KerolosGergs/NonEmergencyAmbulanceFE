@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PendingRequests } from './pending-requests';
+import { DriverPendingRequests } from './pending-requests';
 
-describe('PendingRequests', () => {
-  let component: PendingRequests;
-  let fixture: ComponentFixture<PendingRequests>;
+describe('DriverPendingRequests', () => {
+  let component: DriverPendingRequests;
+  let fixture: ComponentFixture<DriverPendingRequests>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PendingRequests]
+      imports: [DriverPendingRequests]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(PendingRequests);
+    fixture = TestBed.createComponent(DriverPendingRequests);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

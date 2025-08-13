@@ -1,0 +1,21 @@
+.card { border-radius: .75rem; }
+
+.nav-tabs .nav-link {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.table td, .table th { vertical-align: middle; }
+
+.badge i { font-size: .95rem; }
+
+/* Subtle zebra striping & hover already added via table-hover */
+.table > :not(caption) > * > * { padding: .75rem .75rem; }
+
+/* Optional: compact spacing on small screens */
+@media (max-width: 576px) {
+  .card-body { padding: .75rem; }
+  .nav-tabs .nav-link { padding: .5rem .75rem; }
+}

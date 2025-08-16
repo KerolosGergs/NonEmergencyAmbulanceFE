@@ -43,8 +43,8 @@ export class PatientRequestsComponent implements OnInit {
   }
 
   loadRequests(): void {
-    // const patientId = this.authService.getProfileId();
-    const patientId = 7;
+    const patientId = this.authService.getProfileId();
+    // const patientId = 7;
 
     if (!patientId) {
       this.error = 'Not authenticated';

@@ -1,72 +1,103 @@
-<div class="card shadow-sm rounded-3">
-  <div class="card-body">
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-3">
-      <h5 class="card-title mb-2 fw-bold text-center text-md-start">Pending Transportation Requests</h5>
-      <button class="btn btn-primary" (click)="refresh()">
-        <i class="bi bi-arrow-clockwise me-1"></i> Refresh
+<div class="p-3 bg-white rounded-3 shadow-sm">
+  <h5 class="fw-bold mb-3">Pending Approval Requests</h5>
+
+  <!-- Filters -->
+  <div class="row g-2 mb-3">
+    <div class="col-md-8 col-lg-9">
+      <input
+        type="text"
+        class="form-control"
+        [(ngModel)]="searchTerm"
+        placeholder="Search requests..."
+      />
+    </div>
+    <div class="col-md-4 col-lg-3">
+      <select class="form-select" [(ngModel)]="selectedEmergencyType">
+        <option value="">All Requests</option>
+        <option value="Urgent">Urgent</option>
+        <option value="Standard">Standard</option>
+        <option value="Special Care">Special Care</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Requests Table -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle">
+      <thead class="table-light">
+        <tr>
+          <th scope="col">Patient</th>
+          <th scope="col">From</th>
+          <th scope="col">To</th>
+          <th scope="col">Date & Time</th>
+          <th scope="col">Price</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let r of paginatedRequests" (click)="selectRequest(r)" style="cursor: pointer;">
+          <td>
+            <div class="d-flex align-items-center">
+              <img
+                [src]="r.patientImageUrl"
+                class="rounded-circle me-3"
+                width="40"
+                height="40"
+                alt="Patient Image"
+              />
+              <div>
+                <div class="fw-bold">{{ r.patientName }}</div>
+                <div class="text-muted small">ID: {{ r.patientId }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ r.pickupAddress }}</td>
+          <td>{{ r.dropOffAddress }}</td>
+          <td>
+            <div>{{ r.scheduledDate | date: 'MMM d, y' }}</div>
+            <div class="text-muted small">{{ r.scheduledDate | date: 'h:mm a' }}</div>
+          </td>
+          <td>
+            <span class="fw-bold" >
+              {{ r.price.toString() | currency: 'EGP' }}
+            </span>
+          </td>
+          <td>
+            <!-- On larger screens, show buttons inline -->
+            <div class="d-none d-md-flex gap-2">
+              <button class="btn btn-primary btn-sm" (click)="selectRequest(r)">View Details</button>
+              <button class="btn btn-success btn-sm" (click)="approveRequest(r)">Approve</button>
+              <button class="btn btn-danger btn-sm" (click)="declineRequest(r)">Decline</button>
+            </div>
+            <!-- On smaller screens, show a dropdown -->
+            <div class="d-md-none dropdown">
+              <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Actions
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item"  (click)="selectRequest(r)">View Details</a></li>
+                <li><a class="dropdown-item"  (click)="approveRequest(r)">Approve</a></li>
+                <li><a class="dropdown-item"  (click)="declineRequest(r)">Decline</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <nav *ngIf="totalPages > 1" class="d-flex flex-column flex-md-row justify-content-between align-items-center mt-3">
+    <div class="text-muted mb-2 mb-md-0">
+      Showing {{ paginatedRequests.length }} of {{ filteredRequests.length }} requests
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline-primary" [disabled]="currentPage === 1" (click)="changePage(-1)">
+        Previous
+      </button>
+      <button class="btn btn-outline-primary" [disabled]="currentPage === totalPages" (click)="changePage(1)">
+        Next
       </button>
     </div>
-
-    <div class="table-responsive">
-      <table class="table table-borderless align-middle">
-        <thead class="fw-semibold">
-          <tr>
-            <th>Patient</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Date & Time</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody *ngFor="let request of pagedRequests">
-          <tr class="border-top">
-            <td>
-              <div class="d-flex align-items-center gap-2">
-                <img [src]="request.patientImageUrl" alt="photo" class="rounded-circle" width="40" height="40" />
-                <div>
-                  <div class="fw-bold">{{ request.patientName }}</div>
-                  <small>ID: {{ request.patientId }}</small>
-                </div>
-              </div>
-            </td>
-            <td>{{ request.pickupAddress }}</td>
-            <td>{{ request.dropOffAddress }}</td>
-            <td>
-              {{ request.requestDate| date: 'MMM d, y' }}
-
-              {{ request.requestDate | date: 'h:mm a' }}
-            </td>
-            <td class="text-warning fw-semibold">{{RequestStatus[request.status]}}</td>
-            <td>
-              <div class="d-flex flex-column flex-sm-row gap-2">
-                <button class="btn btn-sm btn-primary" (click)="Accept(request.requestId)">
-                  Accept
-                </button>
-                <button class="btn btn-sm btn-outline-danger" (click)="Decline(request.requestId)">
-                   Decline
-                </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Pagination -->
-    <nav *ngIf="totalPages > 1" aria-label="Page navigation" class="mt-3">
-      <ul class="pagination justify-content-center flex-wrap">
-        <li class="page-item" [class.disabled]="currentPage === 1">
-          <button class="page-link" (click)="goToPage(currentPage - 1)">Previous</button>
-        </li>
-        <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index"
-            [class.active]="currentPage === i + 1">
-          <button class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</button>
-        </li>
-        <li class="page-item" [class.disabled]="currentPage === totalPages">
-          <button class="page-link" (click)="goToPage(currentPage + 1)">Next</button>
-        </li>
-      </ul>
-    </nav>
-  </div>
+  </nav>
 </div>

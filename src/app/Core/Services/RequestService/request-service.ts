@@ -35,7 +35,20 @@ export class RequestService {
 
   /** Get pending requests for drivers */
   getAvailableRequestsForDrivers(): Observable<GenerialResponse<IRequest[]>> {
-    return this.http.get<GenerialResponse<IRequest[]>>(`${this.api}/available-for-driver`);
+    return this.http.get<GenerialResponse<IRequest[]>>(`${this.api}/available-for-driver`).pipe(
+       map((res) => {
+        res.data.forEach((request) => {
+          if (request.patientImageUrl == null) {
+            request.patientImageUrl = 'assets/Patient_logo.png'
+          } else {
+            request.patientImageUrl = `${Environment.ImgUrl}${request.patientImageUrl}`
+            
+          }
+          request.price = Math.floor(Number(request.price)*.40);
+        })
+        return res;
+      })
+    );
   }
 
   /** Get pending requests for nurses */

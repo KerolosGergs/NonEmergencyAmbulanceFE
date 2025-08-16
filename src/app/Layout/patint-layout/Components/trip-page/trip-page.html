@@ -32,23 +32,23 @@
     </li>
   </ul>
   <div class="text-center">
-  <!-- Empty state -->
-  @if (selectedTab === 'today' && todayTrips.length === 0) {
-  <div class="no-trips-icon">🚑</div>
-  <h3>No trips today</h3>
-  <p>When you book a trip for today, it’ll appear here.</p>
-  }
-  @if (selectedTab === 'upcoming' && upcomingTrips.length === 0) {
-  <div class="no-trips-icon">🗓️</div>
-  <h3>No upcoming trips</h3>
-  <p>Schedule a trip and it’ll show up here.</p>
-  }
-  @if (selectedTab === 'completed' && completedTrips.length === 0) {
-  <div class="no-trips-icon">✅</div>
-  <h3>No completed trips</h3>
-  <p>Your completed trips will appear here.</p>
-  }
-</div>
+    <!-- Empty state -->
+    @if (selectedTab === 'today' && todayTrips.length === 0) {
+    <div class="no-trips-icon">🚑</div>
+    <h3>No trips today</h3>
+    <p>When you book a trip for today, it’ll appear here.</p>
+    }
+    @if (selectedTab === 'upcoming' && upcomingTrips.length === 0) {
+    <div class="no-trips-icon">🗓️</div>
+    <h3>No upcoming trips</h3>
+    <p>Schedule a trip and it’ll show up here.</p>
+    }
+    @if (selectedTab === 'completed' && completedTrips.length === 0) {
+    <div class="no-trips-icon">✅</div>
+    <h3>No completed trips</h3>
+    <p>Your completed trips will appear here.</p>
+    }
+  </div>
   <div class="trips-container">
     <!-- Today -->
     @if (selectedTab === 'today') {
@@ -168,12 +168,20 @@
             </div>
           </div>
         </div>
-
-        <div class="actions mt-3">
+        <div class="d-flex gap-3">
+          <div class="actions mt-3">
           <button class="btn btn-sm btn-primary" (click)="startTrip(trip.tripId)" [disabled]="!canStart(trip)">
             Start
           </button>
+
         </div>
+        <div class="actions mt-3">
+          <button class="btn btn-sm btn-success" (click)="completeTrip(trip.tripId)" [disabled]="!canComplete(trip)">
+            Complete
+          </button>
+        </div>
+        </div>
+        
       </div>
     </div>
     }

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { IRequestData } from '../../interface/irequest';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Environment } from '../../../../environments/environment';
 import { ITripData } from '../../interface/itrip-data';
 import { IDriver, IDriverRegister } from '../../interface/Driver/IDriver';
@@ -14,22 +14,7 @@ export class DriverService {
   Api = Environment.apiUrl+'/Driver';
   _httpClient= inject(HttpClient);
 
-  // GetUnassignedRequestsForDriver(): Observable<IRequestData[]> {
-  //   return this._httpClient.get<IRequestData[]>(Environment.apiUrl + '/Request/available-for-driver');
-  // }
 
-  // assignNurseToRequest(requestId: number, driverId: number): Observable<any> {
-  //   const body = { requestId, driverId };
-  //   return this._httpClient.put(Environment.apiUrl + '/Request/assign-driver', body);
-  // }
-
-  // getTripsByDriverId(driverId: number): Observable<ITripData[]> {
-  //   return this._httpClient.get<ITripData[]>(Environment.apiUrl + `/Trip/driver/${driverId}`);
-  // }
-
-  // getdriverById(driverId: number): Observable<IDriver> {
-  //   return this._httpClient.get<IDriver>(Environment.apiUrl + `/Driver/${driverId}`);
-  // }
   /// my Api
 
     /**
@@ -45,7 +30,12 @@ export class DriverService {
     return this._httpClient.post<GenerialResponse<any>>(this.Api , Driver);
   }
   getById(id: number): Observable<GenerialResponse<IDriver>> {
-    return this._httpClient.get<GenerialResponse<IDriver>>(this.Api + '/' + id);
+    return this._httpClient.get<GenerialResponse<IDriver>>(this.Api + '/' + id).pipe(
+      map((response: GenerialResponse<IDriver>) =>{
+              response.data.imgUrl = `${Environment.ImgUrl}${response.data.imgUrl}`
+              return response
+            })
+    );
   }
   updateDriver(id: number, value: IDriver) : Observable<GenerialResponse<any>> {
     return this._httpClient.put<GenerialResponse<any>>(this.Api + '/' + id, value);

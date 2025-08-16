@@ -152,6 +152,7 @@ export class TripPage implements OnInit {
   }
 
   canComplete(t: ITrip): boolean {
+    debugger
     return t.tripStatus === TripStatus.Ongoing;
   }
 

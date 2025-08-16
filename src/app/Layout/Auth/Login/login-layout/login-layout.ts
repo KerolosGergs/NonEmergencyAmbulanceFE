@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { LoginService } from '../../../../Core/Services/LoginServices/login-service';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import {  LoginResponse } from '../../../../Core/interface/login';
+import { LoginResponse } from '../../../../Core/interface/login';
 
 @Component({
   selector: 'app-login-layout',
@@ -33,22 +33,26 @@ export class LoginLayout {
       this.Login.login(this.loginForm.value).subscribe({
 
         next: (res) => {
-          if(res.success){
-            
+          if (res.success) {
+
             this.AuthService.setUserSession(res.data);
-            if(res.data.role == 'Patient'){
-              
+            if (res.data.role == 'Patient') {
+
               this.router.navigate(['/home']);
-            }else if(res.data.role == 'Nurse'){
+            } else if (res.data.role == 'Nurse') {
               this.router.navigate(['/nurse']);
+            }
+            else if (res.data.role == 'Driver') {
+              this.router.navigate(['/driver']);
+
             }
             this.toastr.success(res.message, 'Success');
           }
 
-          else{
+          else {
             this.toastr.error(res.message, 'Error');
           }
-         
+
 
           this.isLoading = false;
         },

@@ -3,73 +3,131 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ToastrService } from 'ngx-toastr';
+import { ProfitService } from '../../../../Core/Services/AdminServices/profit.service';
+import { WithdrawalService } from '../../../../Core/Services/AdminServices/withdrawal-service';
+import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
+import { NurseService } from '../../../../Core/Services/NurseServise/nurse-service';
+import { Router } from '@angular/router';
+import { DriverService } from '../../../../Core/Services/Driver/driver';
 
 @Component({
   selector: 'app-driver-header',
   standalone: true,
-  imports: [CommonModule, FormsModule,ReactiveFormsModule],
-  templateUrl: './driver-header.html',
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    // NgbModule, // uncomment if you use ng-bootstrap components here
+  ], templateUrl: './driver-header.html',
   styleUrls: ['./driver-header.scss']
 })
 export class DriverHeader implements OnInit {
-  // Services
-  private fb = inject(FormBuilder);
-  private toastr = inject(ToastrService);
+  fullName: string | null = null;
+  licenseNumber: string | null = null;
+  phoneNumber: string | null = null;
+  imgUrl: string | null = null;
 
-  /** Inputs (feed these from parent if you have real data) */
-  @Input() driverName = 'John Miller';
-  @Input() driverId = 'DRV-10293';
-  @Input() phoneNumber?: string;
-  @Input() certification?: string; // if you want a tag like “Class B”
-  @Input() imgUrl?: string;
-  @Input() totalMoney = 0;
-
-  loading = signal(false);
   today = new Date();
+  totalMoney = 0;
+  loading = true;
 
   withdrawForm!: FormGroup;
 
+  private readonly _withdrawalService = inject(WithdrawalService);
+  private readonly _profitService = inject(ProfitService);
+  private readonly _driverService = inject(DriverService);
+  private readonly _auth = inject(AuthService);
+  private readonly _router = inject(Router);
+  private readonly toastr = inject(ToastrService);
+  private readonly fb = inject(FormBuilder);
+
   ngOnInit(): void {
+    this.buildForm();
+    this.loadProfile();
+    this.getTotalMoney();
+  }
+
+  private buildForm(): void {
     this.withdrawForm = this.fb.group({
-      amount: [
-        null,
-        [
-          Validators.required,
-          Validators.min(50),      // set your minimum allowed withdrawal
-          Validators.max(1000000)  // guard too-large input
-        ]
-      ]
+      amount: [null, [Validators.required, Validators.min(0.01)]]
     });
   }
 
-  /** Submit withdraw */
+  private loadProfile(): void {
+    const id = this._auth.getProfileId();
+    if (!id) { this.loading = false; return; }
+
+    this._driverService.getById(id).subscribe({
+      next: (res) => {
+        if (res?.success && res.data) {
+          this.fullName = res.data.userFullName ?? this._auth.getFullName();
+          this.licenseNumber = res.data.licenseNumber ?? null;
+          this.phoneNumber = res.data.phoneNumber ?? null;
+          this.imgUrl = res.data.imgUrl ?? null;
+        } else {
+          this.fullName = this._auth.getFullName();
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.fullName = this._auth.getFullName();
+        this.loading = false;
+      }
+    });
+  }
+
+  private getTotalMoney(): void {
+    this._profitService.getUserBalance().subscribe({
+      next: (res) => {
+        this.totalMoney = (res?.success && typeof res.data === 'number') ? res.data : 0;
+
+        // Set dynamic max validator after we know the balance
+        const ctrl = this.withdrawForm.get('amount');
+        if (ctrl) {
+          ctrl.addValidators(Validators.max(this.totalMoney || 0));
+          ctrl.updateValueAndValidity({ emitEvent: false });
+        }
+      },
+      error: () => (this.totalMoney = 0)
+    });
+  }
+
   withdraw(): void {
-    if (this.withdrawForm.invalid) {
-      this.withdrawForm.markAllAsTouched();
-      this.toastr.error('Please enter a valid amount.', 'Withdraw');
+    if (this.loading) return;
+
+    const ctrl = this.withdrawForm.get('amount');
+    const value = Number(ctrl?.value || 0);
+
+    if (!ctrl || this.withdrawForm.invalid) {
+      this.toastr.error('Please enter a valid amount.', 'Invalid Amount');
       return;
     }
-    const amount = this.withdrawForm.value.amount;
-    if (amount > this.totalMoney) {
-      this.toastr.warning('Amount exceeds current balance.', 'Withdraw');
+    if (value > this.totalMoney) {
+      this.toastr.info('You cannot withdraw more than your current balance.', 'Notice');
       return;
     }
 
-    this.loading.set(true);
-    // TODO: call your API here
-    setTimeout(() => {
-      this.loading.set(false);
-      this.totalMoney -= amount;
-      this.withdrawForm.reset();
-      this.toastr.success('Withdrawal request submitted.', 'Withdraw');
-    }, 600);
+    this.loading = true;
+    this._withdrawalService.createWithdrawalRequest(value).subscribe({
+      next: (res) => {
+        if (res?.success) {
+          this.toastr.success(`Withdrawal request of ${value.toFixed(2)} EGP submitted successfully.`, 'Success');
+          this.withdrawForm.reset();
+          this.getTotalMoney();
+        } else {
+          this.toastr.error(res?.message || 'Failed to submit withdrawal request.', 'Error');
+        }
+        this.loading = false;
+      },
+      error: () => {
+        this.toastr.error('Error submitting withdrawal request.', 'Error');
+        this.loading = false;
+      }
+    });
   }
 
   logout(): void {
-    // TODO: plug your real logout
-    this.toastr.info('You have logged out.', 'Session');
+    this._auth.logout();
+    this._router.navigate(['/login']);
   }
-
-  /** Shorthands for validation state */
-  get amountCtrl() { return this.withdrawForm.get('amount'); }
 }

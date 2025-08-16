@@ -39,7 +39,7 @@ export class DriverApprovedRequests {
     if (!profileId) return;
     this.DriverId = profileId;
 
-    this.requests$ = this._requests.getAssignedRequestsByNurse(this.DriverId);
+    this.requests$ = this._requests.getAssignedRequestsByDriver(this.DriverId);
   }
 
   // UPDATED: filter helpers for template

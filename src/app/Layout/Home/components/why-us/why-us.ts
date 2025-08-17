@@ -15,7 +15,7 @@ export interface Feature {
 export class WhyUs {
 
   // Section content - easy to modify
-  sectionTitle: string = 'Why Choose MediTransport';
+  sectionTitle: string = 'Why Choose Sanad';
   sectionDescription: string = 'We\'re committed to providing the highest quality non-emergency medical transportation services.';
 
   // Features data - easy to modify

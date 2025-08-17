@@ -28,7 +28,7 @@ export class Testimonial {
     {
       id: 1,
       rating: 5.0,
-      quote: 'The MediTransport team was incredibly professional and caring...',
+      quote: 'The Sanad team was incredibly professional and caring...',
       customerName: 'Margaret Wilson',
       customerRole: 'Dialysis Patient',
       customerImage: 'assets/login/1.jpg'

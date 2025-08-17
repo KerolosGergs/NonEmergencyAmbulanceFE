@@ -18,7 +18,7 @@ export interface SocialLink {
 })
 export class Footer {
 // Company Info - easy to modify
-  companyName: string = 'MediTransport';
+  companyName: string = 'Sanad';
   companyDescription: string = 'Your trusted non-emergency medical transportation service, providing safe and comfortable journeys for patients.';
   
   // Quick Links - easy to modify
@@ -45,15 +45,15 @@ export class Footer {
   contactTitle: string = 'Contact Us';
   address: string = '123 Medical Drive, Healthcare City, HC 12345';
   phone: string = '+1 (555) 123-4567';
-  email: string = 'info@meditransport.co';
+  email: string = 'info@Sanad.co';
   serviceHours: string = '24/7 Service Available';
 
   // Social Media - easy to modify
   socialLinks: SocialLink[] = [
-    { icon: 'bi-facebook', url: 'https://facebook.com/meditransport', name: 'Facebook' },
-    { icon: 'bi-twitter', url: 'https://twitter.com/meditransport', name: 'Twitter' },
-    { icon: 'bi-instagram', url: 'https://instagram.com/meditransport', name: 'Instagram' },
-    { icon: 'bi-linkedin', url: 'https://linkedin.com/company/meditransport', name: 'LinkedIn' }
+    { icon: 'bi-facebook', url: 'https://facebook.com/Sanad', name: 'Facebook' },
+    { icon: 'bi-twitter', url: 'https://twitter.com/Sanad', name: 'Twitter' },
+    { icon: 'bi-instagram', url: 'https://instagram.com/Sanad', name: 'Instagram' },
+    { icon: 'bi-linkedin', url: 'https://linkedin.com/company/Sanad', name: 'LinkedIn' }
   ];
 
   // Footer Bottom - easy to modify

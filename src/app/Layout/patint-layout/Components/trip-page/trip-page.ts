@@ -34,8 +34,8 @@ export class TripPage implements OnInit {
 
   loadPatientTrips(): void {
     this.loading = true;
-    // const patientId = this.authService.getProfileId();
-    const patientId: number = 7;
+    const patientId = this.authService.getProfileId();
+    // const patientId: number = 7;
 
     if (!patientId) {
       this.trips = [];

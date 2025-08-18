@@ -115,7 +115,7 @@
           <button class="btn btn-sm btn-primary me-2" (click)="startTrip(trip.tripId)" [disabled]="!canStart(trip)">
             Start
           </button>
-          <button class="btn btn-sm btn-success" (click)="completeTrip(trip.tripId)" [disabled]="!canComplete(trip)">
+          <button class="btn btn-sm btn-success" (click)="openPayment(trip)" [disabled]="!canComplete(trip)">
             Complete
           </button>
         </div>
@@ -176,7 +176,7 @@
 
         </div>
         <div class="actions mt-3">
-          <button class="btn btn-sm btn-success" (click)="completeTrip(trip.tripId)" [disabled]="!canComplete(trip)">
+          <button class="btn btn-sm btn-success" (click)="openPayment(trip)" [disabled]="!canComplete(trip)">
             Complete
           </button>
         </div>
@@ -248,5 +248,8 @@
     }
     }
   </div>
+  }
+  @if (showPayment) {
+    <app-payment [tripId]="paymentTripId!" [price]="paymentPrice!" (close)="handlePaymentClose($event)"></app-payment>
   }
 </div>

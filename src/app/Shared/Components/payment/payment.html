@@ -1,0 +1,74 @@
+<div class="payment-container">
+  <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+    <!-- Credit/Debit Card Option -->
+    <div class="payment-option" [class.selected]="selectedPaymentMethod === 'creditCard'">
+      <div class="form-check">
+        <input class="form-check-input" type="radio" id="creditCard" value="creditCard" formControlName="paymentMethod">
+        <label class="form-check-label" for="creditCard">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <strong>Credit & Debit cards</strong>
+              <div class="text-muted small">Transaction fee may apply</div>
+            </div>
+            <div class="card-icons">
+              <img src="https://img.youm7.com/large/201807280719121912.jpg" alt="Visa">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/2560px-MasterCard_Logo.svg.png" alt="MasterCard">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpjj9QW3dOBBqwQmKF3-mdc-hViCw4hBDUbA&s" alt="Maestro">
+            </div>
+          </div>
+        </label>
+      </div>
+
+      <div *ngIf="selectedPaymentMethod === 'creditCard'" class="payment-details">
+        <div class="mb-3">
+          <label for="cardholderName" class="form-label">Cardholder Name</label>
+          <input type="text" id="cardholderName" class="form-control" formControlName="cardholderName">
+        </div>
+
+        <div class="mb-3">
+          <label for="cardNumber" class="form-label">Card Number</label>
+          <div class="input-group">
+            <input type="text" id="cardNumber" class="form-control" formControlName="cardNumber" placeholder="4124 XXXX XXXX XXXX">
+            <span class="input-group-text card-brand-icon"><i class="bi bi-credit-card-2-front"></i></span>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">End Date</label>
+            <div class="d-flex">
+              <select class="form-select me-2" formControlName="expiryMonth">
+                <option value="" disabled>mm</option>
+                <option *ngFor="let month of months" [value]="month">{{ month }}</option>
+              </select>
+              <select class="form-select" formControlName="expiryYear">
+                <option value="" disabled>yyyy</option>
+                <option *ngFor="let year of years" [value]="year">{{ year }}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="cvv" class="form-label">CVV</label>
+            <div class="input-group">
+              <input type="password" id="cvv" class="form-control" formControlName="cvv">
+              <span class="input-group-text"><i class="bi bi-info-circle"></i> 3 digits</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-check mb-3">
+          <input type="checkbox" class="form-check-input" id="terms" formControlName="terms">
+          <label class="form-check-label" for="terms">
+            I have read and accept the terms of use, rules of flight and privacy policy
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-grid mt-4">
+      <button type="submit" class="btn btn-success btn-lg pay-now-btn" [disabled]="paymentForm.invalid">
+        Pay Now <i class="bi bi-chevron-double-right"></i>
+      </button>
+    </div>
+  </form>
+</div>

@@ -46,6 +46,9 @@ export class LoginLayout {
               this.router.navigate(['/driver']);
 
             }
+            else if(res.data.role == 'Admin'){
+              this.router.navigate(['/admin']);
+            }
             this.toastr.success(res.message, 'Success');
           }
 

@@ -6,11 +6,12 @@ import { ITrip, TripStatus } from '../../../../Core/interface/Trip/itrip';
 import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
 import { Environment } from '../../../../../environments/environment';
 import { TripTracker } from "../trip-tracker/trip-tracker";
+import { Payment } from '../../../../Shared/Components/payment/payment';
 
 @Component({
   selector: 'app-trip-page',
   standalone: true,
-  imports: [CommonModule, TripTracker],
+  imports: [CommonModule, TripTracker, Payment],
   templateUrl: './trip-page.html',
   styleUrls: ['./trip-page.scss']
 })
@@ -27,6 +28,10 @@ export class TripPage implements OnInit {
   loading = false;
   error = '';
   selectedTab: 'today' | 'upcoming' | 'completed' = 'today';
+
+  showPayment = false;
+  paymentTripId?: number;
+  paymentPrice?: number;
 
   ngOnInit(): void {
     this.loadPatientTrips();
@@ -109,17 +114,17 @@ export class TripPage implements OnInit {
     });
   }
 
-  completeTrip(tripId: number): void {
-    this.loading = true;
-    this.tripService.completeTrip(tripId).subscribe({
-      next: (res) => {
-        this.loadPatientTrips();
-      },
-      error: (err) => {
-        console.error('Error completing trip:', err);
-        this.loading = false;
-      }
-    });
+  openPayment(trip: ITrip): void {
+    this.paymentTripId = trip.tripId;
+    this.paymentPrice = trip.price;
+    this.showPayment = true;
+  }
+
+  handlePaymentClose(success: boolean): void {
+    this.showPayment = false;
+    if (success) {
+      this.loadPatientTrips();
+    }
   }
 
   /** UI helpers */

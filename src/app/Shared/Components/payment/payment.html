@@ -1,0 +1,12 @@
+<div class="modal-backdrop"></div>
+<div class="modal-dialog">
+  <div class="modal-content p-4">
+    <h5 class="modal-title mb-3">Payment</h5>
+    <p>Trip ID: {{ tripId }}</p>
+    <p>Amount: {{ price | currency:'EGP':true }}</p>
+    <div class="d-flex gap-2 mt-3">
+      <button class="btn btn-primary" (click)="payNow()">Pay Now</button>
+      <button class="btn btn-secondary" (click)="cancel()">Close</button>
+    </div>
+  </div>
+</div>

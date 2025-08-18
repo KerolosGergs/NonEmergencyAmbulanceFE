@@ -6,11 +6,12 @@ import { ITrip, TripStatus } from '../../../../Core/interface/Trip/itrip';
 import { AuthService } from '../../../../Core/Services/AuthServices/auth-service';
 import { Environment } from '../../../../../environments/environment';
 import { TripTracker } from "../trip-tracker/trip-tracker";
+import { PaymentModalComponent } from '../payment-modal/payment-modal';
 
 @Component({
   selector: 'app-trip-page',
   standalone: true,
-  imports: [CommonModule, TripTracker],
+  imports: [CommonModule, TripTracker, PaymentModalComponent],
   templateUrl: './trip-page.html',
   styleUrls: ['./trip-page.scss']
 })
@@ -27,6 +28,11 @@ export class TripPage implements OnInit {
   loading = false;
   error = '';
   selectedTab: 'today' | 'upcoming' | 'completed' = 'today';
+
+  // Payment modal state
+  isPaymentVisible = false;
+  paymentTripId: number | null = null;
+  paymentPrice: number | null = null;
 
   ngOnInit(): void {
     this.loadPatientTrips();
@@ -109,11 +115,24 @@ export class TripPage implements OnInit {
     });
   }
 
+  openPaymentModal(trip: ITrip): void {
+    this.paymentTripId = trip.tripId;
+    this.paymentPrice = trip.price;
+    this.isPaymentVisible = true;
+  }
+
+  closePaymentModal(): void {
+    this.isPaymentVisible = false;
+    this.paymentTripId = null;
+    this.paymentPrice = null;
+  }
+
   completeTrip(tripId: number): void {
     this.loading = true;
     this.tripService.completeTrip(tripId).subscribe({
-      next: (res) => {
+      next: () => {
         this.loadPatientTrips();
+        this.closePaymentModal();
       },
       error: (err) => {
         console.error('Error completing trip:', err);
@@ -152,7 +171,6 @@ export class TripPage implements OnInit {
   }
 
   canComplete(t: ITrip): boolean {
-    debugger
     return t.tripStatus === TripStatus.Ongoing;
   }
 

@@ -1,7 +1,21 @@
+<div class="summary-bar">
+  <div class="summary-item">
+    <i class="bi bi-hash"></i>
+    <span><strong>Trip ID:</strong> #{{ tripId }}</span>
+  </div>
+  <div class="summary-item">
+    <i class="bi bi-cash-coin"></i>
+    <span><strong>Price:</strong> {{ price | currency:'EGP':'symbol' }}</span>
+  </div>
+</div>
+
 <div class="payment-container">
+
   <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+
     <!-- Credit/Debit Card Option -->
     <div class="payment-option" [class.selected]="selectedPaymentMethod === 'creditCard'">
+     
       <div class="form-check">
         <input class="form-check-input" type="radio" id="creditCard" value="creditCard" formControlName="paymentMethod">
         <label class="form-check-label" for="creditCard">
@@ -12,8 +26,11 @@
             </div>
             <div class="card-icons">
               <img src="https://img.youm7.com/large/201807280719121912.jpg" alt="Visa">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/2560px-MasterCard_Logo.svg.png" alt="MasterCard">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpjj9QW3dOBBqwQmKF3-mdc-hViCw4hBDUbA&s" alt="Maestro">
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/MasterCard_Logo.svg/2560px-MasterCard_Logo.svg.png"
+                alt="MasterCard">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpjj9QW3dOBBqwQmKF3-mdc-hViCw4hBDUbA&s"
+                alt="Maestro">
             </div>
           </div>
         </label>
@@ -28,7 +45,8 @@
         <div class="mb-3">
           <label for="cardNumber" class="form-label">Card Number</label>
           <div class="input-group">
-            <input type="text" id="cardNumber" class="form-control" formControlName="cardNumber" placeholder="4124 XXXX XXXX XXXX">
+            <input type="text" id="cardNumber" class="form-control" formControlName="cardNumber"
+              placeholder="4124 XXXX XXXX XXXX">
             <span class="input-group-text card-brand-icon"><i class="bi bi-credit-card-2-front"></i></span>
           </div>
         </div>

@@ -63,17 +63,26 @@
         </div>
 
         <div class="field-group">
-          <label for="emergencyType">Emergency Type *</label>
+          <label for="emergencyType">Destination Type *</label>
           <select id="emergencyType" name="emergencyType" [(ngModel)]="formData.emergencyType" required
             class="form-input">
-            <option value="">Select emergency type</option>
-            <option value="medical">🏥 Medical Emergency</option>
-            <option value="fire">🔥 Fire Emergency</option>
-            <option value="police">👮 Police Emergency</option>
-            <option value="transport">🚗 Emergency Transport</option>
-            <option value="other">❓ Other</option>
+            <option value="">Select destination</option>
+            <option value="doctor">👨‍⚕️ Doctor</option>
+            <option value="hospital">🏥 Hospital</option>
+            <option value="pharmacy">💊 Pharmacy</option>
+            <option value="clinic">🏨 Clinic</option>
+            <option value="other">❓ Other Medical Place</option>
           </select>
         </div>
+        <!-- <div class="field-group">
+          <label for="emergencyType">Fully Equipped Transport Vehicle *</label>
+          <select id="emergencyType" name="emergencyType" [(ngModel)]="formData.emergencyType" required
+            class="form-input">
+            <option value="">Select option</option>
+            <option value="yes">✅ Yes, I need a fully equipped vehicle</option>
+            <option value="no">❌ No, a regular vehicle is fine</option>
+          </select>
+        </div> -->
 
         <div class="field-group">
           <label for="notes">Additional Notes</label>

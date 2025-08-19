@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-ready-book',
@@ -24,10 +25,11 @@ export class ReadyBook {
   heroImage: string = 'assets/images/ambulance-team.jpg';
   heroImageAlt: string = 'Medical transport team helping patient';
 
-  constructor() { }
+  constructor(private router :Router) { }
 
   // Button click handlers
   onBookTransport(): void {
+        this.router.navigate(['/FormRequest']);
     console.log('Book Transport Now clicked');
     // Add your navigation or action logic here
     // Example: this.router.navigate(['/booking']);

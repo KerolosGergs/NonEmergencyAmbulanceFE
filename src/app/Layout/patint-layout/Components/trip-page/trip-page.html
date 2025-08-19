@@ -11,6 +11,7 @@
   }
 
   @if (!loading && !error) {
+    <button class="btn btn-primary m-3 text-right" (click)="refreshTrips()">Refresh</button>
   <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
       <button class="nav-link" [class.active]="selectedTab === 'today'" (click)="selectedTab = 'today'">

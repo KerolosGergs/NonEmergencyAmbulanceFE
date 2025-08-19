@@ -33,7 +33,7 @@ export class PatientRequestsComponent implements OnInit {
     { key: RequestStatus.Accepted,    label: 'Accepted' },
     { key: RequestStatus.Rejected,    label: 'Rejected' },
     { key: RequestStatus.InProgress,  label: 'In Progress' },
-    { key: RequestStatus.Completed,   label: 'Completed' },
+    // { key: RequestStatus.Completed,   label: 'Completed' },
     { key: RequestStatus.Cancelled,   label: 'Cancelled' },
   ];
   activeStatus: RequestStatus = RequestStatus.Pending; // default

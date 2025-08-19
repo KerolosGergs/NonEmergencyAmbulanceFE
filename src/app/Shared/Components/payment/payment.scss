@@ -55,3 +55,32 @@
 .input-group-text {
   font-size: 0.875rem;
 }
+
+.summary-bar {
+  position: sticky; /* keeps it at top while scrolling */
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(135deg, #0d6efd, #20c997);
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-bottom: 3px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  font-size: 1.1rem;
+  font-weight: 500;
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+
+    i {
+      font-size: 1.4rem;
+      background: rgba(255,255,255,0.2);
+      padding: .4rem;
+      border-radius: 50%;
+    }
+  }
+}

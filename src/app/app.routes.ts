@@ -62,7 +62,7 @@ export const routes: Routes = [
                     { path: 'withdrawal', loadComponent: () => import('../app/Layout/Driver/components/withdrawal-driver/withdrawal-driver').then(m => m.WithdrawalDriver) },
                 ]
             },
-            {path:'payment',loadComponent:()=>import('../app/Shared/Components/payment/payment').then(m=>m.PaymentFormComponent)}
+            {path:'payment/:tripId/:price',loadComponent:()=>import('../app/Shared/Components/payment/payment').then(m=>m.PaymentFormComponent)}
 
         ]
     },

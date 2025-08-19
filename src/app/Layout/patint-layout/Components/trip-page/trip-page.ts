@@ -1,5 +1,5 @@
 import { PatientService } from './../../../../Core/Services/PatientServise/patient-service';
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TripService } from '../../../../Core/Services/TripService/trip';
 import { ITrip, TripStatus } from '../../../../Core/interface/Trip/itrip';
@@ -7,6 +7,9 @@ import { AuthService } from '../../../../Core/Services/AuthServices/auth-service
 import { Environment } from '../../../../../environments/environment';
 import { TripTracker } from "../trip-tracker/trip-tracker";
 import { PaymentModalComponent } from '../payment-modal/payment-modal';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-trip-page',
@@ -15,10 +18,18 @@ import { PaymentModalComponent } from '../payment-modal/payment-modal';
   templateUrl: './trip-page.html',
   styleUrls: ['./trip-page.scss']
 })
-export class TripPage implements OnInit {
+export class TripPage implements OnInit ,OnChanges {
+refreshTrips() {
+this.loadPatientTrips();
+}
   private readonly tripService = inject(TripService);
   private readonly authService = inject(AuthService);
   private readonly PatientService = inject(PatientService);
+  constructor(private toastr: ToastrService,private router :Router) {}
+  ngOnChanges(changes: SimpleChanges): void {
+       this.loadPatientTrips();
+
+  }
 
   trips: ITrip[] = [];
   todayTrips: ITrip[] = [];
@@ -37,7 +48,7 @@ export class TripPage implements OnInit {
   ngOnInit(): void {
     this.loadPatientTrips();
   }
-
+ 
   loadPatientTrips(): void {
     this.loading = true;
     const patientId = this.authService.getProfileId();
@@ -115,17 +126,17 @@ export class TripPage implements OnInit {
     });
   }
 
-  openPaymentModal(trip: ITrip): void {
-    this.paymentTripId = trip.tripId;
-    this.paymentPrice = trip.price;
-    this.isPaymentVisible = true;
-  }
+  // openPaymentModal(trip: ITrip): void {
+  //   this.paymentTripId = trip.tripId;
+  //   this.paymentPrice = trip.price;
+  //   this.isPaymentVisible = true;
+  // }
 
-  closePaymentModal(): void {
-    this.isPaymentVisible = false;
-    this.paymentTripId = null;
-    this.paymentPrice = null;
-  }
+  // closePaymentModal(): void {
+  //   this.isPaymentVisible = false;
+  //   this.paymentTripId = null;
+  //   this.paymentPrice = null;
+  // }
 
   completeTrip(tripId: number): void {
     this.loading = true;
@@ -181,4 +192,30 @@ export class TripPage implements OnInit {
   }
 
   trackByTripId = (_: number, t: ITrip) => t.tripId;
+
+   openPaymentModal(trip: ITrip): void {
+    // Navigate to new page with TripId and Price
+    this.router.navigate(['/payment', trip.tripId, trip.price]);
+  }
+  closePaymentModal(): void {
+    this.isPaymentVisible = false;
+    this.paymentTripId = null;
+    this.paymentPrice = null;
+  }
+
+  /** Called when payment form emits payNow */
+  handlePayNow(e: { tripId: number; amount: number; form: any }) {
+    // Optionally send e.form to your payment gateway before completing trip.
+    this.tripService.completeTrip(e.tripId).subscribe({
+      next: () => {
+        this.toastr.success('تم إكمال الرحلة بنجاح');
+        this.loadPatientTrips();
+        this.closePaymentModal();
+      },
+      error: (err) => {
+        console.error('Error completing trip:', err);
+        this.toastr.error('حدث خطأ أثناء إكمال الرحلة');
+      }
+    });
+  }
 }
